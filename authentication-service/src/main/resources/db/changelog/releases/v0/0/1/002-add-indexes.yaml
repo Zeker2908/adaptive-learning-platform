@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-users-email-index
+      author: zeker
+      changes:
+        - createIndex:
+            indexName: idx_users_email_unique
+            tableName: users
+            unique: true
+            columns:
+              - column:
+                  name: email
+
+  - changeSet:
+      id: 006-create-oauth-provider-id-index
+      author: zeker
+      changes:
+        - createIndex:
+            indexName: idx_oauth_auth_provider_id
+            tableName: oauth_auth
+            columns:
+              - column:
+                  name: provider
+              - column:
+                  name: o_auth_id
+
+  - changeSet:
+      id: 007-create-password-history-user-index
+      author: zeker
+      changes:
+        - createIndex:
+            indexName: idx_password_history_user
+            tableName: password_history
+            columns:
+              - column:
+                  name: local_auth_id

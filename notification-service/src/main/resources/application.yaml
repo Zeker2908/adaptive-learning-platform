@@ -1,0 +1,36 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+      debug: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+      database: 1
+app:
+  frontend-url: http://localhost:3000
+  company-name: ${COMPANY_NAME:Test}
+  redis:
+    duration: 15
+  links:
+    email-verification: /email-confirmation
+    password-reset: /password-reset

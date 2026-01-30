@@ -1,0 +1,38 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: task-service
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/interview
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USERNAME:admin}
+    password: ${POSTGRES_PASSWORD:admin}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    show-sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+logging:
+  level:
+    root: INFO
+    ru.zeker: DEBUG
+
+app:
+  domain: http://localhost:8080
+  version: 1
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

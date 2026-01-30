@@ -1,0 +1,134 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-tags
+      author: zeker
+      changes:
+        - createTable:
+            tableName: tags
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: tags
+            indexName: idx_tag_name
+            unique: true
+            columns:
+              - column:
+                  name: name
+
+  - changeSet:
+      id: 002-create-tasks
+      author: zeker
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: difficulty
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: template_code
+                  type: TEXT
+              - column:
+                  name: tests
+                  type: JSONB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 003-create-task-tags
+      author: chatgpt
+      changes:
+        - createTable:
+            tableName: task_tags
+            columns:
+              - column:
+                  name: task_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: task_id, tag_id
+            tableName: task_tags
+            constraintName: pk_task_tags
+        - addForeignKeyConstraint:
+            baseTableName: task_tags
+            baseColumnNames: task_id
+            referencedTableName: tasks
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_task_tags_task
+        - addForeignKeyConstraint:
+            baseTableName: task_tags
+            baseColumnNames: tag_id
+            referencedTableName: tags
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_task_tags_tag

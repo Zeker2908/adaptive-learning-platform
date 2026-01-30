@@ -1,0 +1,134 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-solutions-table
+      author: zeker
+      changes:
+        - createTable:
+            tableName: solutions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: task_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: language
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feedback
+                  type: jsonb
+                  constraints:
+                    nullable: true
+
+        - createIndex:
+            tableName: solutions
+            indexName: idx_solutions_user_id
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: create-user-progress-table
+      author: zeker
+      changes:
+        - createTable:
+            tableName: user_progress
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: topic
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: confidence
+                  type: double
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            tableName: user_progress
+            indexName: idx_user_progress_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: user_progress
+            indexName: idx_user_progress_user_id_confidence
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: confidence
+
+        - addUniqueConstraint:
+            tableName: user_progress
+            constraintName: uk_user_progress_user_id_topic
+            columnNames: user_id, topic

@@ -1,0 +1,267 @@
+version: "3.9"
+
+services:
+  # === PostgreSQL ===
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: interview
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-judge0-db.sql:/docker-entrypoint-initdb.d/init-judge0-db.sql
+    networks:
+      - internal
+
+  # === Redis ===
+  redis:
+    image: redis:7
+    container_name: redis
+    volumes:
+      - redisdata:/data
+    networks:
+      - internal
+
+  # === Zookeeper ===
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - internal
+
+  # === Kafka ===
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+    volumes:
+      - kafka_data:/data
+    networks:
+      - internal
+
+  init-kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: |
+      bash -c "
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.request --partitions 32 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.result --partitions 32 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.notification.events --partitions 32 --replication-factor 1
+      "
+    init: true
+    networks:
+      - internal
+
+  # === Kafka UI ===
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8089:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      KAFKA_CLUSTERS_0_READONLY: "false"
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - internal
+
+  # https://github.com/judge0/judge0/releases
+  # На проде раскоментировать нужен linux
+  #  # === Judge0 Worker ===
+#  judge0:
+#    image: judge0/judge0:1.13.1
+#    privileged: true
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    environment:
+#      - DATABASE_URL=postgresql://admin:admin@postgres:5432/judge0
+#      - REDIS_URL=redis://redis:6379/10
+#      - REDIS_HOST=redis
+#      - REDIS_PORT=6379
+#    restart: unless-stopped
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - internal
+
+  # === API Gateway ===
+  api-gateway:
+    image: api-gateway:latest
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    ports:
+      - "8080:8080"  # единственная точка входа
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    environment:
+      PUBLIC_KEY: file:/app/keys/public.pem
+    volumes:
+      - ./secrets/keys/public.pem:/app/keys/public.pem:ro
+    depends_on:
+      - authentication-service
+      - task-service
+      - notification-service
+      - solution-service
+    networks:
+      - internal
+
+  # === Auth Service ===
+  authentication-service:
+    image: authentication-service:latest
+    build:
+      context: .
+      dockerfile: authentication-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      PRIVATE_KEY: file:/app/keys/private.pem
+      PUBLIC_KEY: file:/app/keys/public.pem
+      POSTGRES_HOST: postgres:5432
+      POSTGRES_USERNAME: admin
+      POSTGRES_PASSWORD: admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_HOST: kafka:9092
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    volumes:
+      - ./secrets/keys/private.pem:/app/keys/private.pem:ro
+      - ./secrets/keys/public.pem:/app/keys/public.pem:ro
+    networks:
+      - internal
+
+  # === Notification Service ===
+  notification-service:
+    image: notification-service:latest
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      KAFKA_HOST: kafka:9092
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      COMPANY_NAME: Interview
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - internal
+
+  # === Task Service ===
+  task-service:
+    image: task-service:latest
+    build:
+      context: .
+      dockerfile: task-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      POSTGRES_HOST: postgres:5432
+      POSTGRES_USERNAME: admin
+      POSTGRES_PASSWORD: admin
+    depends_on:
+      - postgres
+    networks:
+      - internal
+
+  # === Solution Service ===
+  solution-service:
+    image: solution-service:latest
+    build:
+      context: .
+      dockerfile: solution-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      POSTGRES_HOST: postgres:5432
+      POSTGRES_USERNAME: admin
+      POSTGRES_PASSWORD: admin
+      KAFKA_HOST: kafka:9092
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    networks:
+      - internal
+
+  # === Sandbox Service ===
+  sandbox-service:
+    image: sandbox-service:latest
+    build:
+      context: .
+      dockerfile: sandbox-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      KAFKA_HOST: kafka:9092
+      JUDGE0_URL: ${JUDGE0_URL}
+    depends_on:
+      kafka:
+        condition: service_healthy
+      solution-service:
+        condition: service_started
+    networks:
+      - internal
+
+# === Networks ===
+networks:
+  internal:
+
+# === Volumes ===
+volumes:
+  pgdata:
+  redisdata:
+  kafka_data:
