@@ -1,7 +1,6 @@
 package ru.zeker.task.domain.model.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import ru.zeker.common.dto.task.Difficulty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,10 +18,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.proxy.HibernateProxy;
-import ru.zeker.common.dto.task.TestCase;
+import ru.zeker.common.dto.task.Difficulty;
+import ru.zeker.common.dto.task.json.TaskContent;
 import ru.zeker.common.model.BaseEntity;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -53,12 +52,9 @@ public class Task extends BaseEntity {
     )
     private Set<Tag> tags;
 
-    @Column(columnDefinition = "TEXT")
-    private String templateCode;
-
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb", nullable = false)
-    private List<TestCase> tests;
+    private TaskContent content;
 
     @Override
     public final boolean equals(Object o) {

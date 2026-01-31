@@ -1,6 +1,7 @@
 package ru.zeker.common.dto.task.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.zeker.common.dto.task.Difficulty;
 import ru.zeker.common.dto.task.TestCase;
+import ru.zeker.common.dto.task.json.TaskContent;
 
 import java.util.List;
 import java.util.Set;
@@ -33,8 +35,7 @@ public class TaskRequest {
     @NotEmpty
     private Set<String> tags;
 
-    private String templateCode;
-
-    @NotEmpty
-    private List<TestCase> tests;
+    @NotNull
+    @Valid
+    private TaskContent content;
 }

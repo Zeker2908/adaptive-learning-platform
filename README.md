@@ -143,8 +143,6 @@ adaptive-learning-platform/
 ## 📞 Контакты
 
 Maintainer: **Leonid** – [mud.runner@bk.ru](mailto:mud.runner@bk.ru)  
-Проект создан в рамках учебного MVP по ТЗ «Адаптивная платформа для подготовки к техническим собеседованиям».
-
 ---
 
 ## 📄 Лицензия

@@ -12,7 +12,7 @@ import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 public class KafkaProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendEmailEvent(SolutionExecRequest message) {
+    public void sendExecutionEvent(SolutionExecRequest message) {
         kafkaTemplate.send("solution.exec.request", message.getSolutionId(), message);
     }
 

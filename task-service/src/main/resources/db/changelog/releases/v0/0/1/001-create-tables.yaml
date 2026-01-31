@@ -72,10 +72,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: template_code
-                  type: TEXT
-              - column:
-                  name: tests
+                  name: content
                   type: JSONB
                   constraints:
                     nullable: false

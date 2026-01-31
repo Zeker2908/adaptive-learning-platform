@@ -26,8 +26,7 @@ public interface TaskMapper {
                 .description(request.getDescription())
                 .difficulty(request.getDifficulty())
                 .tags(tagEntities)
-                .templateCode(request.getTemplateCode())
-                .tests(request.getTests())
+                .content(request.getContent())
                 .build();
     }
 }

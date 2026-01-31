@@ -9,17 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 import ru.zeker.common.dto.kafka.solution.SolutionExecResult;
 import ru.zeker.common.dto.solution.SolutionStatus;
 import ru.zeker.common.dto.solution.request.SolutionRequest;
 import ru.zeker.common.dto.solution.response.DailyActivity;
+import ru.zeker.common.dto.task.json.TaskContent;
 import ru.zeker.common.dto.task.response.TaskResponse;
 import ru.zeker.solution.client.TaskClient;
-import ru.zeker.solution.domain.mapper.SolutionMapper;
 import ru.zeker.solution.domain.model.entity.Solution;
+import ru.zeker.solution.exception.SolutionBadRequestException;
 import ru.zeker.solution.exception.SolutionNotFoundException;
 import ru.zeker.solution.repository.SolutionRepository;
+import ru.zeker.solution.service.strategy.SolutionSubmissionStrategy;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,27 +33,26 @@ import java.util.UUID;
 public class SolutionService {
 
     private final SolutionRepository repository;
-    private final KafkaProducer kafkaProducer;
-    private final SolutionMapper solutionMapper;
+    private final List<SolutionSubmissionStrategy<? extends TaskContent>> strategies;
     private final TaskClient taskClient;
     private final UserProgressService userProgressService;
     private final ObjectMapper objectMapper;
 
     @Transactional
     public Solution submitSolution(SolutionRequest request, String userId) {
-        Solution solution = Solution.builder()
-                .userId(UUID.fromString(userId))
-                .taskId(request.getTaskId())
-                .code(request.getCode())
-                .language(request.getLanguage())
-                .status(SolutionStatus.PENDING)
-                .build();
-        solution = repository.save(solution);
+        TaskResponse taskResponse = taskClient.getTaskById(request.getTaskId());
+        SolutionSubmissionStrategy<?> strategy = strategies.stream()
+                .filter(s -> s.support(taskResponse.getContent()))
+                .findFirst()
+                .orElseThrow(() -> new SolutionBadRequestException(
+                        "No submission strategy available for task type: " + taskResponse.getContent().getClass().getSimpleName()
+                ));
 
-        TaskResponse taskResponse = taskClient.getTaskById(solution.getTaskId());
-        SolutionExecRequest message = solutionMapper.toKafkaMessage(solution, taskResponse.getTests());
-        kafkaProducer.sendEmailEvent(message);
-        return solution;
+        @SuppressWarnings("unchecked")
+        SolutionSubmissionStrategy<TaskContent> typedStrategy =
+                (SolutionSubmissionStrategy<TaskContent>) strategy;
+
+        return typedStrategy.handle(request, userId, taskResponse.getContent());
     }
 
     public Solution getSolution(UUID id, UUID userId) {

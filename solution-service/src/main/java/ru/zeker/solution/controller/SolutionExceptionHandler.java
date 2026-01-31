@@ -3,6 +3,7 @@ package ru.zeker.solution.controller;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,7 +23,7 @@ public class SolutionExceptionHandler extends GlobalExceptionHandler {
         try {
             // Иногда Feign возвращает тело с сообщением, можно попытаться распарсить
             String body = ex.contentUTF8();
-            if (body != null && !body.isBlank()) {
+            if (StringUtils.isNotBlank(body)) {
                 message = body;
             }
         } catch (Exception e) {

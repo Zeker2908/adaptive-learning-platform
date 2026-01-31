@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
@@ -20,23 +21,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-import ru.zeker.gateway.exception.AuthException;
 import ru.zeker.common.util.JwtUtils;
+import ru.zeker.gateway.exception.AuthException;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
-import static ru.zeker.common.headers.ApiHeaders.*;
+import static ru.zeker.common.headers.ApiHeaders.USER_ID;
+import static ru.zeker.common.headers.ApiHeaders.USER_NAME;
+import static ru.zeker.common.headers.ApiHeaders.USER_ROLE;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtValidationFilter implements GlobalFilter, Ordered {
-    private static final String BEARER_PREFIX     = "Bearer ";
+    private static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTH_REQUIRED_KEY = "auth-required";
     private static final String REQUIRED_ROLE_KEY = "required-role";
+    private static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
 
     private final JwtUtils jwtUtils;
     private final Jackson2JsonEncoder jsonEncoder;
@@ -66,7 +71,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
 
     private Mono<Claims> extractClaims(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
+        if (StringUtils.isBlank(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
             return Mono.error(new AuthException("Отсутствует заголовок авторизации", HttpStatus.UNAUTHORIZED));
         }
 
@@ -75,7 +80,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         if (jwtUtils.isTokenExpired(token)) {
-                            throw new AuthException("Срок действия токена истек", HttpStatus.UNAUTHORIZED);
+                            throw new AuthException("Срок действия токена истек", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
                         }
                         return jwtUtils.extractAllClaims(token);
                     } catch (JwtException e) {
@@ -91,7 +96,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
 
     private Mono<Claims> verifyRole(ServerWebExchange exchange, Claims claims) {
         String userRole = claims.get("role", String.class);
-        if (userRole == null) {
+        if (Objects.isNull(userRole)) {
             log.warn("Роль пользователя не указана в токене");
             return Mono.error(new AuthException("Роль пользователя не указана в токене", HttpStatus.FORBIDDEN));
         }
@@ -101,7 +106,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                 .map(meta -> meta.get(REQUIRED_ROLE_KEY))
                 .map(Object::toString)
                 .orElse(null);
-        if (requiredRole != null && !requiredRole.equals(userRole)) {
+        if (Objects.nonNull(requiredRole) && !requiredRole.equals(userRole)) {
             log.warn("Недостаточно привилегий");
             return Mono.error(new AuthException("Недостаточно привилегий", HttpStatus.FORBIDDEN));
         }
@@ -113,6 +118,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                 .header(USER_ID, claims.get("id", String.class))
                 .header(USER_NAME, claims.getSubject())
                 .header(USER_ROLE, claims.get("role", String.class))
+                .headers(headers -> headers.remove(HttpHeaders.AUTHORIZATION))
                 .build();
         return exchange.mutate().request(mutated).build();
     }
@@ -129,6 +135,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         body.put("status", ex.getStatus().value());
         body.put("error", ex.getStatus().getReasonPhrase());
         body.put("message", ex.getMessage());
+        if (StringUtils.isNotBlank(ex.getReason())) {
+            body.put("reason", ex.getReason());
+        }
 
         return response.writeWith(
                 jsonEncoder.encode(

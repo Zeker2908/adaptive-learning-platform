@@ -33,8 +33,7 @@ public class TaskService {
     public Page<Task> getTasks(String title, List<Difficulty> difficulties, List<String> tags, int count) {
         log.debug("Find task with parameters title={}, diffList={}, tags={}", title, difficulties, tags);
 
-        Specification<Task> spec = Specification
-                .where(TaskSpecification.hasTitle(title))
+        Specification<Task> spec = TaskSpecification.hasTitle(title)
                 .and(TaskSpecification.hasDifficulties(difficulties))
                 .and(TaskSpecification.hasAnyTags(tags));
 
@@ -72,7 +71,6 @@ public class TaskService {
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDifficulty(request.getDifficulty());
-        task.setTemplateCode(request.getTemplateCode());
 
         Set<Tag> tagEntities = tagService.findOrCreateTags(request.getTags());
         task.setTags(tagEntities);
