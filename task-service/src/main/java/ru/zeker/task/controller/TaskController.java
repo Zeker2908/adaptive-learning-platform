@@ -1,5 +1,6 @@
 package ru.zeker.task.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.common.dto.task.Difficulty;
+import ru.zeker.common.dto.task.json.Views;
 import ru.zeker.common.dto.task.response.TaskResponse;
 import ru.zeker.task.domain.mapper.TaskMapper;
 import ru.zeker.task.service.TaskService;
@@ -120,6 +122,7 @@ public class TaskController {
             @ApiResponse(responseCode = "400", description = "Некорректный параметр count")
     })
     @GetMapping("/random")
+    @JsonView(Views.Public.class)
     public ResponseEntity<List<TaskResponse>> getRandomTasks(
             @Parameter(description = "Количество случайных задач", example = "5", required = true)
             @Min(1)

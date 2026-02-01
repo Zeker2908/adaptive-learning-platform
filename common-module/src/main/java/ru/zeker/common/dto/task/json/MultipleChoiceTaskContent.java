@@ -1,5 +1,6 @@
 package ru.zeker.common.dto.task.json;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,14 @@ import java.util.Set;
 public final class MultipleChoiceTaskContent implements TaskContent {
 
     @NotBlank
+    @JsonView(Views.Public.class)
     private String question;
+
     @NotEmpty
+    @JsonView(Views.Public.class)
     private List<ChoiceOption> options;
+
     @NotEmpty
+    @JsonView(Views.Admin.class)
     private Set<Integer> correctOptionIndices;
 }

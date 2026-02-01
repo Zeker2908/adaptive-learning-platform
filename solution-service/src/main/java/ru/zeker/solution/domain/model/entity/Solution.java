@@ -41,10 +41,9 @@ public class Solution extends BaseEntity {
     private UUID taskId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String code;
+    private String answer;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Language language;
 
     @Enumerated(EnumType.STRING)

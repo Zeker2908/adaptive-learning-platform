@@ -40,15 +40,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: code
+                  name: answer
                   type: text
                   constraints:
                     nullable: false
               - column:
                   name: language
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: status
                   type: varchar(255)

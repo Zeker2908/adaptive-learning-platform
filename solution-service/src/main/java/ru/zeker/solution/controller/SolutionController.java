@@ -57,8 +57,8 @@ public class SolutionController {
                     "Статус решения может быть PENDING, пока не будет обработан judging-сервисом.",
             responses = {
                     @ApiResponse(
-                            responseCode = "202",
-                            description = "Решение успешно отправлено на обработку",
+                            responseCode = "200",
+                            description = "Решение успешно или отправлено на обработку",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolutionResponse.class))
                     ),
                     @ApiResponse(responseCode = "400", description = "Некорректный запрос"),
@@ -70,8 +70,7 @@ public class SolutionController {
             @RequestHeader(USER_ID) @NotBlank String userId,
             @Valid @RequestBody SolutionRequest request
     ) {
-        return ResponseEntity.accepted()
-                .body(solutionMapper.toResponse(solutionService.submitSolution(request, userId)));
+        return ResponseEntity.ok(solutionMapper.toResponse(solutionService.submitSolution(request, userId)));
     }
 
     @GetMapping("/{id}")

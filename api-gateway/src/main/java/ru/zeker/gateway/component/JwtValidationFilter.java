@@ -83,6 +83,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                             throw new AuthException("Срок действия токена истек", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
                         }
                         return jwtUtils.extractAllClaims(token);
+                    } catch (AuthException e) {
+                        log.warn(e.getMessage());
+                        throw e;
                     } catch (JwtException e) {
                         log.warn("Недействительный JWT: {}", e.getMessage());
                         throw new AuthException("Недействительный токен", HttpStatus.UNAUTHORIZED);

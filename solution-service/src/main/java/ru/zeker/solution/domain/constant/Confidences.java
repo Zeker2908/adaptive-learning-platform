@@ -1,4 +1,4 @@
-package ru.zeker.solution.constant;
+package ru.zeker.solution.domain.constant;
 
 import lombok.experimental.UtilityClass;
 import ru.zeker.common.dto.task.Difficulty;

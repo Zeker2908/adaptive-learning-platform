@@ -34,7 +34,7 @@ public class CodingSolutionSubmissionStrategy implements SolutionSubmissionStrat
         Solution solution = Solution.builder()
                 .userId(UUID.fromString(userId))
                 .taskId(request.getTaskId())
-                .code(request.getCode())
+                .answer(request.getAnswer())
                 .language(request.getLanguage())
                 .status(SolutionStatus.PENDING)
                 .build();

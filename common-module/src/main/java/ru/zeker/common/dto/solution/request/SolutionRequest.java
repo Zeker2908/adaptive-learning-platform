@@ -22,9 +22,8 @@ public class SolutionRequest {
     private UUID taskId;
 
     @NotBlank
-    private String code;
+    private String answer;
 
-    @NotNull
     private Language language;
 
 }

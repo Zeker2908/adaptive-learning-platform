@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static ru.zeker.solution.constant.Confidences.DEFAULT_CONFIDENCE;
-import static ru.zeker.solution.constant.Confidences.DIFFICULTY_WEIGHT_SUM;
-import static ru.zeker.solution.constant.Confidences.MAX_CONFIDENCE;
-import static ru.zeker.solution.constant.Confidences.MIN_CONFIDENCE;
+import static ru.zeker.solution.domain.constant.Confidences.DEFAULT_CONFIDENCE;
+import static ru.zeker.solution.domain.constant.Confidences.DIFFICULTY_WEIGHT_SUM;
+import static ru.zeker.solution.domain.constant.Confidences.MAX_CONFIDENCE;
+import static ru.zeker.solution.domain.constant.Confidences.MIN_CONFIDENCE;
 
 @Slf4j
 @Service

@@ -1,5 +1,6 @@
 package ru.zeker.solution.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.zeker.common.dto.task.json.Views;
 import ru.zeker.common.dto.task.response.TaskResponse;
 import ru.zeker.solution.service.RecommendationService;
 
@@ -36,7 +38,6 @@ public class RecommendationController {
 
     private final RecommendationService recommendationService;
 
-    @GetMapping
     @Operation(
             summary = "Получить рекомендованные задачи",
             description = "Возвращает список персонализированных задач, рекомендованных пользователю на основе его предыдущих решений и прогресса.",
@@ -53,6 +54,8 @@ public class RecommendationController {
                     @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID")
             }
     )
+    @GetMapping
+    @JsonView(Views.Public.class)
     public ResponseEntity<List<TaskResponse>> getRecommendations(
             @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
             @RequestHeader(USER_ID) String userId,
@@ -67,7 +70,6 @@ public class RecommendationController {
             @Max(10)
             int limit
     ) {
-        List<TaskResponse> tasks = recommendationService.getRecommendedTasks(UUID.fromString(userId), limit);
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(recommendationService.getRecommendedTasks(UUID.fromString(userId), limit));
     }
 }

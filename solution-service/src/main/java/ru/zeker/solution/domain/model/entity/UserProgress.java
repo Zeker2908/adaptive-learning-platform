@@ -18,8 +18,8 @@ import ru.zeker.common.model.BaseEntity;
 import java.util.Objects;
 import java.util.UUID;
 
-import static ru.zeker.solution.constant.Confidences.MAX_CONFIDENCE_STR;
-import static ru.zeker.solution.constant.Confidences.MIN_CONFIDENCE_STR;
+import static ru.zeker.solution.domain.constant.Confidences.MAX_CONFIDENCE_STR;
+import static ru.zeker.solution.domain.constant.Confidences.MIN_CONFIDENCE_STR;
 
 @Getter
 @Setter
