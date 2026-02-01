@@ -50,16 +50,6 @@ export MAIL_PASSWORD=<SMTP password>
 export JUDGE0_URL=http://<ваш-judge0-хост>:2358  # или публичный
 ```
 
-### Генерация ключей JWT
-
-```bash
-mkdir -p secrets/keys
-cd secrets/keys
-openssl ecparam -name prime256v1 -genkey -noout -out ec-private.pem
-openssl pkcs8 -topk8 -nocrypt -in ec-private.pem -out private.pem
-openssl ec -in private.pem -pubout -out public.pem
-```
-
 ### Запуск
 
 ```bash
@@ -107,8 +97,8 @@ adaptive-learning-platform/
 ├── task-service/            # Задачи, теги, сложность
 ├── solution-service/        # Решения, прогресс, рекомендации
 ├── sandbox-service/         # Интеграция с Judge0
-├── common-module/                  # Общие DTO, исключения, утилиты
-├── secrets/                 # Ключи (не в репозитории)
+├── common-module/           # Общие DTO, исключения, утилиты
+├── keygen/                  # Контейнер отвечающий за создание приватного и публичного ключей 
 ├── postman/                 # Коллекция постмана
 ├── docker-compose.yml       # Запуск всей инфраструктуры
 └── README.md

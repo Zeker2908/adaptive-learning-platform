@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  # === Key Generator (одноразовый) ===
+  keygen:
+    build:
+      context: ./keygen
+    volumes:
+      - keys:/keys
+    init: true
+
   # === PostgreSQL ===
   postgres:
     image: postgres:15
@@ -130,14 +138,11 @@ services:
       start_period: 30s
       retries: 5
     environment:
-      PUBLIC_KEY: file:/app/keys/public.pem
+      PUBLIC_KEY: file:///app/keys/public.pem
     volumes:
-      - ./secrets/keys/public.pem:/app/keys/public.pem:ro
+      - keys:/app/keys:ro
     depends_on:
-      - authentication-service
-      - task-service
-      - notification-service
-      - solution-service
+      - keygen
     networks:
       - internal
 
@@ -151,8 +156,8 @@ services:
         DOCKER_BUILDKIT: 1
     restart: always
     environment:
-      PRIVATE_KEY: file:/app/keys/private.pem
-      PUBLIC_KEY: file:/app/keys/public.pem
+      PRIVATE_KEY: file:///app/keys/private.pem
+      PUBLIC_KEY: file:///app/keys/public.pem
       POSTGRES_HOST: postgres:5432
       POSTGRES_USERNAME: admin
       POSTGRES_PASSWORD: admin
@@ -163,12 +168,12 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
     depends_on:
+      - keygen
       - postgres
       - redis
       - kafka
     volumes:
-      - ./secrets/keys/private.pem:/app/keys/private.pem:ro
-      - ./secrets/keys/public.pem:/app/keys/public.pem:ro
+      - keys:/app/keys:ro
     networks:
       - internal
 
@@ -265,3 +270,4 @@ volumes:
   pgdata:
   redisdata:
   kafka_data:
+  keys:

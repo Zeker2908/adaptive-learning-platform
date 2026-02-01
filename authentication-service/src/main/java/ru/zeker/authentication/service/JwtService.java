@@ -60,6 +60,8 @@ public class JwtService {
             throw new IllegalStateException("Неверный формат ключа", e);
         } catch (IllegalArgumentException | IOException e) {
             throw new IllegalStateException("Ошибка декодирования Base64", e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Ошибка инициализации JWT", e);
         }
     }
 
