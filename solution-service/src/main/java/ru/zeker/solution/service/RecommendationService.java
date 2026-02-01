@@ -3,7 +3,7 @@ package ru.zeker.solution.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.zeker.common.dto.task.response.TaskResponse;
-import ru.zeker.solution.client.TaskClient;
+import ru.zeker.solution.service.client.TaskClient;
 
 import java.util.Collections;
 import java.util.Comparator;

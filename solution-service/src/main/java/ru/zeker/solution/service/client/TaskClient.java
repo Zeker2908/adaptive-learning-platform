@@ -1,4 +1,4 @@
-package ru.zeker.solution.client;
+package ru.zeker.solution.service.client;
 
 import feign.FeignException;
 import org.springframework.cloud.openfeign.FeignClient;

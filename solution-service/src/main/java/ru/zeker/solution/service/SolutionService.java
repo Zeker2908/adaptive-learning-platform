@@ -15,11 +15,11 @@ import ru.zeker.common.dto.solution.request.SolutionRequest;
 import ru.zeker.common.dto.solution.response.DailyActivity;
 import ru.zeker.common.dto.task.json.TaskContent;
 import ru.zeker.common.dto.task.response.TaskResponse;
-import ru.zeker.solution.client.TaskClient;
 import ru.zeker.solution.domain.model.entity.Solution;
 import ru.zeker.solution.exception.SolutionBadRequestException;
 import ru.zeker.solution.exception.SolutionNotFoundException;
 import ru.zeker.solution.repository.SolutionRepository;
+import ru.zeker.solution.service.client.TaskClient;
 import ru.zeker.solution.service.strategy.SolutionSubmissionStrategy;
 
 import java.time.LocalDate;
@@ -52,7 +52,14 @@ public class SolutionService {
         SolutionSubmissionStrategy<TaskContent> typedStrategy =
                 (SolutionSubmissionStrategy<TaskContent>) strategy;
 
-        return typedStrategy.handle(request, userId, taskResponse.getContent());
+
+        Solution solution = typedStrategy.handle(request, userId, taskResponse.getContent());
+
+        if (solution.getStatus() != SolutionStatus.PENDING) {
+            updateProgress(solution, taskResponse, solution.getStatus() == SolutionStatus.SUCCESS);
+        }
+
+        return solution;
     }
 
     public Solution getSolution(UUID id, UUID userId) {
@@ -89,12 +96,7 @@ public class SolutionService {
                 .orElseThrow(SolutionNotFoundException::new);
 
         TaskResponse task = taskClient.getTaskById(solution.getTaskId());
-        double difficulty = task.getDifficulty().getRating();
-        int tagCount = task.getTags().size();
-
-        for (String topic : task.getTags()) {
-            userProgressService.updateOrCreate(topic, solution.getUserId(), difficulty, success, tagCount);
-        }
+        updateProgress(solution, task, success);
     }
 
     public List<DailyActivity> getUserActivity(UUID userId, int lastDays) {
@@ -130,6 +132,15 @@ public class SolutionService {
 
             repository.saveAll(staleSolutions);
             log.info("Marked {} solutions as TIMEOUT", staleSolutions.size());
+        }
+    }
+
+    private void updateProgress(Solution solution, TaskResponse task, boolean success) {
+        double difficulty = task.getDifficulty().getRating();
+        int tagCount = task.getTags().size();
+
+        for (String topic : task.getTags()) {
+            userProgressService.updateOrCreate(topic, solution.getUserId(), difficulty, success, tagCount);
         }
     }
 
