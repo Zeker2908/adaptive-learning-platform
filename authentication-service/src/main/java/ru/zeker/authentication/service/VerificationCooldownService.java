@@ -15,12 +15,12 @@ public class VerificationCooldownService {
     private static final String KEY_PREFIX = "verification_cooldown:";
 
     public boolean canResendEmail(String email) {
-        String key = KEY_PREFIX + email;
+        var key = KEY_PREFIX + email;
         return !redisTemplate.hasKey(key);
     }
 
     public void updateCooldown(String email) {
-        String key = KEY_PREFIX + email;
+        var key = KEY_PREFIX + email;
         redisTemplate.opsForValue().set(key, "locked", COOLDOWN_DURATION);
     }
 }

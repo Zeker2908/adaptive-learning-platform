@@ -13,7 +13,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.zeker.authentication.domain.dto.Tokens;
 import ru.zeker.authentication.domain.dto.request.ConfirmationEmailRequest;
 import ru.zeker.authentication.domain.dto.request.LoginRequest;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
@@ -76,7 +74,7 @@ public class AuthenticationController {
      * @param request  {@link LoginRequest} - user credentials
      * @param response {@link HttpServletResponse} to set refresh token in cookie
      * @return {@link ResponseEntity} with {@link AuthenticationResponse} (access token)
-     * @throws jakarta.validation.ConstraintViolationException if request data is invalid
+     * @throws jakarta.validation.ConstraintViolationException                     if request data is invalid
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are incorrect
      */
     @Operation(summary = "Login", description = "Authenticates user and sets refresh token in cookie")
@@ -89,8 +87,8 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
-        Tokens tokens = authenticationService.login(request);
-        ResponseCookie cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        var tokens = authenticationService.login(request);
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -101,7 +99,7 @@ public class AuthenticationController {
      * @param request {@link ConfirmationEmailRequest} - confirmation token
      * @return {@link ResponseEntity} with HTTP status 200 (OK)
      * @throws jakarta.validation.ConstraintViolationException if token is invalid
-     * @throws TokenExpiredException if token is expired
+     * @throws TokenExpiredException                           if token is expired
      */
     @Operation(summary = "Email confirmation", description = "Confirms email using provided token")
     @ApiResponses({
@@ -155,7 +153,7 @@ public class AuthenticationController {
      * @param request {@link ResetPasswordRequest} - new password and token
      * @return {@link ResponseEntity} with HTTP status 200 (OK)
      * @throws jakarta.validation.ConstraintViolationException if request data is invalid
-     * @throws TokenExpiredException if token is expired
+     * @throws TokenExpiredException                           if token is expired
      */
     @Operation(summary = "Password reset", description = "Resets password using recovery token")
     @ApiResponses(value = {
@@ -172,10 +170,10 @@ public class AuthenticationController {
      * Refreshes access token using refresh token.
      *
      * @param refreshToken refresh token from cookie
-     * @param response {@link HttpServletResponse} to set new refresh token
+     * @param response     {@link HttpServletResponse} to set new refresh token
      * @return {@link ResponseEntity} with new {@link AuthenticationResponse} (access token)
      * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
-     * @throws TokenExpiredException if refresh token is expired
+     * @throws TokenExpiredException                           if refresh token is expired
      */
     @Operation(summary = "Refresh access token", description = "Refreshes access token using refresh token from cookie and returns new access token")
     @ApiResponses(value = {
@@ -187,8 +185,8 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
-        Tokens tokens = authenticationService.refreshToken(refreshToken);
-        ResponseCookie cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        var tokens = authenticationService.refreshToken(refreshToken);
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -197,7 +195,7 @@ public class AuthenticationController {
      * Logs out user from current session.
      *
      * @param refreshToken refresh token from cookie
-     * @param response {@link HttpServletResponse} to clear cookie
+     * @param response     {@link HttpServletResponse} to clear cookie
      * @return {@link ResponseEntity} with HTTP status 204 (No Content)
      * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
      */
@@ -211,7 +209,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeRefreshToken(refreshToken);
-        ResponseCookie cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
+        var cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }
@@ -220,7 +218,7 @@ public class AuthenticationController {
      * Logs out user from all active sessions.
      *
      * @param refreshToken refresh token from cookie
-     * @param response {@link HttpServletResponse} to clear cookie
+     * @param response     {@link HttpServletResponse} to clear cookie
      * @return {@link ResponseEntity} with HTTP status 204 (No Content)
      * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
      */
@@ -234,7 +232,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeAllUserTokens(refreshToken);
-        ResponseCookie cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
+        var cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }

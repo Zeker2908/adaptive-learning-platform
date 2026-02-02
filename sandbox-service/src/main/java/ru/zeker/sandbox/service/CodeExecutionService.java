@@ -8,7 +8,6 @@ import ru.zeker.common.dto.judge0.request.SubmissionRequest;
 import ru.zeker.common.dto.judge0.response.Status;
 import ru.zeker.common.dto.judge0.response.SubmissionResponse;
 import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
-import ru.zeker.common.dto.task.json.TestCase;
 import ru.zeker.sandbox.client.Judge0Client;
 
 import java.nio.charset.StandardCharsets;
@@ -28,14 +27,14 @@ public class CodeExecutionService {
     private final Random random = new Random();
 
     public SubmissionResponse execute(SolutionExecRequest request) {
-        int langId = request.getLanguage().getCode();
+        var langId = request.getLanguage().getCode();
 
-        TestCase selectedTest = request.getTests().get(
+        var selectedTest = request.getTests().get(
                 random.nextInt(request.getTests().size())
         );
 
-        String stdin = selectedTest.getInput();
-        String expectedOutput = selectedTest.getOutput();
+        var stdin = selectedTest.getInput();
+        var expectedOutput = selectedTest.getOutput();
 
         if (!stdin.endsWith("\n")) {
             stdin += "\n";
@@ -44,12 +43,12 @@ public class CodeExecutionService {
             expectedOutput += "\n";
         }
 
-        String encodedCode = Base64.getEncoder()
+        var encodedCode = Base64.getEncoder()
                 .encodeToString(request.getCode().getBytes(StandardCharsets.UTF_8));
-        String encodedStdin = Base64.getEncoder()
+        var encodedStdin = Base64.getEncoder()
                 .encodeToString(stdin.getBytes(StandardCharsets.UTF_8));
 
-        SubmissionRequest sub = SubmissionRequest.builder()
+        var sub = SubmissionRequest.builder()
                 .sourceCode(encodedCode)
                 .languageId(langId)
                 .stdin(encodedStdin)
@@ -57,7 +56,7 @@ public class CodeExecutionService {
 
         log.info("Executing single random test case");
 
-        SubmissionResponse response = judge0Client.submitCode(sub, true, true);
+        var response = judge0Client.submitCode(sub, true, true);
 
         if (isCorrect(response, expectedOutput)) {
             return SubmissionResponse.builder()
@@ -88,10 +87,10 @@ public class CodeExecutionService {
             return false;
         }
 
-        String actualOutput = safeDecodeBase64(response.getStdout());
+        var actualOutput = safeDecodeBase64(response.getStdout());
 
-        String normalizedActual = actualOutput.stripTrailing();
-        String normalizedExpected = expectedOutput.stripTrailing();
+        var normalizedActual = actualOutput.stripTrailing();
+        var normalizedExpected = expectedOutput.stripTrailing();
 
         log.info("Comparing: actual='{}', expected='{}'", normalizedActual, normalizedExpected);
         return normalizedActual.equals(normalizedExpected);
@@ -101,8 +100,8 @@ public class CodeExecutionService {
         if (Objects.isNull(value)) return null;
 
         try {
-            String cleaned = value.replaceAll("[^A-Za-z0-9+/=]", StringUtils.EMPTY);
-            byte[] decoded = Base64.getDecoder().decode(cleaned);
+            var cleaned = value.replaceAll("[^A-Za-z0-9+/=]", StringUtils.EMPTY);
+            var decoded = Base64.getDecoder().decode(cleaned);
             return new String(decoded, StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.warn("Received non-base64 stdout (raw): {}", value);

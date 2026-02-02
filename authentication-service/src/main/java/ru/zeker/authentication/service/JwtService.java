@@ -37,20 +37,20 @@ public class JwtService {
     @PostConstruct
     public void init() {
         try {
-            if (Objects.isNull(jwtProperties.getPrivateKeyPath())|| !jwtProperties.getPrivateKeyPath().exists()) {
+            if (Objects.isNull(jwtProperties.getPrivateKeyPath()) || !jwtProperties.getPrivateKeyPath().exists()) {
                 throw new IllegalStateException("The private key is not set.");
             }
 
-            String privateKeyContent = new String(jwtProperties.getPrivateKeyPath().getInputStream().readAllBytes());
+            var privateKeyContent = new String(jwtProperties.getPrivateKeyPath().getInputStream().readAllBytes());
 
-            String privateKeyPEM = privateKeyContent
+            var privateKeyPEM = privateKeyContent
                     .replace("-----BEGIN PRIVATE KEY-----", "")
                     .replace("-----END PRIVATE KEY-----", "")
                     .replaceAll("\\s", "");
 
-            byte[] keyBytes = Base64.getDecoder().decode(privateKeyPEM);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory kf = KeyFactory.getInstance("EC");
+            var keyBytes = Base64.getDecoder().decode(privateKeyPEM);
+            var spec = new PKCS8EncodedKeySpec(keyBytes);
+            var kf = KeyFactory.getInstance("EC");
             this.privateKey = kf.generatePrivate(spec);
             if (!(this.privateKey instanceof ECPrivateKey)) {
                 throw new IllegalStateException("The key is not an EC private key.");
@@ -67,7 +67,7 @@ public class JwtService {
     }
 
     public UUID extractUserId(String token) {
-        String id = jwtUtils.extractClaim(token, claims -> claims.get("id", String.class));
+        var id = jwtUtils.extractClaim(token, claims -> claims.get("id", String.class));
         if (Objects.isNull(id)) throw new InvalidTokenException("Invalid user ID");
         return UUID.fromString(id);
     }
@@ -78,7 +78,7 @@ public class JwtService {
 
 
     public String generateAccessToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
             claims.put("role", customUserDetails.getRole());
@@ -87,7 +87,7 @@ public class JwtService {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
         }
@@ -95,7 +95,7 @@ public class JwtService {
     }
 
     public String generateEmailToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
             claims.put("version", customUserDetails.getVersion());
@@ -108,7 +108,7 @@ public class JwtService {
     }
 
     private String generateToken(UserDetails userDetails, Map<String, Object> claims, long expiration) {
-        long currentTimeMillis = System.currentTimeMillis();
+        var currentTimeMillis = System.currentTimeMillis();
 
         return Jwts.builder()
                 .setClaims(claims)

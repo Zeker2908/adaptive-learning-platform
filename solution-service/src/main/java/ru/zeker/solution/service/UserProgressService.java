@@ -33,7 +33,7 @@ public class UserProgressService {
     }
 
     public List<String> getWeakestTopics(UUID userId, int maxTopics) {
-        List<UserProgress> weakest = repository.findWeakestTopicsByUserId(
+        var weakest = repository.findWeakestTopicsByUserId(
                 userId,
                 PageRequest.of(0, maxTopics)
         );
@@ -49,7 +49,7 @@ public class UserProgressService {
 
     @Transactional
     public void updateOrCreate(String topic, UUID userId, double difficulty, boolean success, int totalTags) {
-        UserProgress progress = repository
+        var progress = repository
                 .findByUserIdAndTopic(userId, topic)
                 .orElseGet(() -> UserProgress.builder()
                         .userId(userId)
@@ -58,16 +58,26 @@ public class UserProgressService {
                         .build()
                 );
 
-        double oldConfidence = progress.getConfidence();
+        var oldConfidence = progress.getConfidence();
+        var delta = (success
+                ? calculateSuccessDelta(oldConfidence, difficulty)
+                : calculateFailureDelta(difficulty))
+                / Math.max(1, totalTags);
 
-        double baseDelta = success
-                ? (MAX_CONFIDENCE - oldConfidence) * SUCCESS_FACTOR * difficulty
-                : -FAILURE_BASE * (DIFFICULTY_WEIGHT_SUM - difficulty);
-
-        double delta = baseDelta / Math.max(1, totalTags);
-
-        double newConfidence = Math.min(MAX_CONFIDENCE, Math.max(MIN_CONFIDENCE, oldConfidence + delta));
+        var newConfidence = calculateNewConfidence(oldConfidence, delta);
         progress.setConfidence(newConfidence);
         repository.save(progress);
+    }
+
+    private double calculateNewConfidence(double oldConfidence, double delta) {
+        return Math.min(MAX_CONFIDENCE, Math.max(MIN_CONFIDENCE, oldConfidence + delta));
+    }
+
+    private double calculateSuccessDelta(double oldConfidence, double difficulty) {
+        return (MAX_CONFIDENCE - oldConfidence) * SUCCESS_FACTOR * difficulty;
+    }
+
+    private double calculateFailureDelta(double difficulty) {
+        return -FAILURE_BASE * (DIFFICULTY_WEIGHT_SUM - difficulty);
     }
 }

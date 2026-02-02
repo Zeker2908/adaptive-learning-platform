@@ -59,7 +59,7 @@ public class UserService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void bindPassword(String userId, BindPasswordRequest request) {
-        User user = findById(UUID.fromString(userId));
+        var user = findById(UUID.fromString(userId));
 
         if (Objects.nonNull(user.getLocalAuth())) {
             throw new UserAlreadyExistsException("User already has password bound");
@@ -81,7 +81,7 @@ public class UserService {
             throw new BadCredentialsException("New password must be different from old password");
         }
 
-        User user = findById(UUID.fromString(userId));
+        var user = findById(UUID.fromString(userId));
 
         if (Objects.isNull(user.getLocalAuth())) {
             throw new IllegalStateException("User is not registered locally");
@@ -109,7 +109,7 @@ public class UserService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteByEmail(String email) {
-        User user = findByEmail(email);
+        var user = findByEmail(email);
         repository.delete(user);
         log.info("Deleted user with email: {}", email);
     }

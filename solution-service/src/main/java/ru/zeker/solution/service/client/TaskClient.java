@@ -7,7 +7,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.zeker.common.dto.task.Difficulty;
 import ru.zeker.common.dto.task.response.TaskResponse;
 
 import java.util.List;

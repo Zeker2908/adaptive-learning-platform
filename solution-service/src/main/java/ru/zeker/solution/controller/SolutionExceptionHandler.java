@@ -17,11 +17,11 @@ import java.util.Map;
 public class SolutionExceptionHandler extends GlobalExceptionHandler {
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<Map<String, Object>> handleFeignException(FeignException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.resolve(ex.status());
+        var status = HttpStatus.resolve(ex.status());
 
-        String message = ex.getMessage();
+        var message = ex.getMessage();
         try {
-            String body = ex.contentUTF8();
+            var body = ex.contentUTF8();
             if (StringUtils.isNotBlank(body)) {
                 message = body;
             }

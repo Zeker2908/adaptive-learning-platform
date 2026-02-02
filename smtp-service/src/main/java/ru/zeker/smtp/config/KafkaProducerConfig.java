@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public Map<String, Object> producerConfig() {
-        Map<String, Object> props = new HashMap<>();
+        var props = new HashMap<String, Object>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);

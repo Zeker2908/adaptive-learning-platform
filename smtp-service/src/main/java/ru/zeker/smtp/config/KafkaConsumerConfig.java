@@ -22,7 +22,6 @@ import org.springframework.messaging.converter.MessageConversionException;
 import ru.zeker.common.dto.kafka.smtp.EmailEvent;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 @EnableKafka
@@ -45,7 +44,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
+        var props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "smtp-service");
 
@@ -68,8 +67,8 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Object>
     emailKafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory,
                                        CommonErrorHandler errorHandler) {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+        var factory =
+                new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(16);
         factory.setCommonErrorHandler(errorHandler);
@@ -79,17 +78,17 @@ public class KafkaConsumerConfig {
 
     @Bean
     public CommonErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
+        var recoverer = new DeadLetterPublishingRecoverer(
                 kafkaTemplate,
                 (rec, ex) -> new TopicPartition(rec.topic() + ".DLT", rec.partition())
         );
 
-        ExponentialBackOffWithMaxRetries backOff = new ExponentialBackOffWithMaxRetries(maxAttempts);
+        var backOff = new ExponentialBackOffWithMaxRetries(maxAttempts);
         backOff.setInitialInterval(initialInterval);
         backOff.setMultiplier(multiplier);
         backOff.setMaxInterval(maxInterval);
 
-        DefaultErrorHandler handler = new DefaultErrorHandler(recoverer, backOff);
+        var handler = new DefaultErrorHandler(recoverer, backOff);
         handler.addNotRetryableExceptions(
                 DeserializationException.class,
                 MessageConversionException.class

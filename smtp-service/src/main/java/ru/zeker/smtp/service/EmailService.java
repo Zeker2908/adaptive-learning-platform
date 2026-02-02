@@ -1,7 +1,6 @@
 package ru.zeker.smtp.service;
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.angus.mail.smtp.SMTPSenderFailedException;
@@ -59,22 +58,22 @@ public class EmailService {
         log.info("Preparing to send email to: {}", emailContext.getTo());
 
         try {
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(
+            var message = javaMailSender.createMimeMessage();
+            var messageHelper = new MimeMessageHelper(
                     message,
                     MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                     StandardCharsets.UTF_8.name()
             );
 
-            Context thymeleafContext = new Context();
+            var thymeleafContext = new Context();
             thymeleafContext.setVariables(emailContext.getTemplateContext());
 
-            String htmlContent = springTemplateEngine.process(
+            var htmlContent = springTemplateEngine.process(
                     emailContext.getTemplateLocation(),
                     thymeleafContext
             );
 
-            String senderName = Objects.nonNull(emailContext.getFromDisplayName())
+            var senderName = Objects.nonNull(emailContext.getFromDisplayName())
                     ? emailContext.getFromDisplayName()
                     : companyName;
 
@@ -83,7 +82,7 @@ public class EmailService {
             messageHelper.setSubject(emailContext.getSubject());
             messageHelper.setText(htmlContent, true);
             if (Objects.nonNull(emailContext.getAttachment())) {
-                FileSystemResource file = new FileSystemResource(emailContext.getAttachment());
+                var file = new FileSystemResource(emailContext.getAttachment());
                 messageHelper.addAttachment(file.getFilename(), file);
             }
 
@@ -125,7 +124,7 @@ public class EmailService {
             String templateLocation,
             Map<String, Object> payloadContext
     ) {
-        Map<String, Object> templateContext = new HashMap<>();
+        var templateContext = new HashMap<String, Object>();
         templateContext.put(ThymeleafUtils.CURRENT_YEAR, Year.now().getValue());
         templateContext.put(ThymeleafUtils.COMPANY_NAME, companyName);
         if (Objects.nonNull(payloadContext)) {

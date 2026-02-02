@@ -30,7 +30,7 @@ public class VerificationEmailContextStrategy implements EmailContextStrategy {
         log.debug("Setting up the context of the registration confirmation email: {}",
                 event.getEmail());
 
-        String verificationUrl = applicationUrl + emailVerificationUrl + "?token=" + event.getPayload().get("token");
+        var verificationUrl = applicationUrl + emailVerificationUrl + "?token=" + event.getPayload().get("token");
 
         return emailService.createEmailContext(
                 event,

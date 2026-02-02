@@ -52,7 +52,7 @@ public class AuthenticationExceptionHandler extends GlobalExceptionHandler {
 
     @ExceptionHandler({CredentialsExpiredException.class, DisabledException.class, AccountExpiredException.class})
     public ResponseEntity<Map<String, Object>> handleAccountStatusExceptions(RuntimeException ex, HttpServletRequest request) {
-        HttpStatus status = ex instanceof CredentialsExpiredException
+        var status = ex instanceof CredentialsExpiredException
                 ? HttpStatus.UNAUTHORIZED
                 : HttpStatus.FORBIDDEN;
 

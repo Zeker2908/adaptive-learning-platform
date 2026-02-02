@@ -18,7 +18,7 @@ import static ru.zeker.authentication.domain.model.enums.Role.ADMIN;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    
+
     @Mapping(target = "role", constant = "USER")
     User toEntity(RegisterRequest request, @Context PasswordEncoder passwordEncoder);
 
@@ -35,7 +35,7 @@ public interface UserMapper {
     @AfterMapping
     default void setLocalAuth(@MappingTarget User user, RegisterRequest request,
                               @Context PasswordEncoder passwordEncoder) {
-        boolean isAdmin = ADMIN.equals(user.getRole());
+        var isAdmin = ADMIN.equals(user.getRole());
         user.setLocalAuth(LocalAuth.builder()
                 .user(user)
                 .password(passwordEncoder.encode(request.getPassword()))

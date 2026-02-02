@@ -34,13 +34,13 @@ public class ConsumerKafkaListeners {
     ) {
         try {
             log.info("Message {}", record);
-            SubmissionResponse response = codeExecutionService.execute(record.value());
+            var response = codeExecutionService.execute(record.value());
             if (!isValidStatus(response)) {
                 log.error("response {}", response);
                 throw new CodeExecutionException("Execution failed: " + Objects.requireNonNullElse(response.getMessage(), response.getStatus().getDescription()));
             }
             log.info("Result {}", response);
-            SolutionExecResult solutionExecResult = SolutionExecResult.builder()
+            var solutionExecResult = SolutionExecResult.builder()
                     .solutionId(record.value().getSolutionId())
                     .status(SolutionStatus.SUCCESS)
                     .build();
@@ -48,7 +48,7 @@ public class ConsumerKafkaListeners {
             log.info("Message processing completed");
         } catch (RetryableException | FeignException.ServiceUnavailable e) {
             log.error("Judge0 service is temporarily unavailable: {}", e.getMessage(), e);
-            SolutionExecResult solutionExecResult = SolutionExecResult.builder()
+            var solutionExecResult = SolutionExecResult.builder()
                     .solutionId(record.value().getSolutionId())
                     .status(SolutionStatus.SERVICE_UNAVAILABLE)
                     .descriptionError("Execution service is temporarily unavailable")
@@ -56,7 +56,7 @@ public class ConsumerKafkaListeners {
             kafkaProducer.sendEmailEvent(solutionExecResult);
         } catch (CodeExecutionException e) {
             log.warn("Code execution failed: {}", e.getMessage());
-            SolutionExecResult solutionExecResult = SolutionExecResult.builder()
+            var solutionExecResult = SolutionExecResult.builder()
                     .solutionId(record.value().getSolutionId())
                     .status(SolutionStatus.FAILED)
                     .descriptionError(e.getMessage())
@@ -64,7 +64,7 @@ public class ConsumerKafkaListeners {
             kafkaProducer.sendEmailEvent(solutionExecResult);
         } catch (Exception e) {
             log.error("Error while request to judge0 {}", e.getMessage(), e);
-            SolutionExecResult solutionExecResult = SolutionExecResult.builder()
+            var solutionExecResult = SolutionExecResult.builder()
                     .solutionId(record.value().getSolutionId())
                     .status(SolutionStatus.FAILED)
                     .descriptionError(e.getMessage())

@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -16,7 +15,6 @@ import ru.zeker.authentication.exception.OAuth2ProviderException;
 import ru.zeker.authentication.service.JwtService;
 import ru.zeker.authentication.service.OAuth2Service;
 import ru.zeker.authentication.util.CookieUtils;
-import ru.zeker.authentication.domain.model.entity.User;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -34,39 +32,40 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     /**
      * Handler for successful OAuth2 authentication.
      * <p>
-     *     If user is not found, registers them.
-     *     If user is found but doesn't have OAuth2 authentication in database, adds it.
-     *     If user is found, generates access and refresh tokens.
-     *     If authentication fails, returns error data.
+     * If user is not found, registers them.
+     * If user is found but doesn't have OAuth2 authentication in database, adds it.
+     * If user is found, generates access and refresh tokens.
+     * If authentication fails, returns error data.
      * </p>
+     *
      * @param request        HTTP request
      * @param response       HTTP response
      * @param authentication authentication result
-     * @throws IOException   input/output error
+     * @throws IOException input/output error
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("OAuth2 successful authentication handler triggered: remote={}, uri={}",
                 request.getRemoteAddr(), request.getRequestURI());
         try {
-            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+            var oAuth2User = (OAuth2User) authentication.getPrincipal();
             log.debug("OAuth2User principal obtained: authorities={}", authentication.getAuthorities());
 
-            String provider = getOAuth2Provider(authentication);
+            var provider = getOAuth2Provider(authentication);
             if (Objects.isNull(provider)) {
                 log.error("Failed to get OAuth2Provider");
                 throw new OAuth2ProviderException("Failed to get OAuth2Provider");
             }
             log.info("OAuth2Provider obtained: {}", provider);
 
-            User user = oAuth2Service.processOauth2User(oAuth2User, provider);
+            var user = oAuth2Service.processOauth2User(oAuth2User, provider);
 
             log.debug("User resolved: id={}, email={}, enabled={}", user.getId(), user.getEmail(), user.isEnabled());
 
-            String accessToken = jwtService.generateAccessToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user);
+            var accessToken = jwtService.generateAccessToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
 
-            ResponseCookie refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(7));
+            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(7));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             response.setContentType("application/json;charset=UTF-8");

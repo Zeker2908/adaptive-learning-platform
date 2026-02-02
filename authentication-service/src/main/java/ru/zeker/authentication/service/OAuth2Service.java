@@ -42,8 +42,8 @@ public class OAuth2Service {
      */
     @Transactional
     public User processOauth2User(OAuth2User oAuth2User, String providerName) {
-        Boolean emailVerified = oAuth2User.getAttribute("email_verified");
-        String email = oAuth2User.getAttribute("email");
+        var emailVerified = (Boolean) oAuth2User.getAttribute("email_verified");
+        var email = (String) oAuth2User.getAttribute("email");
         log.info("Processing OAuth2 user: email={}, emailVerified={}", email, emailVerified);
 
         if (Objects.isNull(emailVerified) || !emailVerified) {
@@ -51,8 +51,8 @@ public class OAuth2Service {
             throw new OAuth2ProviderException("Email not verified");
         }
 
-        OAuth2Provider oAuth2Provider = extractProvider(providerName);
-        OAuth2UserInfo userInfo = oAuth2Provider.extractUserInfo(oAuth2User.getAttributes());
+        var oAuth2Provider = extractProvider(providerName);
+        var userInfo = oAuth2Provider.extractUserInfo(oAuth2User.getAttributes());
 
         return userRepository.findByEmail(email)
                 .map(u -> update(u, userInfo, oAuth2Provider))
@@ -69,7 +69,7 @@ public class OAuth2Service {
      * @return Updated user
      */
     private User update(User user, OAuth2UserInfo userInfo, OAuth2Provider oAuth2Provider) {
-        if (user.getOauthAuth() == null) {
+        if (Objects.isNull(user.getOauthAuth())) {
             userMapper.setOAuthAuth(user, userInfo, oAuth2Provider);
             log.info("Successfully added OAuth2 authentication to user");
             return userRepository.save(user);
@@ -85,7 +85,7 @@ public class OAuth2Service {
      * @return New user
      */
     private User register(OAuth2UserInfo userInfo, OAuth2Provider oAuth2Provider) {
-        User user = userMapper.toOAuthEntity(userInfo, oAuth2Provider);
+        var user = userMapper.toOAuthEntity(userInfo, oAuth2Provider);
         log.debug("Created new user object for OAuth2 registration");
 
         userRepository.save(user);

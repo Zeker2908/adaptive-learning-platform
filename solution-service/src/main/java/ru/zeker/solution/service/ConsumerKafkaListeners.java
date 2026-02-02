@@ -37,9 +37,9 @@ public class ConsumerKafkaListeners {
     }
 
     private void handleMessage(ConsumerRecord<String, SolutionExecResult> record) throws JsonProcessingException {
-        SolutionExecResult result = record.value();
-        UUID solutionId = parseSolutionIdOrThrow(result.getSolutionId());
-        SolutionStatus status = result.getStatus();
+        var result = record.value();
+        var solutionId = parseSolutionIdOrThrow(result.getSolutionId());
+        var status = result.getStatus();
         solutionService.updateSolutionStatus(solutionId, result);
         if (shouldUpdateProgress(status)) {
             solutionService.updateProgressIfNeeded(solutionId, result.getStatus() == SolutionStatus.SUCCESS);

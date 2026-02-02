@@ -1,9 +1,9 @@
 package ru.zeker.task.service;
 
-import ru.zeker.task.domain.model.entity.Tag;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.zeker.task.domain.model.entity.Tag;
 import ru.zeker.task.repository.TagRepository;
 
 import java.util.Optional;
@@ -24,10 +24,10 @@ public class TagService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Tags is null or empty"));
 
-        Set<Tag> existingTags = repository.findByNameIn(tags);
-        Set<String> existingNames = existingTags.stream().map(Tag::getName).collect(Collectors.toSet());
+        var existingTags = repository.findByNameIn(tags);
+        var existingNames = existingTags.stream().map(Tag::getName).collect(Collectors.toSet());
 
-        Set<Tag> newTags = tags.stream()
+        var newTags = tags.stream()
                 .filter(n -> !existingNames.contains(n))
                 .map(this::buildTag)
                 .collect(Collectors.toSet());

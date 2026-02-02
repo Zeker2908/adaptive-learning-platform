@@ -15,8 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -61,8 +59,8 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Boolean> isAuthRequired(ServerWebExchange exchange) {
-        Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
-        boolean required = Optional.ofNullable(route)
+        var route = (Route) exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+        var required = Optional.ofNullable(route)
                 .map(Route::getMetadata)
                 .map(meta -> Boolean.parseBoolean(meta.getOrDefault(AUTH_REQUIRED_KEY, "true").toString()))
                 .orElse(true);
@@ -70,12 +68,12 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Claims> extractClaims(ServerWebExchange exchange) {
-        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        var authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isBlank(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
             return Mono.error(new AuthException("Authorization header missing", HttpStatus.UNAUTHORIZED));
         }
 
-        String token = authHeader.substring(BEARER_PREFIX.length());
+        var token = authHeader.substring(BEARER_PREFIX.length());
 
         return Mono.fromCallable(() -> {
                     try {
@@ -98,13 +96,13 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Claims> verifyRole(ServerWebExchange exchange, Claims claims) {
-        String userRole = claims.get("role", String.class);
+        var userRole = claims.get("role", String.class);
         if (Objects.isNull(userRole)) {
             log.warn("The user's role is not specified in the token.");
             return Mono.error(new AuthException("The user's role is not specified in the token.", HttpStatus.FORBIDDEN));
         }
-        Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
-        String requiredRole = Optional.ofNullable(route)
+        var route = (Route) exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
+        var requiredRole = Optional.ofNullable(route)
                 .map(Route::getMetadata)
                 .map(meta -> meta.get(REQUIRED_ROLE_KEY))
                 .map(Object::toString)
@@ -117,7 +115,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     }
 
     private ServerWebExchange withUserHeaders(ServerWebExchange exchange, Claims claims) {
-        ServerHttpRequest mutated = exchange.getRequest().mutate()
+        var mutated = exchange.getRequest().mutate()
                 .header(USER_ID, claims.get("id", String.class))
                 .header(USER_NAME, claims.getSubject())
                 .header(USER_ROLE, claims.get("role", String.class))
@@ -128,11 +126,11 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
 
 
     private Mono<Void> writeError(ServerWebExchange exchange, AuthException ex) {
-        ServerHttpResponse response = exchange.getResponse();
+        var response = exchange.getResponse();
         response.setStatusCode(ex.getStatus());
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> body = new LinkedHashMap<>();
+        var body = new LinkedHashMap<>();
         body.put("timestamp", Instant.now().toString());
         body.put("path", exchange.getRequest().getPath().toString());
         body.put("status", ex.getStatus().value());

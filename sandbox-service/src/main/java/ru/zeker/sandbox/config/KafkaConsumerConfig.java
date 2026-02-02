@@ -14,7 +14,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 @EnableKafka
@@ -25,7 +24,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
+        var props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "sandbox-service");
 
@@ -47,8 +46,8 @@ public class KafkaConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object>
     solutionExecKafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+        var factory =
+                new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(16);
         return factory;

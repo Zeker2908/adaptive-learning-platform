@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.zeker.common.dto.kafka.smtp.EmailEvent;
 import ru.zeker.smtp.dto.EmailContext;
-import ru.zeker.smtp.util.ThymeleafUtils;
 import ru.zeker.smtp.service.EmailService;
+import ru.zeker.smtp.util.ThymeleafUtils;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class ForgotPasswordEmailContextStrategy implements EmailContextStrategy 
         log.debug("Setting up the context of a password recovery email: {}",
                 event.getEmail());
 
-        String resetPasswordUrl = applicationUrl + passwordResetUrl + "?token=" + event.getPayload().get("token");
+        var resetPasswordUrl = applicationUrl + passwordResetUrl + "?token=" + event.getPayload().get("token");
 
         return emailService.createEmailContext(
                 event,

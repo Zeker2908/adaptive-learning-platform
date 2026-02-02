@@ -22,7 +22,7 @@ import ru.zeker.solution.repository.SolutionRepository;
 import ru.zeker.solution.service.client.TaskClient;
 import ru.zeker.solution.service.strategy.SolutionSubmissionStrategy;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -40,8 +40,8 @@ public class SolutionService {
 
     @Transactional
     public Solution submitSolution(SolutionRequest request, String userId) {
-        TaskResponse taskResponse = taskClient.getTaskById(request.getTaskId());
-        SolutionSubmissionStrategy<?> strategy = strategies.stream()
+        var taskResponse = taskClient.getTaskById(request.getTaskId());
+        var strategy = strategies.stream()
                 .filter(s -> s.support(taskResponse.getContent()))
                 .findFirst()
                 .orElseThrow(() -> new SolutionBadRequestException(
@@ -49,11 +49,10 @@ public class SolutionService {
                 ));
 
         @SuppressWarnings("unchecked")
-        SolutionSubmissionStrategy<TaskContent> typedStrategy =
-                (SolutionSubmissionStrategy<TaskContent>) strategy;
+        var typedStrategy = (SolutionSubmissionStrategy<TaskContent>) strategy;
 
 
-        Solution solution = typedStrategy.handle(request, userId, taskResponse.getContent());
+        var solution = typedStrategy.handle(request, userId, taskResponse.getContent());
 
         if (solution.getStatus() != SolutionStatus.PENDING) {
             updateProgress(solution, taskResponse, solution.getStatus() == SolutionStatus.SUCCESS);
@@ -74,7 +73,7 @@ public class SolutionService {
 
     @Transactional
     public void updateSolutionStatus(UUID solutionId, SolutionExecResult result) throws JsonProcessingException {
-        Solution solution = repository.findById(solutionId)
+        var solution = repository.findById(solutionId)
                 .orElseThrow(SolutionNotFoundException::new);
 
         if (solution.getStatus() != SolutionStatus.PENDING) {
@@ -92,23 +91,23 @@ public class SolutionService {
 
     @Transactional
     public void updateProgressIfNeeded(UUID solutionId, boolean success) {
-        Solution solution = repository.findById(solutionId)
+        var solution = repository.findById(solutionId)
                 .orElseThrow(SolutionNotFoundException::new);
 
-        TaskResponse task = taskClient.getTaskById(solution.getTaskId());
+        var task = taskClient.getTaskById(solution.getTaskId());
         updateProgress(solution, task, success);
     }
 
     public List<DailyActivity> getUserActivity(UUID userId, int lastDays) {
-        LocalDateTime since = LocalDateTime.now().minusDays(lastDays);
-        List<Object[]> results = repository.findActivityByDay(userId, since);
+        var since = LocalDateTime.now().minusDays(lastDays);
+        var results = repository.findActivityByDay(userId, since);
 
         return results.stream()
                 .map(row -> {
-                    java.sql.Date sqlDate = (java.sql.Date) row[0];
-                    LocalDate localDate = sqlDate.toLocalDate();
-                    long count = (Long) row[1];
-                    return new DailyActivity(localDate.toString(), (int) count);
+                    var sqlDate = (Date) row[0];
+                    var localDate = sqlDate.toLocalDate();
+                    var count = (Integer) row[1];
+                    return new DailyActivity(localDate.toString(), count);
                 })
                 .toList();
     }
@@ -117,15 +116,15 @@ public class SolutionService {
     @Scheduled(fixedDelay = 30_000)
     @Transactional
     public void checkAndTimeoutStaleSolutions() {
-        LocalDateTime timeoutThreshold = LocalDateTime.now().minusMinutes(2);
+        var timeoutThreshold = LocalDateTime.now().minusMinutes(2);
 
-        List<Solution> staleSolutions = repository
+        var staleSolutions = repository
                 .findByStatusAndCreatedAtBefore(SolutionStatus.PENDING, timeoutThreshold);
 
         if (!staleSolutions.isEmpty()) {
             log.info("Found {} stale PENDING solutions to mark as TIMEOUT", staleSolutions.size());
 
-            for (Solution solution : staleSolutions) {
+            for (var solution : staleSolutions) {
                 solution.setStatus(SolutionStatus.TIMEOUT);
                 solution.setFeedback(objectMapper.writeValueAsString("Execution did not complete in time (timeout)"));
             }
@@ -136,10 +135,10 @@ public class SolutionService {
     }
 
     private void updateProgress(Solution solution, TaskResponse task, boolean success) {
-        double difficulty = task.getDifficulty().getRating();
-        int tagCount = task.getTags().size();
+        var difficulty = task.getDifficulty().getRating();
+        var tagCount = task.getTags().size();
 
-        for (String topic : task.getTags()) {
+        for (var topic : task.getTags()) {
             userProgressService.updateOrCreate(topic, solution.getUserId(), difficulty, success, tagCount);
         }
     }

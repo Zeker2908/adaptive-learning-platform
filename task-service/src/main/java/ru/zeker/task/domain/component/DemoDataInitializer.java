@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import ru.zeker.common.dto.task.request.TaskRequest;
 import ru.zeker.task.service.TaskService;
 
-import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -31,12 +30,12 @@ public class DemoDataInitializer {
         }
 
         try {
-            InputStream inputStream = new ClassPathResource("data/demo-tasks.json").getInputStream();
+            var inputStream = new ClassPathResource("data/demo-tasks.json").getInputStream();
             List<TaskRequest> tasks = objectMapper.readValue(inputStream, objectMapper.getTypeFactory()
                     .constructCollectionType(List.class, TaskRequest.class));
 
             log.info("Initializing {} demo tasks...", tasks.size());
-            for (TaskRequest task : tasks) {
+            for (var task : tasks) {
                 taskService.createTask(task);
             }
             log.info("Demo tasks initialized successfully");

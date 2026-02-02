@@ -33,16 +33,16 @@ public class PasswordHistoryService {
         if (Objects.isNull(user.getLocalAuth())) {
             throw new IllegalStateException("LocalAuth not found for user");
         }
-        Set<PasswordHistory> existingPasswords = findAllByUserId(user.getId());
+        var existingPasswords = findAllByUserId(user.getId());
 
-        boolean isPasswordReused = existingPasswords.parallelStream()
+        var isPasswordReused = existingPasswords.parallelStream()
                 .anyMatch(history -> passwordEncoder.matches(rawPassword, history.getPassword()));
 
         if (isPasswordReused) {
             throw new PasswordHistoryException("This password has already been used. Please choose a different password");
         }
 
-        PasswordHistory passwordHistory = PasswordHistory.builder()
+        var passwordHistory = PasswordHistory.builder()
                 .localAuth(user.getLocalAuth())
                 .password(passwordEncoder.encode(rawPassword))
                 .build();
@@ -50,7 +50,7 @@ public class PasswordHistoryService {
         passwordHistoryRepository.save(passwordHistory);
 
         // Limiting the number of stored passwords
-        int size = existingPasswords.size();
+        var size = existingPasswords.size();
         if (size >= maxPasswordHistoryCount) {
             passwordHistoryRepository.deleteOldestByLocalAuthId(user.getId(), size - maxPasswordHistoryCount + 1);
         }

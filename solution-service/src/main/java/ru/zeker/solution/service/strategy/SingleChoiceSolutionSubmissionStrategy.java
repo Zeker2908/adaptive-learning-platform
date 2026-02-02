@@ -24,11 +24,11 @@ public class SingleChoiceSolutionSubmissionStrategy implements SolutionSubmissio
 
     @Override
     public Solution handle(SolutionRequest request, String userId, SingleChoiceTaskContent taskContent) {
-        SolutionStatus status = isCorrectAnswer(request.getAnswer(), taskContent)
+        var status = isCorrectAnswer(request.getAnswer(), taskContent)
                 ? SolutionStatus.SUCCESS
                 : SolutionStatus.FAILED;
 
-        Solution solution = Solution.builder()
+        var solution = Solution.builder()
                 .userId(UUID.fromString(userId))
                 .taskId(request.getTaskId())
                 .answer(request.getAnswer())
@@ -39,7 +39,7 @@ public class SingleChoiceSolutionSubmissionStrategy implements SolutionSubmissio
     }
 
     private boolean isCorrectAnswer(String answer, SingleChoiceTaskContent taskContent) {
-        String trimmed = answer.trim();
+        var trimmed = answer.trim();
         if (!trimmed.matches("-?\\d+")) {
             return false;
         }

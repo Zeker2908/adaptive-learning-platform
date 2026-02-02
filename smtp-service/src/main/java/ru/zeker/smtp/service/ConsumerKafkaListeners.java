@@ -67,13 +67,13 @@ public class ConsumerKafkaListeners {
      * @param record Kafka record containing {@link EmailEvent}
      */
     private void handleRecord(ConsumerRecord<String, EmailEvent> record) {
-        EmailEvent event = record.value();
+        var event = record.value();
         if (Objects.isNull(event)) {
             log.warn("Empty event in Kafka record: partition={}, offset={}", record.partition(), record.offset());
             return;
         }
 
-        EmailContextStrategy contextStrategy = emailEventContextMap.get(event.getType());
+        var contextStrategy = emailEventContextMap.get(event.getType());
         if (Objects.isNull(contextStrategy)) {
             log.error("Unknown event: {}", event.getType());
             return;
@@ -92,10 +92,10 @@ public class ConsumerKafkaListeners {
             ConsumerRecord<String, EmailEvent> record,
             EmailContext emailContext
     ) {
-        EmailEvent event = record.value();
-        String eventType = event.getType().name();
+        var event = record.value();
+        var eventType = event.getType().name();
         try {
-            String eventKey = "event:" + event.getId();
+            var eventKey = "event:" + event.getId();
 
             if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(eventKey, "processed", Duration.ofMinutes(redisDuration)))) {
                 log.info("Processing {} event for user: {}, partition: {}, offset: {}",
@@ -128,7 +128,7 @@ public class ConsumerKafkaListeners {
      */
     private void sendToDeadLetterTopic(ConsumerRecord<String, EmailEvent> record) {
         try {
-            String dltTopic = record.topic() + ".DLT";
+            var dltTopic = record.topic() + ".DLT";
             kafkaTemplate.send(dltTopic, record.key(), record.value());
             log.warn("Message sent to Dead Letter Topic: {}", dltTopic);
         } catch (Exception e) {

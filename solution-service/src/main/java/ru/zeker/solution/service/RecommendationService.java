@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.zeker.common.dto.task.response.TaskResponse;
 import ru.zeker.solution.service.client.TaskClient;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -26,46 +25,31 @@ public class RecommendationService {
     private final TaskClient taskClient;
 
     public List<TaskResponse> getRecommendedTasks(UUID userId, int limit) {
-        List<String> weakTopics = userProgressService.getWeakestTopics(userId, WEAK_TOPICS_LIMIT);
+        var weakTopics = userProgressService.getWeakestTopics(userId, WEAK_TOPICS_LIMIT);
 
-        List<TaskResponse> candidateTasks;
-        if (weakTopics.isEmpty()) {
-            //  No progress → we give random tasks
-            candidateTasks = taskClient.getRandomTasks(CANDIDATE_TASKS_LIMIT);
-        } else {
-            // We receive tasks on weak topics
-            candidateTasks = taskClient.getTasksByTags(weakTopics, CANDIDATE_TASKS_LIMIT);
-        }
+        List<TaskResponse> candidateTasks = weakTopics.isEmpty()
+                ? taskClient.getRandomTasks(CANDIDATE_TASKS_LIMIT)
+                : taskClient.getTasksByTags(weakTopics, CANDIDATE_TASKS_LIMIT);
 
-        if (candidateTasks.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Map<String, Double> confidenceMap = userProgressService.getUserConfidenceMap(userId);
         return candidateTasks.stream()
-                .sorted(comparatorByAdaptivePriority(confidenceMap))
+                .sorted(comparatorByAdaptivePriority(userProgressService.getUserConfidenceMap(userId)))
                 .limit(limit)
                 .toList();
     }
 
     private Comparator<TaskResponse> comparatorByAdaptivePriority(Map<String, Double> confidenceMap) {
-        return (a, b) -> {
-            double priorityA = calculatePriority(a, confidenceMap);
-            double priorityB = calculatePriority(b, confidenceMap);
-            // Sort by descending priority: most important first
-            return Double.compare(priorityB, priorityA);
-        };
+        return Comparator.comparingDouble((TaskResponse task) -> calculatePriority(task, confidenceMap)).reversed();
     }
 
-    private double calculatePriority(TaskResponse task, Map<String, Double> confidenceMap) {
+    private static double calculatePriority(TaskResponse task, Map<String, Double> confidenceMap) {
         // Average rating for all task tags (default 0.5)
-        double avgConfidence = task.getTags().stream()
+        var avgConfidence = task.getTags().stream()
                 .mapToDouble(tag -> confidenceMap.getOrDefault(tag, DEFAULT_CONFIDENCE))
                 .average()
                 .orElse(DEFAULT_CONFIDENCE);
 
         // Difficulty weighting: easy problems have higher priority in weak topics
-        double difficultyWeight = DIFFICULTY_WEIGHT_SUM - task.getDifficulty().getRating(); // EASY=0.8 → вес=1.2
+        var difficultyWeight = DIFFICULTY_WEIGHT_SUM - task.getDifficulty().getRating(); // EASY=0.8 → HARD=1.2
 
         // Priority = (1 - Confidence) * Difficulty Weight
         return (MAX_CONFIDENCE - avgConfidence) * difficultyWeight;

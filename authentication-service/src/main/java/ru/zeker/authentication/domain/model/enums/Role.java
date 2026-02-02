@@ -5,7 +5,7 @@ public enum Role {
     ADMIN;
 
     public static Role fromString(String role) {
-        for (Role r : Role.values()) {
+        for (var r : Role.values()) {
             if (r.name().equalsIgnoreCase(role)) {
                 return r;
             }

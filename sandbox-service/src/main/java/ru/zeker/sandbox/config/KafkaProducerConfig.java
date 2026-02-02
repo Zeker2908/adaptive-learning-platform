@@ -13,7 +13,6 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {
@@ -26,14 +25,14 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
-        Map<String, Object> configs = new HashMap<>();
+        var configs = new HashMap<String, Object>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(configs);
     }
 
     @Bean
     public ProducerFactory<String, Object> producerConfig() {
-        Map<String, Object> props = new HashMap<>();
+        var props = new HashMap<String, Object>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);

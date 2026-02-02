@@ -3,7 +3,6 @@ package ru.zeker.solution.service.strategy;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 import ru.zeker.common.dto.solution.SolutionStatus;
 import ru.zeker.common.dto.solution.request.SolutionRequest;
 import ru.zeker.common.dto.task.json.CodingTaskContent;
@@ -31,7 +30,7 @@ public class CodingSolutionSubmissionStrategy implements SolutionSubmissionStrat
     @Override
     @Transactional
     public Solution handle(SolutionRequest request, String userId, CodingTaskContent taskContent) {
-        Solution solution = Solution.builder()
+        var solution = Solution.builder()
                 .userId(UUID.fromString(userId))
                 .taskId(request.getTaskId())
                 .answer(request.getAnswer())
@@ -40,7 +39,7 @@ public class CodingSolutionSubmissionStrategy implements SolutionSubmissionStrat
                 .build();
         solution = solutionRepository.save(solution);
 
-        SolutionExecRequest message = solutionMapper.toKafkaMessage(solution, taskContent.getTestCases());
+        var message = solutionMapper.toKafkaMessage(solution, taskContent.getTestCases());
         kafkaProducer.sendExecutionEvent(message);
 
         return solution;

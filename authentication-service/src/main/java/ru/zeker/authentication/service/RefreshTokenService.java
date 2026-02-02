@@ -12,8 +12,6 @@ import ru.zeker.authentication.repository.RefreshTokenRepository;
 import ru.zeker.common.config.JwtProperties;
 
 import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,18 +36,18 @@ public class RefreshTokenService {
     public String createRefreshToken(User user) {
         log.debug("Creating new refresh token for user with ID: {}", user.getId());
 
-        String token = jwtService.generateRefreshToken(user);
-        Date expiryDate = new Date(System.currentTimeMillis() + jwtProperties.getRefresh().getExpiration());
-        long ttlSeconds = TimeUnit.MILLISECONDS.toSeconds(expiryDate.getTime() - System.currentTimeMillis());
+        var token = jwtService.generateRefreshToken(user);
+        var expiryDate = new Date(System.currentTimeMillis() + jwtProperties.getRefresh().getExpiration());
+        var ttlSeconds = TimeUnit.MILLISECONDS.toSeconds(expiryDate.getTime() - System.currentTimeMillis());
 
-        RefreshToken refreshToken = RefreshToken.builder()
+        var refreshToken = RefreshToken.builder()
                 .token(token)
                 .userId(user.getId())
                 .expiryDate(expiryDate)
                 .ttl(ttlSeconds)
                 .build();
 
-        RefreshToken savedToken = refreshTokenRepository.save(refreshToken);
+        var savedToken = refreshTokenRepository.save(refreshToken);
         log.debug("Refresh token successfully saved to database, expiration: {} seconds", ttlSeconds);
 
         return savedToken.getToken();
@@ -95,8 +93,8 @@ public class RefreshTokenService {
         refreshTokenRepository.delete(token);
         log.debug("Old refresh token deleted");
 
-        User user = userService.findById(token.getUserId());
-        String newToken = createRefreshToken(user);
+        var user = userService.findById(token.getUserId());
+        var newToken = createRefreshToken(user);
 
         log.info("Refresh token successfully rotated for user with ID: {}", token.getUserId());
         return newToken;
@@ -123,10 +121,10 @@ public class RefreshTokenService {
      * @param token user token
      */
     public void revokeAllUserTokens(String token) {
-        UUID userId = jwtService.extractUserId(token);
+        var userId = jwtService.extractUserId(token);
         log.info("Revoking all refresh tokens for user with ID: {}", userId);
 
-        Set<RefreshToken> tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
+        var tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
             log.warn("User with ID: {} has no refresh tokens", userId);
             return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens");
         });

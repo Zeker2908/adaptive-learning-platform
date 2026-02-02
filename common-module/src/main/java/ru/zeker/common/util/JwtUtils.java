@@ -36,16 +36,16 @@ public class JwtUtils {
                 throw new IllegalStateException("The public key is not set");
             }
 
-            String publicKeyContent = new String(jwtProperties.getPublicKeyPath().getInputStream().readAllBytes());
+            var publicKeyContent = new String(jwtProperties.getPublicKeyPath().getInputStream().readAllBytes());
 
-            String publicKeyPEM = publicKeyContent
+            var publicKeyPEM = publicKeyContent
                     .replace("-----BEGIN PUBLIC KEY-----", "")
                     .replace("-----END PUBLIC KEY-----", "")
                     .replaceAll("\\s+", "");
 
-            byte[] keyBytes = Base64.getDecoder().decode(publicKeyPEM);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            KeyFactory kf = KeyFactory.getInstance("EC");
+            var keyBytes = Base64.getDecoder().decode(publicKeyPEM);
+            var spec = new X509EncodedKeySpec(keyBytes);
+            var kf = KeyFactory.getInstance("EC");
             this.publicKey = kf.generatePublic(spec);
 
             this.jwtParser = Jwts.parserBuilder()
@@ -76,7 +76,7 @@ public class JwtUtils {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        final var claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 

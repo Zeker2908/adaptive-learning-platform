@@ -26,7 +26,7 @@ public class GatewayConfig {
 
     @Bean
     public Cache<String, Claims> claimsCache(JwtProperties jwtProperties) {
-        long cacheTtlMs = Math.max(0, jwtProperties.getAccess().getExpiration() - TimeUnit.MINUTES.toMillis(1));
+        var cacheTtlMs = Math.max(0, jwtProperties.getAccess().getExpiration() - TimeUnit.MINUTES.toMillis(1));
 
         return Caffeine.newBuilder()
                 .maximumSize(100_000)

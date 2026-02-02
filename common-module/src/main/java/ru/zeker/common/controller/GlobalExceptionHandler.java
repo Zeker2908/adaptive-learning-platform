@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
     private Map<String, Object> buildBaseErrorResponse(HttpStatus status, String message, String path, String requestId) {
-        Map<String, Object> response = new LinkedHashMap<>();
+        var response = new LinkedHashMap<String, Object>();
         response.put("timestamp", Instant.now().toString());
         response.put("path", path);
         response.put("status", status.value());
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
             String path,
             String requestId
     ) {
-        Map<String, Object> errorResponse = buildBaseErrorResponse(status, message, path, requestId);
+        var errorResponse = buildBaseErrorResponse(status, message, path, requestId);
         log.error("Ошибка: {} - {}", status, message);
         return ResponseEntity.status(status).body(errorResponse);
     }
@@ -93,12 +93,12 @@ public class GlobalExceptionHandler {
             ConstraintViolationException ex,
             HttpServletRequest request
     ) {
-        Map<String, String> errors = ex.getConstraintViolations().stream()
+        var errors = ex.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
                         v -> v.getPropertyPath().toString(),
                         ConstraintViolation::getMessage
                 ));
-        Map<String, Object> errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
+        var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
                 "Parameter validation error", request.getRequestURI(), request.getRequestId());
         errorResponse.put("details", errors);
 
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        Map<String, String> validationErrors = ex.getBindingResult()
+        var validationErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler {
                         DefaultMessageSourceResolvable::getDefaultMessage,
                         (existing, replacement) -> existing
                 ));
-        Map<String, Object> errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
+        var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
                 "Parameter validation error", request.getRequestURI(), request.getRequestId());
         errorResponse.put("details", validationErrors);
 

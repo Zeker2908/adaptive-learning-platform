@@ -16,7 +16,7 @@ public interface SolutionRepository extends JpaRepository<Solution, UUID> {
 
     List<Solution> findByUserId(UUID userId);
 
-    List<Solution>findByStatusAndCreatedAtBefore(SolutionStatus status, LocalDateTime createdAt);
+    List<Solution> findByStatusAndCreatedAtBefore(SolutionStatus status, LocalDateTime createdAt);
 
     @Query("SELECT DATE(s.createdAt), COUNT(s) " +
             "FROM Solution s " +
