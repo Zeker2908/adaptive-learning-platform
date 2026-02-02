@@ -14,6 +14,7 @@ import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.domain.model.entity.User;
 
 import java.security.SecureRandom;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,39 +34,36 @@ public class DataInitializer implements CommandLineRunner {
     private String adminName;
 
     /**
-     * Инициализирует администратора в системе.
-     * Если администратор с данным email не существует, то создает администратора со сгенерированным паролем.
-     * Логирует информацию о созданном администраторе.
-     * @param args аргументы командной строки
+     * Initializes an administrator in the system.
+     * If an administrator with the given email address does not exist, it creates an administrator with a generated password.
+     * Logs information about the created administrator.
+     * @param args command line arguments
      */
     @Override
     @Transactional
     public void run(String... args) {
         if (!userService.existsByEmail(adminName)) {
-            final String password = generatePassword();
-            log.info("Создание администратора с email: {}", adminName);
+            final String password = generateRandomPassword();
+            log.info("Creating an administrator with email: {}", adminName);
             RegisterRequest request = RegisterRequest.builder().email(adminName).password(password).build();
-
             User admin = userMapper.toAdmin(request, passwordEncoder);
-
             userService.create(admin);
             passwordHistoryService.create(admin, password);
-            log.info("Администратор создан.");
-            log.info(ANSI_GREEN + "Сгенерированный пароль: {}" + ANSI_RESET, password);
+            log.info("Administrator created");
+            log.info(ANSI_GREEN + "Generated password: {}" + ANSI_RESET, password);
         } else {
-            log.info("Пользователь администратора уже создан");
+            log.info("The administrator user has already been created.");
         }
     }
     /**
-     * Генерирует случайный пароль из {@value #CHARACTERS} длиной {@value #STRING_LENGTH}.
-     * @return сгенерированный пароль
+     * Generates a random password from {@value #CHARACTERS} with a length of {@value #STRING_LENGTH}.
+     * @return the generated password
      */
-    private String generatePassword() {
+    private String generateRandomPassword() {
         SecureRandom random = new SecureRandom();
-        StringBuilder password = new StringBuilder(STRING_LENGTH);
-        for (int i = 0; i < STRING_LENGTH; i++) {
-            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
-        }
-        return password.toString();
+        return random.ints(STRING_LENGTH, 0, CHARACTERS.length())
+                .mapToObj(CHARACTERS::charAt)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
     }
 }

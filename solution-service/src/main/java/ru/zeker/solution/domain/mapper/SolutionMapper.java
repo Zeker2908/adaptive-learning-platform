@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 import ru.zeker.common.dto.solution.response.SolutionResponse;
-import ru.zeker.common.dto.task.TestCase;
+import ru.zeker.common.dto.task.json.TestCase;
 import ru.zeker.solution.domain.model.entity.Solution;
 import ru.zeker.common.dto.solution.SolutionStatus;
 

@@ -27,14 +27,14 @@ public class VerificationEmailContextStrategy implements EmailContextStrategy {
 
     @Override
     public EmailContext handle(EmailEvent event) {
-        log.debug("Настройка контекста письма для подтверждения регистрации: {}",
+        log.debug("Setting up the context of the registration confirmation email: {}",
                 event.getEmail());
 
         String verificationUrl = applicationUrl + emailVerificationUrl + "?token=" + event.getPayload().get("token");
 
         return emailService.createEmailContext(
                 event,
-                "Подтверждение регистрации",
+                "Confirmation of registration",
                 EMAIL_VERIFICATION_TEMPLATE,
                 Map.of(ThymeleafUtils.ACTION_URL,verificationUrl)
         );

@@ -28,14 +28,14 @@ public class ForgotPasswordEmailContextStrategy implements EmailContextStrategy 
 
     @Override
     public EmailContext handle(EmailEvent event) {
-        log.debug("Настройка контекста письма для восстановления пароля: {}",
+        log.debug("Setting up the context of a password recovery email: {}",
                 event.getEmail());
 
         String resetPasswordUrl = applicationUrl + passwordResetUrl + "?token=" + event.getPayload().get("token");
 
         return emailService.createEmailContext(
                 event,
-                "Восстановление пароля",
+                "Password recovery",
                 FORGOT_PASSWORD_TEMPLATE,
                 Map.of(ThymeleafUtils.ACTION_URL, resetPasswordUrl)
         );

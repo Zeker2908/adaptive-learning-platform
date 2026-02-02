@@ -17,15 +17,15 @@ import java.util.List;
 @Builder
 public final class SingleChoiceTaskContent implements TaskContent {
 
-    @NotBlank
+    @NotBlank(message = "The question cannot be empty")
     @JsonView(Views.Public.class)
     private String question;
 
-    @NotEmpty
+    @NotEmpty(message = "The options cannot be empty")
     @JsonView(Views.Public.class)
     private List<ChoiceOption> options;
 
-    @NotNull
+    @NotNull(message = "The correctOptionIndex cannot be null")
     @JsonView(Views.Admin.class)
     private int correctOptionIndex;
 }

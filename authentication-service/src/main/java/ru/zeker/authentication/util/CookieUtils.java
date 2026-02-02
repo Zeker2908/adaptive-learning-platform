@@ -7,7 +7,7 @@ import java.time.Duration;
 public final class CookieUtils {
     private CookieUtils() {}
 
-    public static ResponseCookie createRefreshTokenCookie(String value, Duration duration) {
+    public static ResponseCookie createTokenCookie(String value, Duration duration) {
         return ResponseCookie.from("refresh_token", value)
                 .httpOnly(true)
                 .secure(true)

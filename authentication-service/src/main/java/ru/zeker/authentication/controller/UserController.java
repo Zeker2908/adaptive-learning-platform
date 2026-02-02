@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -34,17 +35,17 @@ import ru.zeker.authentication.util.CookieUtils;
 import java.time.Duration;
 import java.util.UUID;
 
-import static ru.zeker.common.headers.ApiHeaders.USER_ID;
+import static ru.zeker.common.headers.AppHeaders.USER_ID;
 
 /**
- * Контроллер для управления пользователями и их аутентификационными данными.
- * Обеспечивает операции получения информации о пользователе, управления паролями и удаления аккаунта.
+ * Controller for managing users and their authentication data.
+ * Provides operations for retrieving user information, managing passwords, and deleting accounts.
  */
 @Validated
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Tag(name = "User Management", description = "API для управления пользователями и их аутентификационными данными")
+@Tag(name = "User Management", description = "API for managing users and their authentication data")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
@@ -52,107 +53,116 @@ public class UserController {
     private final RefreshTokenService refreshTokenService;
 
     /**
-     * Получает информацию о текущем аутентифицированном пользователе.
+     * Retrieves information about the current authenticated user.
      *
-     * @param id ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
-     * @return {@link ResponseEntity} с данными пользователя в формате {@link UserResponse}
-     * @throws jakarta.validation.ConstraintViolationException если ID пустой или невалидный
+     * @param id User ID passed in the request header (required, non-empty)
+     * @return {@link ResponseEntity} with user data in {@link UserResponse} format
+     * @throws jakarta.validation.ConstraintViolationException if ID is empty or invalid
      */
     @Operation(
-            summary = "Получить информацию о пользователе",
-            description = "Возвращает данные текущего аутентифицированного пользователя",
+            summary = "Get user information",
+            description = "Returns data of the current authenticated user",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Успешное получение данных пользователя",
+                            description = "User data retrieved successfully",
                             content = @Content(schema = @Schema(implementation = UserResponse.class)))
             }
     )
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id) {
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(UUID.fromString(id))));
     }
 
     /**
-     * Привязывает пароль к учетной записи пользователя.
+     * Binds a password to the user account.
      *
-     * @param id      ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
-     * @param request {@link BindPasswordRequest} с данными для привязки пароля
-     * @return {@link ResponseEntity} с кодом 202 (Accepted)
-     * @throws jakarta.validation.ConstraintViolationException если ID или данные запроса невалидны
+     * @param id      User ID passed in the request header (required, non-empty)
+     * @param request {@link BindPasswordRequest} with data for binding password
+     * @return {@link ResponseEntity} with status code 202 (Accepted)
+     * @throws jakarta.validation.ConstraintViolationException if ID or request data is invalid
      */
     @Operation(
-            summary = "Привязать пароль",
-            description = "Привязывает пароль к учетной записи пользователя",
+            summary = "Bind password",
+            description = "Binds a password to the user account",
             responses = {
-                    @ApiResponse(responseCode = "202", description = "Запрос на привязку пароля принят"),
-                    @ApiResponse(responseCode = "400", description = "Неверные входные данные"),
-                    @ApiResponse(responseCode = "409", description = "Пароль уже привязан")
+                    @ApiResponse(responseCode = "202", description = "Password binding request accepted"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input data"),
+                    @ApiResponse(responseCode = "409", description = "Password already bound")
             }
     )
     @PutMapping("/me/password")
     public ResponseEntity<Void> bindPassword(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
-            @Parameter(description = "Данные для привязки пароля", required = true)
+            @Parameter(description = "Data for binding password", required = true)
             @RequestBody @Valid BindPasswordRequest request) {
         userService.bindPassword(id, request);
         return ResponseEntity.accepted().build();
     }
 
     /**
-     * Изменяет пароль пользователя и выполняет выход из всех устройств.
+     * Changes user password and logs out from all devices.
      *
-     * @param id                     ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
-     * @param changerPasswordRequest {@link ChangePasswordRequest} с текущим и новым паролем
-     * @param refreshToken           refresh token из куки (обязательный, не пустой)
-     * @param response               {@link HttpServletResponse} для очистки куки
-     * @return {@link ResponseEntity} с кодом 204 (No Content)
-     * @throws jakarta.validation.ConstraintViolationException если параметры невалидны
+     * @param id                     User ID passed in the request header (required, non-empty)
+     * @param changePasswordRequest {@link ChangePasswordRequest} with current and new password
+     * @param refreshToken           Refresh token from cookie (required, non-empty)
+     * @param response               {@link HttpServletResponse} for clearing cookies
+     * @return {@link ResponseEntity} with status code 204 (No Content)
+     * @throws jakarta.validation.ConstraintViolationException if parameters are invalid
      */
     @Operation(
-            summary = "Изменить пароль",
-            description = "Изменяет пароль пользователя и выполняет выход из всех устройств",
+            summary = "Change password",
+            description = "Changes user password and logs out from all devices",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Пароль успешно изменен"),
-                    @ApiResponse(responseCode = "400", description = "Неверные входные данные"),
-                    @ApiResponse(responseCode = "401", description = "Неверный текущий пароль")
+                    @ApiResponse(responseCode = "204", description = "Password changed successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input data"),
+                    @ApiResponse(responseCode = "401", description = "Invalid current password")
             }
     )
     @PatchMapping("/me/password")
     public ResponseEntity<Void> changePassword(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
-            @Parameter(description = "Текущий и новый пароль", required = true)
-            @RequestBody @Valid ChangePasswordRequest changerPasswordRequest,
+            @Parameter(description = "Current and new password", required = true)
+            @RequestBody @Valid ChangePasswordRequest changePasswordRequest,
 
-            @Parameter(description = "Refresh token из куки", required = true)
+            @Parameter(description = "Refresh token from cookie", required = true)
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
 
             HttpServletResponse response) {
-        userService.changePassword(id, changerPasswordRequest.getOldPassword(), changerPasswordRequest.getNewPassword());
+        userService.changePassword(id, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         revokeTokenAndClearCookie(refreshToken, response);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Deletes user account and logs out from all devices.
+     *
+     * @param id           User ID passed in the request header (required, non-empty)
+     * @param refreshToken Refresh token from cookie
+     * @param response     {@link HttpServletResponse} for clearing cookies
+     * @return {@link ResponseEntity} with status code 204 (No Content)
+     * @throws jakarta.validation.ConstraintViolationException if user ID is invalid
+     */
     @Operation(
-            summary = "Удалить аккаунт",
-            description = "Удаляет учетную запись пользователя и выполняет выход из всех устройств",
+            summary = "Delete account",
+            description = "Deletes user account and logs out from all devices",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Аккаунт успешно удален"),
-                    @ApiResponse(responseCode = "400", description = "Неверный ID пользователя")
+                    @ApiResponse(responseCode = "204", description = "Account deleted successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid user ID")
             }
     )
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteCurrentUser(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
-            @Parameter(description = "Refresh token из куки")
+            @Parameter(description = "Refresh token from cookie")
             @CookieValue(name = "refresh_token") String refreshToken,
 
             HttpServletResponse response) {
@@ -161,9 +171,15 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Revokes the refresh token and clears the cookie.
+     *
+     * @param refreshToken Refresh token to revoke
+     * @param response     {@link HttpServletResponse} for clearing cookies
+     */
     private void revokeTokenAndClearCookie(String refreshToken, HttpServletResponse response) {
         refreshTokenService.revokeAllUserTokens(refreshToken);
         response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtils.createRefreshTokenCookie("", Duration.ZERO).toString());
+                CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO).toString());
     }
 }

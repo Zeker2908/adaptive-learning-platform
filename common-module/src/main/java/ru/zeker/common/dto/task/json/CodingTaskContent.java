@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.zeker.common.dto.task.TestCase;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public final class CodingTaskContent implements TaskContent {
     @JsonView(Views.Public.class)
     private String templateCode;
 
-    @NotEmpty
+    @NotEmpty(message = "The testCases cannot be empty")
     @JsonView(Views.Public.class)
     private List<TestCase> testCases;
 }

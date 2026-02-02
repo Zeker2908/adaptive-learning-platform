@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Запрос на изменение пароля")
+@Schema(description = "Password change request")
 public class ChangePasswordRequest {
 
     @NotBlank
-    @Schema(description = "Текущий пароль", example = "OldPass123!")
+    @Schema(description = "Current Password", example = "OPass232!")
     private String oldPassword;
 
-    @NotBlank(message = "Пароль не может быть пустым")
-    @Size(min = 8, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
+    @NotBlank(message = "The password cannot be empty")
+    @Size(min = 8, max = 255, message = "The password length must be between 8 and 255 characters.")
     @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d).{8,255}$",
-            message = "Пароль должен содержать минимум 8 символов, включая хотя бы одну букву и одну цифру"
+            message = "The password must contain at least 8 characters, including at least one letter and one number."
     )
     @Schema(
-            description = "Новый пароль. Должен содержать заглавную, строчную букву, цифру и спецсимвол",
-            example = "NewPass123!",
+            description = "New password. Must contain an uppercase letter, a lowercase letter, a number, and a special character.",
+            example = "NewPass228!",
             minLength = 8,
             maxLength = 255
     )

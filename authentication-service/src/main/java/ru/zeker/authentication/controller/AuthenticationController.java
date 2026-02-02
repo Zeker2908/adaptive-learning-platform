@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -38,30 +39,30 @@ import ru.zeker.authentication.util.CookieUtils;
 import java.time.Duration;
 
 /**
- * Контроллер для управления аутентификацией и авторизацией пользователей.
- * Обеспечивает регистрацию, вход в систему, управление токенами доступа,
- * восстановление пароля и подтверждение email.
+ * Controller for managing user authentication and authorization.
+ * Provides registration, login, access token management,
+ * password recovery, and email confirmation.
  */
 @Validated
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Аутентификация", description = "Управление пользователями: регистрация, вход, email подтверждение и восстановление пароля")
+@Tag(name = "Authentication", description = "User management: registration, login, email confirmation, and password recovery")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
 
     /**
-     * Регистрирует нового пользователя с отправкой подтверждения по email.
+     * Registers a new user and sends a confirmation email.
      *
-     * @param request {@link RegisterRequest} - данные для регистрации
-     * @return {@link ResponseEntity} с HTTP-статусом 201 (Created)
-     * @throws jakarta.validation.ConstraintViolationException если данные запроса невалидны
+     * @param request {@link RegisterRequest} - registration data
+     * @return {@link ResponseEntity} with HTTP status 201 (Created)
+     * @throws jakarta.validation.ConstraintViolationException if the request data is invalid
      */
-    @Operation(summary = "Регистрация нового пользователя", description = "Создает пользователя и отправляет письмо с подтверждением на email")
+    @Operation(summary = "Register a new user", description = "Creates a user and sends a confirmation email")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Пользователь успешно зарегистрирован"),
-            @ApiResponse(responseCode = "409", description = "Пользователь уже существует ")
+            @ApiResponse(responseCode = "201", description = "User successfully registered"),
+            @ApiResponse(responseCode = "409", description = "User already exists")
     })
     @PostMapping("/register")
     public ResponseEntity<Void> signup(@RequestBody @Valid RegisterRequest request) {
@@ -70,42 +71,42 @@ public class AuthenticationController {
     }
 
     /**
-     * Аутентифицирует пользователя и выдает токены доступа.
+     * Authenticates a user and issues access tokens.
      *
-     * @param request  {@link LoginRequest} - учетные данные пользователя
-     * @param response {@link HttpServletResponse} для установки refresh token в cookie
-     * @return {@link ResponseEntity} с {@link AuthenticationResponse} (access token)
-     * @throws jakarta.validation.ConstraintViolationException                     если данные запроса невалидны
-     * @throws org.springframework.security.authentication.BadCredentialsException если учетные данные неверны
+     * @param request  {@link LoginRequest} - user credentials
+     * @param response {@link HttpServletResponse} to set refresh token in cookie
+     * @return {@link ResponseEntity} with {@link AuthenticationResponse} (access token)
+     * @throws jakarta.validation.ConstraintViolationException if request data is invalid
+     * @throws org.springframework.security.authentication.BadCredentialsException if credentials are incorrect
      */
-    @Operation(summary = "Вход в систему", description = "Аутентификация пользователя и установка refresh токена в cookie")
+    @Operation(summary = "Login", description = "Authenticates user and sets refresh token in cookie")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Успешная аутентификация",
+            @ApiResponse(responseCode = "200", description = "Authentication successful",
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Неверные учетные данные")
+            @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
         Tokens tokens = authenticationService.login(request);
-        ResponseCookie cookie = CookieUtils.createRefreshTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        ResponseCookie cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
 
     /**
-     * Подтверждает email пользователя по токену подтверждения.
+     * Confirms user email using confirmation token.
      *
-     * @param request {@link ConfirmationEmailRequest} - токен подтверждения
-     * @return {@link ResponseEntity} с HTTP-статусом 200 (OK)
-     * @throws jakarta.validation.ConstraintViolationException если токен невалиден
-     * @throws TokenExpiredException                           если токен просрочен
+     * @param request {@link ConfirmationEmailRequest} - confirmation token
+     * @return {@link ResponseEntity} with HTTP status 200 (OK)
+     * @throws jakarta.validation.ConstraintViolationException if token is invalid
+     * @throws TokenExpiredException if token is expired
      */
-    @Operation(summary = "Подтверждение email", description = "Подтверждает email по предоставленному токену")
+    @Operation(summary = "Email confirmation", description = "Confirms email using provided token")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Email успешно подтвержден"),
-            @ApiResponse(responseCode = "400", description = "Неверный токен")
+            @ApiResponse(responseCode = "200", description = "Email successfully confirmed"),
+            @ApiResponse(responseCode = "400", description = "Invalid token")
     })
     @PatchMapping("/email/verify")
     public ResponseEntity<Void> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request) {
@@ -114,16 +115,16 @@ public class AuthenticationController {
     }
 
     /**
-     * Повторно отправляет письмо с подтверждением email.
+     * Resends confirmation email.
      *
-     * @param request {@link ResendVerificationRequest} - email пользователя
-     * @return {@link ResponseEntity} с HTTP-статусом 202 (Accepted)
-     * @throws jakarta.validation.ConstraintViolationException если email невалиден
+     * @param request {@link ResendVerificationRequest} - user email
+     * @return {@link ResponseEntity} with HTTP status 202 (Accepted)
+     * @throws jakarta.validation.ConstraintViolationException if email is invalid
      */
-    @Operation(summary = "Повторная отправка подтверждения", description = "Отправляет письмо подтверждения, если оно не было подтверждено ранее")
+    @Operation(summary = "Resend confirmation", description = "Sends confirmation email if not already confirmed")
     @ApiResponses({
-            @ApiResponse(responseCode = "202", description = "Письмо отправлено"),
-            @ApiResponse(responseCode = "429", description = "Письмо уже отправлено, повторная отправка через 60 секунд")
+            @ApiResponse(responseCode = "202", description = "Email sent"),
+            @ApiResponse(responseCode = "429", description = "Email already sent, retry after 60 seconds")
     })
     @PostMapping("/email/resend-verification")
     public ResponseEntity<Void> resendConfirmationEmail(
@@ -133,14 +134,14 @@ public class AuthenticationController {
     }
 
     /**
-     * Инициирует процесс восстановления пароля.
+     * Initiates password recovery process.
      *
-     * @param request {@link UserUpdateRequest} - email пользователя
-     * @return {@link ResponseEntity} с HTTP-статусом 202 (Accepted)
-     * @throws jakarta.validation.ConstraintViolationException если email невалиден
+     * @param request {@link UserUpdateRequest} - user email
+     * @return {@link ResponseEntity} with HTTP status 202 (Accepted)
+     * @throws jakarta.validation.ConstraintViolationException if email is invalid
      */
-    @Operation(summary = "Запрос на сброс пароля", description = "Отправляет email с ссылкой на восстановление пароля")
-    @ApiResponse(responseCode = "202", description = "Письмо для сброса отправлено")
+    @Operation(summary = "Password reset request", description = "Sends email with password reset link")
+    @ApiResponse(responseCode = "202", description = "Password reset email sent")
     @PostMapping("/password/reset-request")
     public ResponseEntity<Void> forgotPassword(@RequestBody @Valid UserUpdateRequest request) {
         authenticationService.forgotPassword(request);
@@ -149,17 +150,17 @@ public class AuthenticationController {
 
 
     /**
-     * Сбрасывает пароль пользователя по токену восстановления.
+     * Resets user password using recovery token.
      *
-     * @param request {@link ResetPasswordRequest} - новый пароль и токен
-     * @return {@link ResponseEntity} с HTTP-статусом 200 (OK)
-     * @throws jakarta.validation.ConstraintViolationException если данные запроса невалидны
-     * @throws TokenExpiredException                           если токен просрочен
+     * @param request {@link ResetPasswordRequest} - new password and token
+     * @return {@link ResponseEntity} with HTTP status 200 (OK)
+     * @throws jakarta.validation.ConstraintViolationException if request data is invalid
+     * @throws TokenExpiredException if token is expired
      */
-    @Operation(summary = "Сброс пароля", description = "Сбрасывает пароль по токену восстановления")
+    @Operation(summary = "Password reset", description = "Resets password using recovery token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Пароль успешно сброшен"),
-            @ApiResponse(responseCode = "400", description = "Недействительный или просроченный токен", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Password successfully reset"),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired token", content = @Content)
     })
     @PatchMapping("/password")
     public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
@@ -168,72 +169,72 @@ public class AuthenticationController {
     }
 
     /**
-     * Обновляет access token по refresh token.
+     * Refreshes access token using refresh token.
      *
-     * @param refreshToken refresh token из cookie
-     * @param response     {@link HttpServletResponse} для установки нового refresh token
-     * @return {@link ResponseEntity} с новым {@link AuthenticationResponse} (access token)
-     * @throws jakarta.validation.ConstraintViolationException если refresh token невалиден
-     * @throws TokenExpiredException                           если refresh token просрочен
+     * @param refreshToken refresh token from cookie
+     * @param response {@link HttpServletResponse} to set new refresh token
+     * @return {@link ResponseEntity} with new {@link AuthenticationResponse} (access token)
+     * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
+     * @throws TokenExpiredException if refresh token is expired
      */
-    @Operation(summary = "Обновление access token", description = "Обновляет access token по refresh token из cookie и возвращает новый access token")
+    @Operation(summary = "Refresh access token", description = "Refreshes access token using refresh token from cookie and returns new access token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Токен успешно обновлен",
+            @ApiResponse(responseCode = "200", description = "Token successfully refreshed",
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Невалидный или просроченный refresh token", content = @Content)
+            @ApiResponse(responseCode = "401", description = "Invalid or expired refresh token", content = @Content)
     })
     @PostMapping("/token/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         Tokens tokens = authenticationService.refreshToken(refreshToken);
-        ResponseCookie cookie = CookieUtils.createRefreshTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        ResponseCookie cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
 
     /**
-     * Выходит пользователя из текущей сессии.
+     * Logs out user from current session.
      *
-     * @param refreshToken refresh token из cookie
-     * @param response     {@link HttpServletResponse} для очистки cookie
-     * @return {@link ResponseEntity} с HTTP-статусом 204 (No Content)
-     * @throws jakarta.validation.ConstraintViolationException если refresh token невалиден
+     * @param refreshToken refresh token from cookie
+     * @param response {@link HttpServletResponse} to clear cookie
+     * @return {@link ResponseEntity} with HTTP status 204 (No Content)
+     * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
      */
-    @Operation(summary = "Выход из текущей сессии", description = "Удаляет текущий refresh token и очищает cookie")
+    @Operation(summary = "Logout from current session", description = "Revokes current refresh token and clears cookie")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Выход выполнен"),
-            @ApiResponse(responseCode = "400", description = "Невалидный refresh token", content = @Content)
+            @ApiResponse(responseCode = "204", description = "Logout successful"),
+            @ApiResponse(responseCode = "400", description = "Invalid refresh token", content = @Content)
     })
     @DeleteMapping("/sessions/current")
     public ResponseEntity<Void> logout(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeRefreshToken(refreshToken);
-        ResponseCookie cookie = CookieUtils.createRefreshTokenCookie("", Duration.ZERO);
+        ResponseCookie cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * Выходит пользователя из всех активных сессий.
+     * Logs out user from all active sessions.
      *
-     * @param refreshToken refresh token из cookie
-     * @param response     {@link HttpServletResponse} для очистки cookie
-     * @return {@link ResponseEntity} с HTTP-статусом 204 (No Content)
-     * @throws jakarta.validation.ConstraintViolationException если refresh token невалиден
+     * @param refreshToken refresh token from cookie
+     * @param response {@link HttpServletResponse} to clear cookie
+     * @return {@link ResponseEntity} with HTTP status 204 (No Content)
+     * @throws jakarta.validation.ConstraintViolationException if refresh token is invalid
      */
-    @Operation(summary = "Выход со всех устройств", description = "Удаляет все refresh токены пользователя и очищает cookie")
+    @Operation(summary = "Logout from all devices", description = "Revokes all user refresh tokens and clears cookie")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Все сессии завершены"),
-            @ApiResponse(responseCode = "400", description = "Невалидный refresh token", content = @Content)
+            @ApiResponse(responseCode = "204", description = "All sessions terminated"),
+            @ApiResponse(responseCode = "400", description = "Invalid refresh token", content = @Content)
     })
     @DeleteMapping("/sessions")
     public ResponseEntity<Void> revokeAllRefreshTokens(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeAllUserTokens(refreshToken);
-        ResponseCookie cookie = CookieUtils.createRefreshTokenCookie("", Duration.ZERO);
+        ResponseCookie cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }

@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Подтверждение email</title>
+  <title>Email confirmation</title>
   <style>
-    /* Простые стили, которые поддерживаются большинством почтовых клиентов */
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
@@ -55,22 +54,22 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>Добро пожаловать!</h1>
+    <h1>Welcome!</h1>
   </div>
   <div class="content">
-    <p>Благодарим вас за регистрацию. Чтобы завершить процесс, пожалуйста, подтвердите ваш email, нажав на кнопку ниже:</p>
+    <p>Thank you for registering. To complete the process, please confirm your email by clicking the button below.:</p>
 
     <p style="text-align: center;">
-      <a th:href="${actionUrl}" class="button" style="display: inline-block; padding: 12px 24px; background-color: #4a6fa5; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Подтвердить email</a>
+      <a th:href="${actionUrl}" class="button" style="display: inline-block; padding: 12px 24px; background-color: #4a6fa5; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Confirm email</a>
     </p>
 
-    <p>Если кнопка не работает, скопируйте и вставьте эту ссылку в браузер:</p>
-    <p><code th:text="${actionUrl}" style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">[Ссылка для подтверждения]</code></p>
+    <p>If the button doesn't work, copy and paste this link into your browser.:</p>
+    <p><code th:text="${actionUrl}" style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">[Confirmation link]</code></p>
 
-    <p>Если вы не регистрировались у нас, просто проигнорируйте это письмо.</p>
+    <p>If you haven't registered with us, please ignore this email</p>
   </div>
   <div class="footer">
-    <p th:text="'© ' + ${currentYear} + ' ' + ${companyName} + '. Все права защищены.'">© 2025 Название компании. Все права защищены.</p>
+    <p th:text="'© ' + ${currentYear} + ' ' + ${companyName} + '. All rights reserved.'">© 2026. All rights reserved.</p>
   </div>
 </div>
 </body>

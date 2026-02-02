@@ -30,10 +30,10 @@ public class RecommendationService {
 
         List<TaskResponse> candidateTasks;
         if (weakTopics.isEmpty()) {
-            // Нет прогресса → даём случайные задачи
+            //  No progress → we give random tasks
             candidateTasks = taskClient.getRandomTasks(CANDIDATE_TASKS_LIMIT);
         } else {
-            // Получаем задачи по слабым темам
+            // We receive tasks on weak topics
             candidateTasks = taskClient.getTasksByTags(weakTopics, CANDIDATE_TASKS_LIMIT);
         }
 
@@ -52,22 +52,22 @@ public class RecommendationService {
         return (a, b) -> {
             double priorityA = calculatePriority(a, confidenceMap);
             double priorityB = calculatePriority(b, confidenceMap);
-            // Сортируем по убыванию приоритета: самые важные — первые
+            // Sort by descending priority: most important first
             return Double.compare(priorityB, priorityA);
         };
     }
 
     private double calculatePriority(TaskResponse task, Map<String, Double> confidenceMap) {
-        // Средний рейтинг по всем тегам задачи (по умолчанию 0.5)
+        // Average rating for all task tags (default 0.5)
         double avgConfidence = task.getTags().stream()
                 .mapToDouble(tag -> confidenceMap.getOrDefault(tag, DEFAULT_CONFIDENCE))
                 .average()
                 .orElse(DEFAULT_CONFIDENCE);
 
-        // Вес сложности: лёгкие задачи имеют больший приоритет в слабых темах
+        // Difficulty weighting: easy problems have higher priority in weak topics
         double difficultyWeight = DIFFICULTY_WEIGHT_SUM - task.getDifficulty().getRating(); // EASY=0.8 → вес=1.2
 
-        // Приоритет = (1 - уверенность) * вес сложности
+        // Priority = (1 - Confidence) * Difficulty Weight
         return (MAX_CONFIDENCE - avgConfidence) * difficultyWeight;
     }
 }

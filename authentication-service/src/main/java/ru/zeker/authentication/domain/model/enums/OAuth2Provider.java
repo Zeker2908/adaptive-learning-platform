@@ -20,10 +20,10 @@ public enum OAuth2Provider {
 
 
     /**
-     * Извлекает информацию о пользователе из заданных атрибутов OAuth2.
+     * Extracts user information from the specified OAuth2 attributes.
      *
-     * @param attributes атрибутов от поставщика OAuth2
-     * @return извлеченная информация о пользователе
+     * @param attributes of attributes from the OAuth2 provider
+     * @return the extracted user information
      */
     public abstract OAuth2UserInfo extractUserInfo(Map<String, Object> attributes);
 }

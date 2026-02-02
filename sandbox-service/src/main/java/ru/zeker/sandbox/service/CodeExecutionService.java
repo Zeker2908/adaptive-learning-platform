@@ -3,17 +3,17 @@ package ru.zeker.sandbox.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.zeker.common.dto.judge0.request.SubmissionRequest;
 import ru.zeker.common.dto.judge0.response.Status;
 import ru.zeker.common.dto.judge0.response.SubmissionResponse;
 import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
-import ru.zeker.common.dto.task.TestCase;
+import ru.zeker.common.dto.task.json.TestCase;
 import ru.zeker.sandbox.client.Judge0Client;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -30,7 +30,6 @@ public class CodeExecutionService {
     public SubmissionResponse execute(SolutionExecRequest request) {
         int langId = request.getLanguage().getCode();
 
-        // Берём ОДИН случайный тест из списка
         TestCase selectedTest = request.getTests().get(
                 random.nextInt(request.getTests().size())
         );
@@ -38,7 +37,6 @@ public class CodeExecutionService {
         String stdin = selectedTest.getInput();
         String expectedOutput = selectedTest.getOutput();
 
-        // Нормализуем переносы строк
         if (!stdin.endsWith("\n")) {
             stdin += "\n";
         }
@@ -61,9 +59,7 @@ public class CodeExecutionService {
 
         SubmissionResponse response = judge0Client.submitCode(sub, true, true);
 
-        // Проверяем результат вручную
         if (isCorrect(response, expectedOutput)) {
-            // Возвращаем успешный ответ с ID=3 (Accepted)
             return SubmissionResponse.builder()
                     .status(Status.builder()
                             .id(3)
@@ -88,7 +84,7 @@ public class CodeExecutionService {
     }
 
     private boolean isCorrect(SubmissionResponse response, String expectedOutput) {
-        if (response.getStdout() == null) {
+        if (Objects.isNull(response.getStdout())) {
             return false;
         }
 
@@ -102,7 +98,7 @@ public class CodeExecutionService {
     }
 
     private String safeDecodeBase64(String value) {
-        if (value == null) return null;
+        if (Objects.isNull(value)) return null;
 
         try {
             String cleaned = value.replaceAll("[^A-Za-z0-9+/=]", StringUtils.EMPTY);

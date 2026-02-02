@@ -17,6 +17,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -31,8 +32,8 @@ public class JwtUtils {
     @PostConstruct
     public void init() {
         try {
-            if (jwtProperties.getPublicKeyPath() == null || !jwtProperties.getPublicKeyPath().exists()) {
-                throw new IllegalStateException("Публичный ключ не задан");
+            if (Objects.isNull(jwtProperties.getPublicKeyPath()) || !jwtProperties.getPublicKeyPath().exists()) {
+                throw new IllegalStateException("The public key is not set");
             }
 
             String publicKeyContent = new String(jwtProperties.getPublicKeyPath().getInputStream().readAllBytes());
@@ -52,13 +53,13 @@ public class JwtUtils {
                     .build();
 
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Алгоритм EC не поддерживается", e);
+            throw new IllegalStateException("EC algorithm is not supported", e);
         } catch (InvalidKeySpecException e) {
-            throw new IllegalStateException("Некорректный формат ключа", e);
+            throw new IllegalStateException("Incorrect key format", e);
         } catch (IllegalArgumentException | IOException e) {
-            throw new IllegalStateException("Ошибка декодирования Base64", e);
+            throw new IllegalStateException("Base64 decoding error", e);
         } catch (Exception e) {
-            throw new IllegalStateException("Ошибка инициализации JWT", e);
+            throw new IllegalStateException("JWT initialization error", e);
         }
     }
 
@@ -70,7 +71,7 @@ public class JwtUtils {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось проанализировать токен: " + e.getMessage(), e);
+            throw new RuntimeException("Failed to parse token: " + e.getMessage(), e);
         }
     }
 
@@ -99,7 +100,6 @@ public class JwtUtils {
         return extractUsername(token).equals(username);
     }
 
-    // Дополнительные методы для управления кэшем
     public void invalidateToken(String token) {
         claimsCache.invalidate(token);
     }

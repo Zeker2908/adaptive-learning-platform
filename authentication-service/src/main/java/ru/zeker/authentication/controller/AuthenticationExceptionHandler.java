@@ -22,22 +22,22 @@ import java.util.Map;
 public class AuthenticationExceptionHandler extends GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Некорректное значение параметра", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Incorrect parameter value", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Неправильный логин или пароль", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Incorrect login or password", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, "Доступ запрещен", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.FORBIDDEN, "Access denied", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<Map<String, Object>> handleLockedException(LockedException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.LOCKED, "Аккаунт пользователя заблокирован", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.LOCKED, "The user's account has been blocked", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -47,7 +47,7 @@ public class AuthenticationExceptionHandler extends GlobalExceptionHandler {
 
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<Map<String, Object>> handleSignatureException(SignatureException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Недействительный токен", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Invalid token", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler({CredentialsExpiredException.class, DisabledException.class, AccountExpiredException.class})

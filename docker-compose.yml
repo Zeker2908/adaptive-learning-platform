@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: interview
+      POSTGRES_DB: learning
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-judge0-db.sql:/docker-entrypoint-initdb.d/init-judge0-db.sql
@@ -190,7 +190,7 @@ services:
       KAFKA_HOST: kafka:9092
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      COMPANY_NAME: Interview
+      COMPANY_NAME: learning
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:

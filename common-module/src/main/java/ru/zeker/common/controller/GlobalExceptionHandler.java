@@ -15,7 +15,7 @@ import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import ru.zeker.common.exception.ApiException;
+import ru.zeker.common.exception.BaseException;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -46,8 +46,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(errorResponse);
     }
 
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<Map<String, Object>> handleApiException(ApiException ex, HttpServletRequest request) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<Map<String, Object>> handleApiException(BaseException ex, HttpServletRequest request) {
         return buildErrorResponse(ex.getStatus(), ex.getMessage(), request.getRequestURI(), request.getRequestId());
     }
 
@@ -74,17 +74,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingRequestCookieException.class)
     public ResponseEntity<Map<String, Object>> handleMissingRequestCookieException(MissingRequestCookieException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, String.format("Обязательный параметр куки '%s' отсутствует", ex.getCookieName()), request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, String.format("Required cookie parameter '%s' is missing", ex.getCookieName()), request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Некорректный формат тела запроса", request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Incorrect request body format", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request) {
-        String message = String.format("Обязательный параметр '%s' отсутствует", ex.getParameterName());
+        String message = String.format("Required parameter '%s' is missing", ex.getParameterName());
         return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request.getRequestURI(), request.getRequestId());
     }
 
@@ -99,10 +99,10 @@ public class GlobalExceptionHandler {
                         ConstraintViolation::getMessage
                 ));
         Map<String, Object> errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Ошибка валидации параметров", request.getRequestURI(), request.getRequestId());
+                "Parameter validation error", request.getRequestURI(), request.getRequestId());
         errorResponse.put("details", errors);
 
-        log.error("Ошибка валидации параметров: {}", errors);
+        log.error("Parameter validation error: {}", errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -117,19 +117,19 @@ public class GlobalExceptionHandler {
                         (existing, replacement) -> existing
                 ));
         Map<String, Object> errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Ошибка валидации параметров", request.getRequestURI(), request.getRequestId());
+                "Parameter validation error", request.getRequestURI(), request.getRequestId());
         errorResponse.put("details", validationErrors);
 
-        log.error("Ошибка валидации: {}", validationErrors);
+        log.error("Validation error: {}", validationErrors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex, HttpServletRequest request) {
-        log.error("Необработанное исключение", ex);
+        log.error("Unhandled exception", ex);
         return buildErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Произошла внутренняя ошибка сервера. Пожалуйста, попробуйте позже.",
+                "An internal server error occurred. Please try again later",
                 request.getRequestURI(), request.getRequestId()
         );
     }

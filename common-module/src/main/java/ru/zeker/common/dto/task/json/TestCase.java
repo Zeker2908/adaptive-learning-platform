@@ -1,4 +1,4 @@
-package ru.zeker.common.dto.task;
+package ru.zeker.common.dto.task.json;
 
 
 import com.fasterxml.jackson.annotation.JsonView;

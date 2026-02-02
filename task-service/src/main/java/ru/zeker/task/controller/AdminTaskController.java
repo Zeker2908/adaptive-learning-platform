@@ -38,76 +38,74 @@ public class AdminTaskController {
     // ====================== CREATE TASK ==========================
 
     @Operation(
-            summary = "Создать новую задачу",
+            summary = "Create new task",
             description = """
-                    Создаёт новую задачу с указанным названием, описанием, шаблоном, сложностью,
-                    тестами и тегами. \s
-                    Возвращает созданную задачу.
+                    Creates a new task with specified title, description, template, difficulty,
+                    tests, and tags. \s
+                    Returns the created task.
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "Задача успешно создана",
+                    description = "Task successfully created",
                     content = @Content(schema = @Schema(implementation = TaskResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Ошибка валидации запроса")
+            @ApiResponse(responseCode = "400", description = "Request validation error")
     })
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(
-            @Parameter(description = "Данные новой задачи", required = true)
+            @Parameter(description = "New task data", required = true)
             @Valid @RequestBody TaskRequest request
     ) {
         return ResponseEntity.status(201).body(taskMapper.toResponse(taskService.createTask(request)));
     }
 
-
     // ====================== UPDATE TASK ==========================
 
     @Operation(
-            summary = "Обновить существующую задачу",
+            summary = "Update existing task",
             description = """
-                    Обновляет поля задачи по её ID. \s
-                    Если задача не найдена — будет ошибка 404.
+                    Updates task fields by its ID. \s
+                    If task is not found — returns 404 error.
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Задача успешно обновлена",
+                    description = "Task successfully updated",
                     content = @Content(schema = @Schema(implementation = TaskResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Ошибка валидации входных данных"),
-            @ApiResponse(responseCode = "404", description = "Задача с указанным ID не найдена")
+            @ApiResponse(responseCode = "400", description = "Input data validation error"),
+            @ApiResponse(responseCode = "404", description = "Task with specified ID not found")
     })
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> updateTask(
-            @Parameter(description = "UUID задачи", required = true)
+            @Parameter(description = "Task UUID", required = true)
             @PathVariable("id") UUID id,
 
-            @Parameter(description = "Обновлённые данные задачи", required = true)
+            @Parameter(description = "Updated task data", required = true)
             @Valid @RequestBody TaskRequest request
     ) {
         return ResponseEntity.ok(taskMapper.toResponse(taskService.updateTask(id, request)));
     }
 
-
     // ====================== DELETE TASK ==========================
 
     @Operation(
-            summary = "Удалить задачу",
+            summary = "Delete task",
             description = """
-                    Удаляет задачу по UUID. \s
-                    Возвращает статус 204 No Content без тела.
+                    Deletes task by UUID. \s
+                    Returns status 204 No Content without body.
                     """
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Задача успешно удалена"),
-            @ApiResponse(responseCode = "404", description = "Задача не найдена")
+            @ApiResponse(responseCode = "204", description = "Task successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(
-            @Parameter(description = "UUID задачи", required = true)
+            @Parameter(description = "Task UUID", required = true)
             @PathVariable("id") UUID id
     ) {
         taskService.deleteTask(id);

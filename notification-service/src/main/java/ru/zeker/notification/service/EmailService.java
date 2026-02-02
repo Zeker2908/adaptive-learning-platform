@@ -24,10 +24,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Сервис для отправки электронных писем с использованием шаблонов Thymeleaf
+ * Service for sending emails using Thymeleaf templates
  */
 @Slf4j
 @Service
@@ -39,90 +40,84 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Value("${app.company-name:Tech Interview}")
+    @Value("${app.company-name:Adaptive learning platform}")
     private String companyName;
 
     /**
-     * Асинхронно отправляет электронное письмо на основе данных контекста
+     * Asynchronously sends an email based on context data
      *
-     * @param emailContext контекст для отправки письма (получатель, тема, шаблон, параметры)
-     * @return CompletableFuture, который завершается после отправки письма
-     * @throws EmailSendingException если отправка не удалась
+     * @param emailContext context for sending email (recipient, subject, template, parameters)
+     * @return CompletableFuture that completes after sending the email
+     * @throws EmailSendingException if sending fails
      */
     @Retryable(
             retryFor = {EmailSendingException.class},
-            maxAttempts = 3,
             backoff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 10000)
     )
-    @Async("emailSendingExecutor")
+    @Async("emailExecutor")
     public CompletableFuture<Void> sendEmail(EmailContext emailContext) {
-        log.info("Подготовка к отправке письма на адрес: {}", emailContext.getTo());
-        
+        log.info("Preparing to send email to: {}", emailContext.getTo());
+
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(
                     message,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, 
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                     StandardCharsets.UTF_8.name()
             );
 
-            // Подготовка контекста для шаблонизатора
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(emailContext.getTemplateContext());
 
-            // Обработка шаблона
             String htmlContent = springTemplateEngine.process(
-                    emailContext.getTemplateLocation(), 
+                    emailContext.getTemplateLocation(),
                     thymeleafContext
             );
 
-            String senderName = emailContext.getFromDisplayName() != null
+            String senderName = Objects.nonNull(emailContext.getFromDisplayName())
                     ? emailContext.getFromDisplayName()
                     : companyName;
-            
-            // Настройка письма
+
             messageHelper.setFrom(emailContext.getFrom(), senderName);
             messageHelper.setTo(emailContext.getTo());
             messageHelper.setSubject(emailContext.getSubject());
             messageHelper.setText(htmlContent, true);
-            if (emailContext.getAttachment() != null) {
+            if (Objects.nonNull(emailContext.getAttachment())) {
                 FileSystemResource file = new FileSystemResource(emailContext.getAttachment());
                 messageHelper.addAttachment(file.getFilename(), file);
             }
-            
-            log.info("Отправка письма с темой '{}' на адрес: {}", 
+
+            log.info("Sending email with subject '{}' to: {}",
                     emailContext.getSubject(), emailContext.getTo());
-            
-            // Отправка письма
+
             javaMailSender.send(message);
-            
-            log.info("Письмо успешно отправлено на адрес: {}", emailContext.getTo());
+
+            log.info("Email successfully sent to: {}", emailContext.getTo());
             return CompletableFuture.completedFuture(null);
-            
-        }catch (SMTPSenderFailedException e) {
-            log.error("Ошибка при отправке письма на {}: {}",
+
+        } catch (SMTPSenderFailedException e) {
+            log.error("Error sending email to {}: {}",
                     emailContext.getTo(), e.getMessage(), e);
-            throw new EmailSendingException("Ошибка при отправке письма: " + e.getMessage());
+            throw new EmailSendingException("Error sending email: " + e.getMessage());
         } catch (MessagingException e) {
-            log.error("Ошибка при подготовке письма для {}: {}",
+            log.error("Error preparing email for {}: {}",
                     emailContext.getTo(), e.getMessage(), e);
-            throw new EmailSendingException("Ошибка при подготовке письма: " + e.getMessage());
-        }
-        catch (Exception e) {
-            log.error("Неожиданная ошибка при отправке письма на {}: {}", 
+            throw new EmailSendingException("Error preparing email: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error sending email to {}: {}",
                     emailContext.getTo(), e.getMessage(), e);
-            throw new EmailSendingException("Ошибка при отправке письма: " + e.getMessage());
+            throw new EmailSendingException("Error sending email: " + e.getMessage());
         }
     }
-    
+
     /**
-     * Общий метод для создания контекста email на основе события
-     * 
-     * @param event событие, инициирующее отправку email
-     * @param subject тема письма
-     * @param templateLocation путь к шаблону письма
-     * @param payloadContext полезная нагрузка (ссылки подтверждение регистрации, сброс пароля и т.д.)
-     * @return настроенный контекст для отправки письма
+     * General method for creating email context based on an event
+     *
+     * @param event            event triggering email sending
+     * @param subject          email subject
+     * @param templateLocation path to email template
+     * @param payloadContext   payload (registration confirmation links, password reset links, etc.)
+     * @return configured context for sending email
      */
     public EmailContext createEmailContext(
             EmailEvent event,
@@ -130,15 +125,13 @@ public class EmailService {
             String templateLocation,
             Map<String, Object> payloadContext
     ) {
-        // Создание контекста для шаблона
         Map<String, Object> templateContext = new HashMap<>();
         templateContext.put(ThymeleafUtils.CURRENT_YEAR, Year.now().getValue());
         templateContext.put(ThymeleafUtils.COMPANY_NAME, companyName);
-        if (payloadContext != null) {
+        if (Objects.nonNull(payloadContext)) {
             templateContext.putAll(payloadContext);
         }
-        
-        // Создание контекста письма
+
         return EmailContext.builder()
                 .from(from)
                 .to(event.getEmail())

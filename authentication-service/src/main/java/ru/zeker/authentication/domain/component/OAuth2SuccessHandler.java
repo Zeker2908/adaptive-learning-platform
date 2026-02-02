@@ -21,6 +21,7 @@ import ru.zeker.authentication.domain.model.entity.User;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -31,41 +32,41 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
 
     /**
-     * Обработчик успешной аутентификации OAuth2.
+     * Handler for successful OAuth2 authentication.
      * <p>
-     *     Если пользователь не найден, то регистрирует его.
-     *     Если пользователь найден, но у него нет OAuth2 аутентификации в бд, то добавляет ее.
-     *     Если пользователь найден, то генерирует токены доступа и обновления.
-     *     Если аутентификация не удалась, то возвращает данные ошибки.
+     *     If user is not found, registers them.
+     *     If user is found but doesn't have OAuth2 authentication in database, adds it.
+     *     If user is found, generates access and refresh tokens.
+     *     If authentication fails, returns error data.
      * </p>
-     * @param request        HTTP-запрос
-     * @param response       HTTP-ответ
-     * @param authentication результат аутентификации
-     * @throws IOException   ошибка ввода-вывода
+     * @param request        HTTP request
+     * @param response       HTTP response
+     * @param authentication authentication result
+     * @throws IOException   input/output error
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        log.info("Сработал обработчик успешного прохождения аутентификации OAuth2: remote={}, uri={}",
+        log.info("OAuth2 successful authentication handler triggered: remote={}, uri={}",
                 request.getRemoteAddr(), request.getRequestURI());
         try {
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-            log.debug("OAuth2User principal получены: authorities={}", authentication.getAuthorities());
+            log.debug("OAuth2User principal obtained: authorities={}", authentication.getAuthorities());
 
             String provider = getOAuth2Provider(authentication);
-            if (provider == null) {
-                log.error("Не удалось получить OAuth2Provider");
-                throw new OAuth2ProviderException("Не удалось получить OAuth2Provider");
+            if (Objects.isNull(provider)) {
+                log.error("Failed to get OAuth2Provider");
+                throw new OAuth2ProviderException("Failed to get OAuth2Provider");
             }
-            log.info("OAuth2Provider получен: {}", provider);
+            log.info("OAuth2Provider obtained: {}", provider);
 
             User user = oAuth2Service.processOauth2User(oAuth2User, provider);
 
-            log.debug("Пользователь разрешен: id={}, email={}, enabled={}", user.getId(), user.getEmail(), user.isEnabled());
+            log.debug("User resolved: id={}, email={}, enabled={}", user.getId(), user.getEmail(), user.isEnabled());
 
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
 
-            ResponseCookie refreshCookie = CookieUtils.createRefreshTokenCookie(refreshToken, Duration.ofDays(7));
+            ResponseCookie refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(7));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             response.setContentType("application/json;charset=UTF-8");
@@ -74,24 +75,21 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     "token_type", "Bearer"
             ));
         } catch (Exception e) {
-            log.error("Ошибка OAuth2SuccessHandler: {}", e.getMessage(), e);
+            log.error("OAuth2SuccessHandler error: {}", e.getMessage(), e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
             objectMapper.writeValue(response.getWriter(), Map.of(
-                    "error", "OAuth2 authentication прошла неудачно",
+                    "error", "OAuth2 authentication failed",
                     "message", e.getMessage()
             ));
         }
     }
 
-
-
-
     /**
-     * Извлекает имя поставщика OAuth2 из указанного токена аутентификации.
+     * Extracts the OAuth2 provider name from the specified authentication token.
      *
-     * @param authentication токен аутентификации, из которого извлекается поставщик
-     * @return имя поставщика OAuth2, если доступно, в противном случае null
+     * @param authentication authentication token from which to extract the provider
+     * @return OAuth2 provider name if available, otherwise null
      */
     private String getOAuth2Provider(Authentication authentication) {
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {

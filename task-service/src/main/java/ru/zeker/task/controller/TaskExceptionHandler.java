@@ -14,6 +14,6 @@ import java.util.Map;
 public class TaskExceptionHandler extends GlobalExceptionHandler {
     @ExceptionHandler(InvalidTypeIdException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidType(InvalidTypeIdException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Недопустимый тип задачи: " + ex.getTypeId(), request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid task type: " + ex.getTypeId(), request.getRequestURI(), request.getRequestId());
     }
 }

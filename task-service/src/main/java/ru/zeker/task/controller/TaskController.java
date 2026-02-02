@@ -38,42 +38,42 @@ public class TaskController {
 
     // ===================== GET TASK LIST ============================
     @Operation(
-            summary = "Получить список задач",
+            summary = "Get task list",
             description = """
-                    Возвращает список задач, отфильтрованных по:
-                    • title — поиск по подстроке
-                    • difficulty — список сложностей (EASY, MEDIUM, HARD)
-                    • tags — список тегов (задача должна содержать все переданные теги)
-                    • count — максимальное количество возвращаемых задач (по умолчанию 20, максимум 100)
+                    Returns a list of tasks filtered by:
+                    • title — search by substring
+                    • difficulty — list of difficulties (EASY, MEDIUM, HARD)
+                    • tags — list of tags (task must contain all specified tags)
+                    • count — maximum number of tasks to return (default 20, maximum 100)
 
-                    Фильтры работают совместно.
-                    Если не указано ничего — возвращаются все задачи (с ограничением по count).
+                    Filters work together.
+                    If nothing is specified — returns all tasks (with count limit).
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Список задач успешно получен",
+                    description = "Task list successfully retrieved",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = TaskResponse.class)))
             ),
-            @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса")
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getTasks(
-            @Parameter(description = "Поиск по названию задачи (LIKE %title%)")
+            @Parameter(description = "Search by task title (LIKE %title%)")
             @RequestParam(value = "title", required = false) String title,
 
-            @Parameter(description = "Список сложностей. Пример: ?difficulty=EASY&difficulty=HARD")
+            @Parameter(description = "List of difficulties. Example: ?difficulty=EASY&difficulty=HARD")
             @RequestParam(value = "difficulty", required = false) List<Difficulty> difficulties,
 
             @Parameter(description = """
-                    Список тегов.
-                    Задача должна содержать все переданные теги.
-                    Пример: ?tags=Массивы&tags=Циклы
+                    List of tags.
+                    Task must contain all specified tags.
+                    Example: ?tags=Arrays&tags=Loops
                     """)
             @RequestParam(value = "tags", required = false) List<String> tags,
 
-            @Parameter(description = "Максимальное количество задач для возврата (по умолчанию 20, максимум 100)")
+            @Parameter(description = "Maximum number of tasks to return (default 20, maximum 100)")
             @Min(1)
             @Max(100)
             @RequestParam(value = "count", defaultValue = "20") int count
@@ -82,49 +82,47 @@ public class TaskController {
                 .stream().map(taskMapper::toResponse).toList());
     }
 
-
     // ====================== GET ONE TASK ============================
     @Operation(
-            summary = "Получить задачу по ID",
-            description = "Возвращает полную информацию о задаче по её UUID."
+            summary = "Get task by ID",
+            description = "Returns full information about a task by its UUID."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Задача найдена",
+                    description = "Task found",
                     content = @Content(schema = @Schema(implementation = TaskResponse.class))
             ),
-            @ApiResponse(responseCode = "404", description = "Задача не найдена")
+            @ApiResponse(responseCode = "404", description = "Task not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTask(
-            @Parameter(description = "UUID задачи", required = true)
+            @Parameter(description = "Task UUID", required = true)
             @PathVariable("id") UUID id
     ) {
         return ResponseEntity.ok(taskMapper.toResponse(taskService.getTask(id)));
     }
 
-
     // ====================== GET RANDOM TASKS =========================
     @Operation(
-            summary = "Получить случайные задачи",
+            summary = "Get random tasks",
             description = """
-                    Возвращает случайный список задач в количестве count. \s
-                    Используется для генерации случайных тренировочных подборок.
+                    Returns a random list of tasks in the specified count. \s
+                    Used for generating random practice sets.
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Случайные задачи успешно получены",
+                    description = "Random tasks successfully retrieved",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = TaskResponse.class)))
             ),
-            @ApiResponse(responseCode = "400", description = "Некорректный параметр count")
+            @ApiResponse(responseCode = "400", description = "Invalid count parameter")
     })
     @GetMapping("/random")
     @JsonView(Views.Public.class)
     public ResponseEntity<List<TaskResponse>> getRandomTasks(
-            @Parameter(description = "Количество случайных задач", example = "5", required = true)
+            @Parameter(description = "Number of random tasks", example = "5", required = true)
             @Min(1)
             @Max(100)
             @RequestParam(value = "count", defaultValue = "10") int count

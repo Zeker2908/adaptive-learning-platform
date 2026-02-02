@@ -24,7 +24,7 @@ public class ConsumerKafkaListeners {
     private final KafkaProducer kafkaProducer;
     private final CodeExecutionService codeExecutionService;
 
-    @Async("virtualThead") // Чтобы не блокировать 16 потоков у консюмера при ожидании выполнении кода
+    @Async("virtualThead")
     @KafkaListener(
             topics = "solution.exec.request",
             containerFactory = "solutionExecKafkaListenerContainerFactory"

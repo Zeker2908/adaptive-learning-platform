@@ -34,25 +34,24 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
     /**
-     * Настраивает {@link SecurityFilterChain} для конечных точек OAuth2.
+     * Configures the {@link SecurityFilterChain} for OAuth2 endpoints.
      *
-     * <p>Этот метод настраивает {@link SecurityFilterChain} для конечных точек OAuth2 и используется для обработки запросов аутентификации OAuth2
-     *. Цепочка настроена на разрешение всех запросов к конечным точкам OAuth2, отключение защиты CSRF
-     * и использование настраиваемого {@link OAuth2UserService} для обработки конечной точки с информацией о пользователе. Цепочка также настраивает
-     * настраиваемый обработчик успеха и обработчик сбоев.
+     * <p>This method configures the {@link SecurityFilterChain} for OAuth2 endpoints and is used to handle OAuth2 authentication requests.
+     * The chain is configured to allow all requests to OAuth2 endpoints, disable CSRF protection,
+     * and use a custom {@link OAuth2UserService} to handle the user information endpoint. The chain also configures a
+     * custom success handler and a failure handler.
      *
-     * <p>Цепочка настроена на использование {@link OAuth2SuccessHandler} для обработки успешных запросов аутентификации OAuth2.
-     * Обработчик настроен на перенаправление пользователя на URL-адрес успеха по умолчанию после успешной
-     * аутентификации.
+     * <p>The chain is configured to use the {@link OAuth2SuccessHandler} to handle successful OAuth2 authentication requests.
+     * The handler is configured to redirect the user to the default success URL after successful
+     * authentication. *
+     * <p>The chain is also configured to use a custom failure handler to handle OAuth2 authentication failures. The handler
+     * is configured to redirect the user to the default failure URL after authentication failure.
      *
-     * <p>Цепочка также настроена на использование настраиваемого обработчика сбоев для обработки сбоев аутентификации OAuth2. Обработчик
-     * настроен на перенаправление пользователя на URL-адрес сбоя по умолчанию после сбоя аутентификации.
+     * <p>The chain is configured to create a session for OAuth2 authentication requests, as required by the OAuth2 specification.
      *
-     * <p>Цепочка настроена на создание сеанса для запросов аутентификации OAuth2, как того требует спецификация OAuth2.
-     *
-     * @param http объект {@link HttpSecurity}, используемый для настройки цепочки фильтров
-     * @return настроенный {@link SecurityFilterChain}
-     * @throws Exception, если при настройке цепочки фильтров возникает ошибка
+     * @param http : The {@link HttpSecurity} object used to configure the filter chain
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if an error occurs while configuring the filter chain
      */
     @Bean
     @Order(1)
@@ -71,7 +70,7 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json;charset=UTF-8");
                             objectMapper.writeValue(response.getWriter(), Map.of(
-                                    "error", "OAuth2 authentication прошла неудачно",
+                                    "error", "OAuth2 authentication failed",
                                     "message", exception.getMessage()
                             ));
                         })
@@ -82,15 +81,15 @@ public class SecurityConfig {
     }
 
     /**
-     * Формирует цепочку фильтров безопасности для конечных точек аутентификации.
+     * Generates a security filter chain for authentication endpoints.
      *
-     * <p>Конечные точки аутентификации не требуют аутентификации, поэтому для них
-     * выключается CSRF-защита, а авторизация разрешается для любых запросов.
+     * <p>Authentication endpoints do not require authentication, so CSRF protection is disabled for them
+     * and authorization is allowed for all requests.
      * </p>
      *
-     * @param http объект {@link HttpSecurity}, используемый для настройки цепочки фильтров
-     * @return настроенный {@link SecurityFilterChain}
-     * @throws Exception, если при настройке цепочки фильтров возникает ошибка
+     * @param http : {@link HttpSecurity} object used to configure the filter chain
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if an error occurs while configuring the filter chain
      */
     @Bean
     @Order(2)
@@ -106,19 +105,19 @@ public class SecurityConfig {
     }
 
     /**
-     * Настраивает основную цепочку фильтров безопасности для защищенных конечных точек.
+     * Configures the primary security filter chain for protected endpoints.
      *
-     * <p>Эта цепочка фильтров применяется ко всем запросам, которые не обрабатываются
-     * цепочками фильтров OAuth2 и аутентификации. Она требует, чтобы все запросы были
-     * аутентифицированы, отключает CSRF-защиту и настраивает управление сессиями
-     * как STATELESS, что соответствует подходу REST API.</p>
+     * <p>This filter chain applies to all requests that are not handled
+     * by the OAuth2 and authentication filter chains. It requires all requests to be
+     * authenticated, disables CSRF protection, and configures session management
+     * as STATELESS, which aligns with the REST API approach.</p>
      *
-     * <p>Цепочка также добавляет пользовательский фильтр валидации заголовков перед
-     * стандартным фильтром аутентификации по имени пользователя и паролю.</p>
+     * <p>The chain also adds a custom header validation filter before
+     * the default username/password authentication filter.</p>
      *
-     * @param http объект {@link HttpSecurity}, используемый для настройки цепочки фильтров
-     * @return настроенный {@link SecurityFilterChain}
-     * @throws Exception если при настройке цепочки фильтров возникает ошибка
+     * @param http {@link HttpSecurity} object used to configure the filter chain
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if an error occurs while configuring the filter chain
      */
     @Bean
     @Order(3)

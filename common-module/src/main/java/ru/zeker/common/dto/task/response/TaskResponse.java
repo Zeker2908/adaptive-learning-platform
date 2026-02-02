@@ -6,11 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.zeker.common.dto.task.Difficulty;
-import ru.zeker.common.dto.task.TestCase;
 import ru.zeker.common.dto.task.json.TaskContent;
 import ru.zeker.common.dto.task.json.Views;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

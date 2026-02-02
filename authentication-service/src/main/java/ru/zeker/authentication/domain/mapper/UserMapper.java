@@ -18,9 +18,7 @@ import static ru.zeker.authentication.domain.model.enums.Role.ADMIN;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
-
-    // Email нормализуется к lower case в сервисных методах
+    
     @Mapping(target = "role", constant = "USER")
     User toEntity(RegisterRequest request, @Context PasswordEncoder passwordEncoder);
 

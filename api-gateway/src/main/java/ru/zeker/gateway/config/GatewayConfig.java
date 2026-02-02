@@ -32,9 +32,9 @@ public class GatewayConfig {
                 .maximumSize(100_000)
                 .expireAfterWrite(cacheTtlMs, TimeUnit.MILLISECONDS)
                 .evictionListener((String key, Claims value, RemovalCause cause) ->
-                        log.debug("Токен выселен из кэша: {}, причина: {}", key, cause))
+                        log.debug("The token has been evicted from the cache: {}, cause: {}", key, cause))
                 .removalListener((String key, Claims value, RemovalCause cause) ->
-                        log.debug("Токен удален из кэша: {}, причина: {}", key, cause))
+                        log.debug("The token has been evicted from the cache: {}, cause: {}", key, cause))
                 .recordStats()
                 .build();
     }

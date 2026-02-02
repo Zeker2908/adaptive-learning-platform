@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.zeker.common.dto.solution.Language;
-import ru.zeker.common.dto.task.TestCase;
+import ru.zeker.common.dto.task.json.TestCase;
 
 import java.util.List;
 

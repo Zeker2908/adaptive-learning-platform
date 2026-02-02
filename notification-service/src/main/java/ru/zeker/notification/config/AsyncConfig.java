@@ -7,8 +7,8 @@ import java.util.concurrent.*;
 
 @Configuration
 public class AsyncConfig {
-    @Bean(name = "emailSendingExecutor")
-    public Executor emailSendingExecutor() {
+    @Bean(name = "emailExecutor")
+    public Executor emailExecutor() {
         return Executors.newVirtualThreadPerTaskExecutor();
     }
 }

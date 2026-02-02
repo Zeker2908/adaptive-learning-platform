@@ -29,9 +29,8 @@ import ru.zeker.common.util.JwtUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
 /**
- * Сервис для управления аутентификацией и регистрацией пользователей
+ * Service for managing user authentication and registration
  */
 @Slf4j
 @Service
@@ -49,22 +48,22 @@ public class AuthenticationService {
     private final VerificationCooldownService verificationCooldownService;
 
     /**
-     * Регистрация нового пользователя и отправка сообщения для верификации email
+     * Register a new user and send email verification message
      *
-     * @param request данные нового пользователя
+     * @param request new user data
      */
     @Transactional
     public void register(RegisterRequest request) {
         String email = request.getEmail().toLowerCase();
-        log.info("Регистрация нового пользователя с email: {}", email);
+        log.info("Registering new user with email: {}", email);
 
         User user = userMapper.toEntity(request, passwordEncoder);
 
         userService.create(user);
-        log.debug("Пользователь создан в базе данных: {}", email);
+        log.debug("User created in database: {}", email);
 
         passwordHistoryService.create(user, request.getPassword());
-        log.debug("История паролей создана в базе данных");
+        log.debug("Password history created in database");
 
         String token = jwtService.generateEmailToken(user);
         EmailEvent userRegisteredEvent = createEmailEvent(user,
@@ -72,18 +71,18 @@ public class AuthenticationService {
                 Map.of("token", token));
 
         kafkaProducer.sendEmailEvent(userRegisteredEvent);
-        log.info("Отправлено сообщение для верификации email: {}", email);
+        log.info("Email verification message sent: {}", email);
     }
 
     /**
-     * Аутентификация пользователя и выдача токенов
+     * Authenticate user and issue tokens
      *
-     * @param request данные для входа
-     * @return объект с JWT и refresh токенами
+     * @param request login data
+     * @return object with JWT and refresh tokens
      */
     public Tokens login(LoginRequest request) {
         String email = request.getEmail().toLowerCase();
-        log.info("Попытка входа пользователя: {}", email);
+        log.info("Login attempt for user: {}", email);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -94,12 +93,12 @@ public class AuthenticationService {
 
         User user = (User) authentication.getPrincipal();
 
-        log.debug("Аутентификация успешна для пользователя: {}", email);
+        log.debug("Authentication successful for user: {}", email);
 
         String jwtToken = jwtService.generateAccessToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user);
 
-        log.info("Пользователь успешно вошел в систему: {}", email);
+        log.info("User successfully logged in: {}", email);
 
         return Tokens.builder()
                 .token(jwtToken)
@@ -108,13 +107,13 @@ public class AuthenticationService {
     }
 
     /**
-     * Обновление JWT токена по refresh токену
+     * Refresh JWT token using refresh token
      *
-     * @param refreshToken токен обновления
-     * @return новый набор токенов
+     * @param refreshToken refresh token
+     * @return new set of tokens
      */
     public Tokens refreshToken(String refreshToken) {
-        log.debug("Запрос на обновление токена");
+        log.debug("Token refresh request");
 
         RefreshToken token = refreshTokenService.verifyRefreshToken(refreshToken);
         User user = userService.findById(token.getUserId());
@@ -122,7 +121,7 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateAccessToken(user);
         String newRefreshToken = refreshTokenService.rotateRefreshToken(token);
 
-        log.debug("Токены успешно обновлены для пользователя: {}", user.getEmail());
+        log.debug("Tokens successfully refreshed for user: {}", user.getEmail());
 
         return Tokens.builder()
                 .token(jwtToken)
@@ -131,43 +130,43 @@ public class AuthenticationService {
     }
 
     /**
-     * Подтверждение email пользователя
+     * Confirm user email
      *
-     * @param request запрос с JWT токен для подтверждения
-     * @throws InvalidTokenException      если токен недействителен
-     * @throws UserAlreadyEnableException если email уже подтвержден
+     * @param request request with JWT token for confirmation
+     * @throws InvalidTokenException      if token is invalid
+     * @throws UserAlreadyEnableException if email is already confirmed
      */
     public void confirmEmail(ConfirmationEmailRequest request) {
-        log.info("Запрос на подтверждение email");
+        log.info("Email confirmation request");
         String token = request.getToken();
 
         User user = userService.findById(jwtService.extractUserId(token));
 
         if (!jwtService.isTokenValid(token, user)) {
-            log.warn("Попытка подтверждения email с недействительным токеном");
+            log.warn("Attempt to confirm email with invalid token");
             throw new InvalidTokenException();
         }
 
         if (user.isEnabled()) {
-            log.warn("Попытка повторного подтверждения уже активированной учетной записи: {}", user.getEmail());
+            log.warn("Attempt to re-confirm already activated account: {}", user.getEmail());
             throw new UserAlreadyEnableException();
         }
 
         user.getLocalAuth().setEnabled(true);
         userService.update(user);
 
-        log.info("Email успешно подтвержден для пользователя: {}", user.getEmail());
+        log.info("Email successfully confirmed for user: {}", user.getEmail());
     }
 
     /**
-     * Обработка запроса на восстановление пароля.
-     * Отправляет email с инструкциями для сброса пароля
+     * Process password recovery request.
+     * Sends email with password reset instructions
      *
-     * @param request запрос с email пользователя
+     * @param request request with user email
      */
     public void forgotPassword(UserUpdateRequest request) {
         String email = request.getEmail().toLowerCase();
-        log.info("Запрос на восстановление пароля для: {}", email);
+        log.info("Password recovery request for: {}", email);
 
         User user = userService.findByEmail(email);
         String token = jwtService.generateEmailToken(user);
@@ -177,27 +176,27 @@ public class AuthenticationService {
                 Map.of("token", token));
 
         kafkaProducer.sendEmailEvent(event);
-        log.info("Письмо с инструкцией для восстановления пароля отправлено на email: {}", email);
+        log.info("Password recovery email sent to: {}", email);
     }
 
     /**
-     * Сброс пароля пользователя по токену
+     * Reset user password using token
      *
-     * @param request запрос с новым паролем
-     * @throws InvalidTokenException если токен недействителен
+     * @param request request with new password
+     * @throws InvalidTokenException if token is invalid
      */
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        log.info("Запрос на сброс пароля");
+        log.info("Password reset request");
         String token = request.getToken();
         String password = request.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
 
-        // Объединенные проверки токена
+        // Combined token validation
         if (jwtUtils.isTokenExpired(token) ||
                 !userService.findById(jwtService.extractUserId(token)).getVersion().equals(jwtService.extractVersion(token)) ||
                 !jwtUtils.isValidUsername(token, userService.findById(jwtService.extractUserId(token)).getEmail())) {
-            log.warn("Недействительный токен для сброса пароля");
+            log.warn("Invalid token for password reset");
             throw new InvalidTokenException();
         }
 
@@ -218,29 +217,29 @@ public class AuthenticationService {
         userService.update(user);
         refreshTokenService.revokeAllUserTokens(token);
 
-        log.info("Пароль успешно сброшен для пользователя: {}", user.getEmail());
+        log.info("Password successfully reset for user: {}", user.getEmail());
     }
 
     /**
-     * Повторно отправляет письмо с подтверждением указанному пользователю, если он еще не проверен
-     * и если период восстановления истек.
-     * Запрос @param содержит адрес электронной почты для повторной отправки подтверждения
+     * Resends verification email to the specified user if they are not yet verified
+     * and if the cooldown period has expired.
+     * @param request contains the email address for resending verification
      *
-     * @throws UserAlreadyEnableException, если пользователь уже проверен
-     * @throws TooManyRequestsException,   если письмо было запрошено слишком недавно
+     * @throws UserAlreadyEnableException if user is already verified
+     * @throws TooManyRequestsException   if email was requested too recently
      */
     public void resendVerificationEmail(ResendVerificationRequest request) {
-        log.info("Запрос на повторную отправку письма с подтверждением");
+        log.info("Resend verification email request");
         String email = request.getEmail().toLowerCase();
         User user = userService.findByEmail(email);
 
         if (user.isEnabled()) {
-            log.warn("Пользователь уже подтвержден: {}", email);
+            log.warn("User already verified: {}", email);
             throw new UserAlreadyEnableException();
         }
 
         if (!verificationCooldownService.canResendEmail(email)) {
-            log.warn("Попытка повторного отправить письмо с подтверждением слишком часто: {}", email);
+            log.warn("Attempt to resend verification email too frequently: {}", email);
             throw new TooManyRequestsException();
         }
 
@@ -251,8 +250,7 @@ public class AuthenticationService {
 
         kafkaProducer.sendEmailEvent(event);
         verificationCooldownService.updateCooldown(email);
-        log.info("Письмо с подтверждением отправлено на email: {}", email);
-
+        log.info("Verification email sent to: {}", email);
     }
 
     private EmailEvent createEmailEvent(User user, EmailEventType type, Map<String, String> data) {

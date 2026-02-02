@@ -79,20 +79,17 @@ public class KafkaConsumerConfig {
 
     @Bean
     public CommonErrorHandler errorHandler(KafkaTemplate<String, Object> kafkaTemplate) {
-        // Recoverer: отправляем сообщения в <topic>.DLT
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
                 kafkaTemplate,
                 (rec, ex) -> new TopicPartition(rec.topic() + ".DLT", rec.partition())
         );
 
-        // Экспоненциальный бэкофф
         ExponentialBackOffWithMaxRetries backOff = new ExponentialBackOffWithMaxRetries(maxAttempts);
         backOff.setInitialInterval(initialInterval);
         backOff.setMultiplier(multiplier);
         backOff.setMaxInterval(maxInterval);
 
         DefaultErrorHandler handler = new DefaultErrorHandler(recoverer, backOff);
-        // Не ретраить ошибки десериализации и конверсии
         handler.addNotRetryableExceptions(
                 DeserializationException.class,
                 MessageConversionException.class

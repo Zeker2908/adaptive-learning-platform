@@ -11,6 +11,7 @@ import ru.zeker.authentication.domain.model.entity.User;
 import ru.zeker.authentication.exception.PasswordHistoryException;
 import ru.zeker.authentication.repository.PasswordHistoryRepository;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,8 +30,8 @@ public class PasswordHistoryService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void create(User user, String rawPassword) {
-        if (user.getLocalAuth() == null) {
-            throw new IllegalStateException("LocalAuth не найден для пользователя");
+        if (Objects.isNull(user.getLocalAuth())) {
+            throw new IllegalStateException("LocalAuth not found for user");
         }
         Set<PasswordHistory> existingPasswords = findAllByUserId(user.getId());
 
@@ -38,7 +39,7 @@ public class PasswordHistoryService {
                 .anyMatch(history -> passwordEncoder.matches(rawPassword, history.getPassword()));
 
         if (isPasswordReused) {
-            throw new PasswordHistoryException("Пароль уже использовался ранее. Пожалуйста, выберите другой пароль.");
+            throw new PasswordHistoryException("This password has already been used. Please choose a different password");
         }
 
         PasswordHistory passwordHistory = PasswordHistory.builder()
@@ -48,7 +49,7 @@ public class PasswordHistoryService {
 
         passwordHistoryRepository.save(passwordHistory);
 
-        // Ограничение количества хранимых паролей
+        // Limiting the number of stored passwords
         int size = existingPasswords.size();
         if (size >= maxPasswordHistoryCount) {
             passwordHistoryRepository.deleteOldestByLocalAuthId(user.getId(), size - maxPasswordHistoryCount + 1);

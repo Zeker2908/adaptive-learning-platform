@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Запрос на сброс пароля")
+@Schema(description = "Password reset request")
 public class ResetPasswordRequest {
 
-    @Schema(description = "Токен сброса пароля", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", required = true)
+    @Schema(description = "Password reset token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", required = true)
     @NotBlank
     private String token;
 
-    @Schema(description = "Новый пароль", example = "N3wP@ssw0rd!", required = true)
+    @Schema(description = "New password", example = "N3wP@ssw0rd!", required = true)
     @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d).{8,255}$",
-            message = "Пароль должен содержать минимум 8 символов, включая хотя бы одну букву и одну цифру"
+            message = "Password must contain at least 8 characters, including at least one letter and one digit"
     )
-    @NotBlank(message = "Пароль не может быть пустым")
-    @Size(min = 8, max = 255, message = "Длина пароля должна быть от 8 до 255 символов")
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 8, max = 255, message = "Password length must be between 8 and 255 characters")
     private String password;
 }

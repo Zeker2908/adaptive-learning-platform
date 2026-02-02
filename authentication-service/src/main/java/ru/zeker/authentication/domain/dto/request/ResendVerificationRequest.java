@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Запрос на повторную отправку письма подтверждения email")
+@Schema(description = "Request to resend the confirmation email")
 public class ResendVerificationRequest {
 
-    @Schema(description = "Email пользователя", example = "user@example.com")
+    @Schema(description = "User email", example = "user@example.com")
     @Email
     @NotBlank
-    @Size(min = 8, max = 255, message = "Длина почты должна быть от 8 до 255 символов")
+    @Size(min = 8, max = 255, message = "Email length must be between 8 and 255 characters.")
     private String email;
 }

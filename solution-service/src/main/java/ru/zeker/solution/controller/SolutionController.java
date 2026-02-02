@@ -35,13 +35,13 @@ import ru.zeker.solution.service.UserProgressService;
 import java.util.List;
 import java.util.UUID;
 
-import static ru.zeker.common.headers.ApiHeaders.USER_ID;
+import static ru.zeker.common.headers.AppHeaders.USER_ID;
 
 @Validated
 @RestController
 @RequestMapping("/solutions")
 @RequiredArgsConstructor
-@Tag(name = "Solution Controller", description = "Управление решениями задач и отслеживание прогресса пользователя")
+@Tag(name = "Solution Controller", description = "Managing task solutions and tracking user progress")
 @SecurityRequirement(name = "bearerAuth")
 public class SolutionController {
 
@@ -52,21 +52,21 @@ public class SolutionController {
 
     @PostMapping
     @Operation(
-            summary = "Отправить решение задачи",
-            description = "Принимает решение пользователя по задаче и возвращает информацию о принятом решении. " +
-                    "Статус решения может быть PENDING, пока не будет обработан judging-сервисом.",
+            summary = "Submit task solution",
+            description = "Accepts user solution for a task and returns information about the submitted solution. " +
+                    "Solution status can be PENDING until processed by judging service.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Решение успешно или отправлено на обработку",
+                            description = "Solution successfully submitted or sent for processing",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolutionResponse.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректный запрос"),
-                    @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID")
+                    @ApiResponse(responseCode = "400", description = "Invalid request"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header")
             }
     )
     public ResponseEntity<SolutionResponse> submitSolution(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String userId,
             @Valid @RequestBody SolutionRequest request
     ) {
@@ -75,23 +75,23 @@ public class SolutionController {
 
     @GetMapping("/{id}")
     @Operation(
-            summary = "Получить решение по идентификатору",
-            description = "Возвращает детали конкретного решения пользователя по его UUID.",
+            summary = "Get solution by identifier",
+            description = "Returns details of a specific user solution by its UUID.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Решение успешно найдено",
+                            description = "Solution successfully found",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = SolutionResponse.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректный формат USER_ID"),
-                    @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID"),
-                    @ApiResponse(responseCode = "404", description = "Решение не найдено или не принадлежит пользователю")
+                    @ApiResponse(responseCode = "400", description = "Invalid USER_ID format"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header"),
+                    @ApiResponse(responseCode = "404", description = "Solution not found or does not belong to user")
             }
     )
     public ResponseEntity<SolutionResponse> getSolution(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String userId,
-            @Parameter(description = "Идентификатор решения", required = true, example = "123e4567-e89b-12d3-a456-556642440000")
+            @Parameter(description = "Solution identifier", required = true, example = "123e4567-e89b-12d3-a456-556642440000")
             @PathVariable("id") UUID id
     ) {
         return ResponseEntity.ok(solutionMapper.toResponse(solutionService.getSolution(id, UUID.fromString(userId))));
@@ -99,20 +99,20 @@ public class SolutionController {
 
     @GetMapping("/user")
     @Operation(
-            summary = "Получить все решения пользователя",
-            description = "Возвращает список всех решений, отправленных данным пользователем.",
+            summary = "Get all user solutions",
+            description = "Returns a list of all solutions submitted by the given user.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Список решений успешно получен",
+                            description = "List of solutions successfully retrieved",
                             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SolutionResponse.class)))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректный формат USER_ID"),
-                    @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID")
+                    @ApiResponse(responseCode = "400", description = "Invalid USER_ID format"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header")
             }
     )
     public ResponseEntity<List<SolutionResponse>> getUserSolutions(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String userId
     ) {
         return ResponseEntity.ok(solutionService.getUserSolutions(UUID.fromString(userId))
@@ -123,20 +123,20 @@ public class SolutionController {
 
     @GetMapping("/user/progress")
     @Operation(
-            summary = "Получить прогресс пользователя по задачам",
-            description = "Возвращает сводную информацию о прогрессе пользователя: решённые задачи, статистика и т.п.",
+            summary = "Get user progress on tasks",
+            description = "Returns summary information about user progress: solved tasks, statistics, etc.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Прогресс успешно получен",
+                            description = "Progress successfully retrieved",
                             content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserProgressResponse.class)))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректный формат USER_ID"),
-                    @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID")
+                    @ApiResponse(responseCode = "400", description = "Invalid USER_ID format"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header")
             }
     )
     public ResponseEntity<List<UserProgressResponse>> getUserProgress(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String userId
     ) {
         return ResponseEntity.ok(userProgressService.getUserProgress(UUID.fromString(userId))
@@ -146,31 +146,31 @@ public class SolutionController {
     }
 
     @Operation(
-            summary = "Получить статистику активности пользователя",
+            summary = "Get user activity statistics",
             description = """
-                    Возвращает агрегированные данные о количестве решённых задач по дням за указанный период.
-                    Используется для построения графика активности в личном кабинете.
-                    Данные возвращаются в хронологическом порядке (от старых к новым).
+                    Returns aggregated data on the number of solved tasks per day for the specified period.
+                    Used for building activity charts in the personal dashboard.
+                    Data is returned in chronological order (oldest to newest).
                     """,
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Статистика успешно получена",
+                            description = "Statistics successfully retrieved",
                             content = @Content(
                                     array = @ArraySchema(schema = @Schema(implementation = DailyActivity.class))
                             )
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректное значение параметра 'days' (должно быть от 1 до 30)"),
-                    @ApiResponse(responseCode = "401", description = "Не указан или неверен заголовок авторизации (X-User-Id)")
+                    @ApiResponse(responseCode = "400", description = "Invalid value for 'days' parameter (must be between 1 and 30)"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid authorization header (X-User-Id)")
             }
     )
     @GetMapping("/user/activity")
     public ResponseEntity<List<DailyActivity>> getUserActivity(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) String userId,
 
             @Parameter(
-                    description = "Количество последних дней для агрегации (максимум 30)",
+                    description = "Number of recent days to aggregate (maximum 30)",
                     example = "14"
             )
             @RequestParam(value = "days", defaultValue = "14")

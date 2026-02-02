@@ -1,13 +1,13 @@
 package ru.zeker.authentication.exception;
 
 import org.springframework.http.HttpStatus;
-import ru.zeker.common.exception.ApiException;
+import ru.zeker.common.exception.BaseException;
 
-public class UserAlreadyEnableException extends ApiException {
+public class UserAlreadyEnableException extends BaseException {
     public UserAlreadyEnableException(String message) {
         super(message, HttpStatus.CONFLICT);
     }
     public UserAlreadyEnableException() {
-        super("Пользователь уже активирован", HttpStatus.CONFLICT);
+        super("The user is already activated", HttpStatus.CONFLICT);
     }
 }

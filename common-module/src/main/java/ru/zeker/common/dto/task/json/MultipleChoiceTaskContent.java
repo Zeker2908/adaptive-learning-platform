@@ -17,15 +17,15 @@ import java.util.Set;
 @Builder
 public final class MultipleChoiceTaskContent implements TaskContent {
 
-    @NotBlank
+    @NotBlank(message = "The question cannot be empty")
     @JsonView(Views.Public.class)
     private String question;
 
-    @NotEmpty
+    @NotEmpty(message = "The options cannot be empty")
     @JsonView(Views.Public.class)
     private List<ChoiceOption> options;
 
-    @NotEmpty
+    @NotEmpty(message = "The correctOptionIndices cannot be empty")
     @JsonView(Views.Admin.class)
     private Set<Integer> correctOptionIndices;
 }

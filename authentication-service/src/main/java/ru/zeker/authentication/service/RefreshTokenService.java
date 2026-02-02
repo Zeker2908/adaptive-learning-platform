@@ -17,8 +17,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Реализация сервиса для управления refresh-токенами
- * Обеспечивает создание, проверку, обновление и отзыв refresh-токенов
+ * Implementation of service for managing refresh tokens
+ * Provides creation, verification, rotation, and revocation of refresh tokens
  */
 @Slf4j
 @Service
@@ -30,13 +30,13 @@ public class RefreshTokenService {
     private final UserService userService;
 
     /**
-     * Создает новый refresh-токен для пользователя
+     * Creates a new refresh token for a user
      *
-     * @param user пользователь, для которого создается токен
-     * @return строка refresh-токена
+     * @param user user for whom the token is created
+     * @return refresh token string
      */
     public String createRefreshToken(User user) {
-        log.debug("Создание нового refresh-токена для пользователя с ID: {}", user.getId());
+        log.debug("Creating new refresh token for user with ID: {}", user.getId());
 
         String token = jwtService.generateRefreshToken(user);
         Date expiryDate = new Date(System.currentTimeMillis() + jwtProperties.getRefresh().getExpiration());
@@ -50,91 +50,89 @@ public class RefreshTokenService {
                 .build();
 
         RefreshToken savedToken = refreshTokenRepository.save(refreshToken);
-        log.debug("Refresh-токен успешно сохранен в базе данных, срок действия: {} секунд", ttlSeconds);
+        log.debug("Refresh token successfully saved to database, expiration: {} seconds", ttlSeconds);
 
         return savedToken.getToken();
     }
 
     /**
-     * Проверяет действительность refresh-токена
+     * Verifies the validity of a refresh token
      *
-     * @param token строка refresh-токена для проверки
-     * @return объект RefreshToken, если токен действителен
-     * @throws TokenExpiredException  если токен истек или отозван
-     * @throws TokenNotFoundException если токен не найден
+     * @param token refresh token string to verify
+     * @return RefreshToken object if token is valid
+     * @throws TokenExpiredException  if token is expired or revoked
+     * @throws TokenNotFoundException if token is not found
      */
     public RefreshToken verifyRefreshToken(String token) {
-        log.debug("Проверка refresh-токена");
+        log.debug("Verifying refresh token");
 
         return refreshTokenRepository.findByToken(token)
                 .map(t -> {
                     if (t.getExpiryDate().before(new Date())) {
-                        log.warn("Попытка использовать истекший токен для пользователя с ID: {}", t.getUserId());
+                        log.warn("Attempt to use expired token for user with ID: {}", t.getUserId());
                         refreshTokenRepository.delete(t);
-                        throw new TokenExpiredException("Срок действия токена истек");
+                        throw new TokenExpiredException("Token expiration date has passed");
                     }
 
-                    log.debug("Refresh-токен действителен для пользователя с ID: {}", t.getUserId());
+                    log.debug("Refresh token valid for user with ID: {}", t.getUserId());
                     return t;
                 })
                 .orElseThrow(() -> {
-                    log.warn("Токен не найден в базе данных");
-                    return new TokenNotFoundException("Refresh-токен не найден");
+                    log.warn("Token not found in database");
+                    return new TokenNotFoundException("Refresh token not found");
                 });
     }
 
     /**
-     * Обновляет refresh-токен, удаляя старый и создавая новый
+     * Rotates refresh token by deleting the old one and creating a new one
      *
-     * @param token объект старого refresh-токена
-     * @return строка нового refresh-токена
+     * @param token old refresh token object
+     * @return new refresh token string
      */
     public String rotateRefreshToken(RefreshToken token) {
-        log.debug("Обновление refresh-токена для пользователя с ID: {}", token.getUserId());
+        log.debug("Rotating refresh token for user with ID: {}", token.getUserId());
 
         refreshTokenRepository.delete(token);
-        log.debug("Старый refresh-токен удален");
+        log.debug("Old refresh token deleted");
 
         User user = userService.findById(token.getUserId());
         String newToken = createRefreshToken(user);
 
-        log.info("Refresh-токен успешно обновлен для пользователя с ID: {}", token.getUserId());
+        log.info("Refresh token successfully rotated for user with ID: {}", token.getUserId());
         return newToken;
     }
 
     /**
-     * Отзывает refresh-токен, делая его недействительным
+     * Revokes a refresh token, making it invalid
      *
-     * @param token строка refresh-токена для отзыва
+     * @param token refresh token string to revoke
      */
     public void revokeRefreshToken(String token) {
-        log.debug("Запрос на отзыв refresh-токена");
+        log.debug("Request to revoke refresh token");
 
         refreshTokenRepository.findByToken(token)
                 .ifPresent(t -> {
-                    log.info("Отзыв refresh-токена для пользователя с ID: {}", t.getUserId());
+                    log.info("Revoking refresh token for user with ID: {}", t.getUserId());
                     refreshTokenRepository.delete(t);
                 });
     }
 
     /**
-     * Отзывает все refresh-токены пользователя
+     * Revokes all refresh tokens for a user
      *
-     * @param token токен пользователя
+     * @param token user token
      */
     public void revokeAllUserTokens(String token) {
         UUID userId = jwtService.extractUserId(token);
-        log.info("Отзыв всех refresh-токенов для пользователя с ID: {}", userId);
+        log.info("Revoking all refresh tokens for user with ID: {}", userId);
 
         Set<RefreshToken> tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
-            log.warn("Пользователь с ID: {} не имеет refresh-токенов", userId);
-            return new UserNotFoundException("Пользователь с ID: " + userId + " не имеет refresh-токенов");
+            log.warn("User with ID: {} has no refresh tokens", userId);
+            return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens");
         });
 
         refreshTokenRepository.deleteAll(tokens);
 
-        log.info("Отозвано {} токенов для пользователя с ID: {}", tokens.size(), userId);
+        log.info("Revoked {} tokens for user with ID: {}", tokens.size(), userId);
     }
-
-
 }

@@ -6,20 +6,21 @@ import ru.zeker.common.dto.task.Difficulty;
 import ru.zeker.task.domain.model.entity.Task;
 
 import java.util.List;
+import java.util.Objects;
 
 @UtilityClass
 public class TaskSpecification {
 
     public static Specification<Task> hasTitle(String title) {
         return (root, query, builder) ->
-                (title == null || title.isBlank())
+                (Objects.isNull(title) || title.isBlank())
                         ? builder.conjunction()
                         : builder.like(builder.lower(root.get("title")), "%" + title.toLowerCase() + "%");
     }
 
     public static Specification<Task> hasDifficulties(List<Difficulty> diffs) {
         return (root, query, builder) -> {
-            if (diffs == null || diffs.isEmpty()) {
+            if (Objects.isNull(diffs) || diffs.isEmpty()) {
                 return builder.conjunction();
             }
             return root.get("difficulty").in(diffs);
@@ -29,7 +30,7 @@ public class TaskSpecification {
 
     public static Specification<Task> hasAnyTags(List<String> tagNames) {
         return (root, query, builder) -> {
-            if (tagNames == null || tagNames.isEmpty()) {
+            if (Objects.isNull(tagNames) || tagNames.isEmpty()) {
                 return builder.conjunction();
             }
             query.distinct(true);

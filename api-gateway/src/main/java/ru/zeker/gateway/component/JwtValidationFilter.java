@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static ru.zeker.common.headers.ApiHeaders.USER_ID;
-import static ru.zeker.common.headers.ApiHeaders.USER_NAME;
-import static ru.zeker.common.headers.ApiHeaders.USER_ROLE;
+import static ru.zeker.common.headers.AppHeaders.USER_ID;
+import static ru.zeker.common.headers.AppHeaders.USER_NAME;
+import static ru.zeker.common.headers.AppHeaders.USER_ROLE;
 
 @Slf4j
 @Component
@@ -72,7 +72,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private Mono<Claims> extractClaims(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isBlank(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
-            return Mono.error(new AuthException("Отсутствует заголовок авторизации", HttpStatus.UNAUTHORIZED));
+            return Mono.error(new AuthException("Authorization header missing", HttpStatus.UNAUTHORIZED));
         }
 
         String token = authHeader.substring(BEARER_PREFIX.length());
@@ -80,18 +80,18 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         if (jwtUtils.isTokenExpired(token)) {
-                            throw new AuthException("Срок действия токена истек", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
+                            throw new AuthException("The token has expired.", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
                         }
                         return jwtUtils.extractAllClaims(token);
                     } catch (AuthException e) {
                         log.warn(e.getMessage());
                         throw e;
                     } catch (JwtException e) {
-                        log.warn("Недействительный JWT: {}", e.getMessage());
-                        throw new AuthException("Недействительный токен", HttpStatus.UNAUTHORIZED);
+                        log.warn("Invalid JWT: {}", e.getMessage());
+                        throw new AuthException("Invalid token", HttpStatus.UNAUTHORIZED);
                     } catch (Exception e) {
-                        log.warn("Не удалось проанализировать токен {}", e.getMessage());
-                        throw new AuthException("Недействительный токен", HttpStatus.UNAUTHORIZED);
+                        log.warn("Failed to parse token {}", e.getMessage());
+                        throw new AuthException("Invalid token", HttpStatus.UNAUTHORIZED);
                     }
                 })
                 .subscribeOn(Schedulers.boundedElastic());
@@ -100,8 +100,8 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private Mono<Claims> verifyRole(ServerWebExchange exchange, Claims claims) {
         String userRole = claims.get("role", String.class);
         if (Objects.isNull(userRole)) {
-            log.warn("Роль пользователя не указана в токене");
-            return Mono.error(new AuthException("Роль пользователя не указана в токене", HttpStatus.FORBIDDEN));
+            log.warn("The user's role is not specified in the token.");
+            return Mono.error(new AuthException("The user's role is not specified in the token.", HttpStatus.FORBIDDEN));
         }
         Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         String requiredRole = Optional.ofNullable(route)
@@ -110,8 +110,8 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                 .map(Object::toString)
                 .orElse(null);
         if (Objects.nonNull(requiredRole) && !requiredRole.equals(userRole)) {
-            log.warn("Недостаточно привилегий");
-            return Mono.error(new AuthException("Недостаточно привилегий", HttpStatus.FORBIDDEN));
+            log.warn("Insufficient privileges");
+            return Mono.error(new AuthException("Insufficient privileges", HttpStatus.FORBIDDEN));
         }
         return Mono.just(claims);
     }

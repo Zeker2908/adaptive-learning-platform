@@ -5,16 +5,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.zeker.common.dto.task.Difficulty;
-import ru.zeker.common.dto.task.TestCase;
 import ru.zeker.common.dto.task.json.TaskContent;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,18 +22,20 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskRequest {
 
-    @NotBlank
+    @NotBlank(message = "The title cannot be empty")
+    @Size(min = 8, max = 255, message = "The title length must be between 8 and 255 characters.")
     private String title;
 
+    @Size(max = 1000, message = "The description length must be between 1000 characters.")
     private String description;
 
-    @NotNull
+    @NotNull(message = "The difficulty cannot be null")
     private Difficulty difficulty;
 
-    @NotEmpty
+    @NotEmpty(message = "The tags cannot be empty")
     private Set<String> tags;
 
-    @NotNull
+    @NotNull(message = "The content cannot be null")
     @Valid
     private TaskContent content;
 }

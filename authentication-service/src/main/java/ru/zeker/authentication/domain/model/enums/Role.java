@@ -10,6 +10,6 @@ public enum Role {
                 return r;
             }
         }
-        throw new IllegalArgumentException("Неизвестная роль: " + role);
+        throw new IllegalArgumentException("Unknown role: " + role);
     }
 }

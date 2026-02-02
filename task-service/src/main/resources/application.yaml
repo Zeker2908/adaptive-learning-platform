@@ -4,7 +4,7 @@ spring:
   application:
     name: task-service
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/interview
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/learning
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:admin}
     password: ${POSTGRES_PASSWORD:admin}

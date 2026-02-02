@@ -26,42 +26,42 @@ import ru.zeker.solution.service.RecommendationService;
 import java.util.List;
 import java.util.UUID;
 
-import static ru.zeker.common.headers.ApiHeaders.USER_ID;
+import static ru.zeker.common.headers.AppHeaders.USER_ID;
 
 @RestController
 @Validated
 @RequestMapping("/recommendations")
 @RequiredArgsConstructor
-@Tag(name = "Recommendation Controller", description = "Предоставляет персонализированные рекомендации задач на основе прогресса пользователя")
+@Tag(name = "Recommendation Controller", description = "Provides personalized task recommendations based on user progress")
 @SecurityRequirement(name = "bearerAuth")
 public class RecommendationController {
 
     private final RecommendationService recommendationService;
 
     @Operation(
-            summary = "Получить рекомендованные задачи",
-            description = "Возвращает список персонализированных задач, рекомендованных пользователю на основе его предыдущих решений и прогресса.",
+            summary = "Get recommended tasks",
+            description = "Returns a list of personalized tasks recommended to the user based on their previous solutions and progress.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Список рекомендованных задач успешно получен",
+                            description = "List of recommended tasks successfully retrieved",
                             content = @Content(
                                     mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = TaskResponse.class))
                             )
                     ),
-                    @ApiResponse(responseCode = "400", description = "Некорректный формат USER_ID"),
-                    @ApiResponse(responseCode = "401", description = "Отсутствует или неверный заголовок USER_ID")
+                    @ApiResponse(responseCode = "400", description = "Invalid USER_ID format"),
+                    @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header")
             }
     )
     @GetMapping
     @JsonView(Views.Public.class)
     public ResponseEntity<List<TaskResponse>> getRecommendations(
-            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
+            @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) String userId,
 
             @Parameter(
-                    description = "Максимальное количество возвращаемых задач (от 1 до 10)",
+                    description = "Maximum number of tasks to return (from 1 to 10)",
                     example = "5",
                     schema = @Schema(minimum = "1", maximum = "10", defaultValue = "5")
             )

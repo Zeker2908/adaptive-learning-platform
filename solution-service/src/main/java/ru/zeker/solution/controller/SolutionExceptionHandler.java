@@ -21,19 +21,17 @@ public class SolutionExceptionHandler extends GlobalExceptionHandler {
 
         String message = ex.getMessage();
         try {
-            // Иногда Feign возвращает тело с сообщением, можно попытаться распарсить
             String body = ex.contentUTF8();
             if (StringUtils.isNotBlank(body)) {
                 message = body;
             }
-        } catch (Exception e) {
-            // игнорируем парсинг ошибок
+        } catch (Exception ignored) {
         }
 
         log.error("Feign exception: HTTP {} - {}", ex.status(), message, ex);
         return buildErrorResponse(
                 status,
-                "Ошибка при вызове внешнего сервиса: " + message,
+                "Error calling external service: " + message,
                 request.getRequestURI(),
                 request.getRequestId()
         );

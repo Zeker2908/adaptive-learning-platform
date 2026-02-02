@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RefreshTokenRequest {
-    @Size(max = 512, message = "Длина токена обновления должна составлять 512 символов.")
-    @NotBlank(message = "Токен обновления не может быть пустым")
+    @Size(max = 512, message = "The refresh token must be 512 characters long")
+    @NotBlank(message = "The refresh token cannot be empty")
     private String refreshToken;
 }
