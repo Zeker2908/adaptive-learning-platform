@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Запрос на подтверждение email по токену")
+@Schema(description = "Request for email verification by token")
 public class ConfirmationEmailRequest {
 
     @Schema(description = "Email confirmation token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", required = true)

@@ -3,6 +3,8 @@ package ru.zeker.authentication.service;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zeker.authentication.domain.dto.request.BindPasswordRequest;
+import ru.zeker.authentication.domain.dto.request.GrantAdminRequest;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
+import ru.zeker.authentication.domain.model.enums.Role;
 import ru.zeker.authentication.exception.UserAlreadyExistsException;
 import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.UserRepository;
@@ -37,6 +41,11 @@ public class UserService {
     public User findById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<User> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -96,6 +105,16 @@ public class UserService {
         user.getLocalAuth().setPassword(passwordEncoder.encode(newPassword));
         repository.save(user);
         log.info("Password changed for user with ID: {}", user.getId());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public User grantAdmin(GrantAdminRequest request) {
+        var user = findById(request.userId());
+        if (user.getRole() == Role.ADMIN) {
+            throw new UserAlreadyExistsException("The user already has the admin role");
+        }
+        user.setRole(Role.ADMIN);
+        return update(user);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
