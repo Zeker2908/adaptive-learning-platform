@@ -4,7 +4,7 @@
 
 ## 📝 Описание
 
-Этот репозиторий содержит набор микросервисов на **Spring Boot**, реализующих адаптивную платформу для подготовки к техническим собеседованиям. Система анализирует уровень знаний пользователя и динамически формирует персональную очередь задач, фокусируясь на слабых темах.
+Этот репозиторий содержит набор микросервисов на **Spring Boot**, реализующих адаптивную платформу обучения. Система анализирует уровень знаний пользователя и динамически формирует персональную очередь задач, фокусируясь на слабых темах.
 
 ### Основные компоненты:
 
@@ -12,7 +12,7 @@
 - **Task Service** — управление задачами, тегами и сложностью
 - **Solution Service** — хранение решений, расчёт прогресса, рекомендации
 - **Sandbox Service** — интеграция с Judge0 для безопасного запуска кода
-- **Notification Service** — email-уведомления через Kafka
+- **SMTP Service** — email-уведомления через Kafka
 - **API Gateway** — единая точка входа, валидация JWT, маршрутизация
 - **Инфраструктура**: PostgreSQL, Redis, Kafka + Zookeeper (через Docker Compose)
 
@@ -93,7 +93,7 @@ docker compose up --build
 adaptive-learning-platform/
 ├── api-gateway/             # Spring Cloud Gateway
 ├── authentication-service/  # Auth + JWT + OAuth2
-├── notification-service/    # Email через Kafka + Thymeleaf
+├── smtp-service/            # Email через Kafka + Thymeleaf
 ├── task-service/            # Задачи, теги, сложность
 ├── solution-service/        # Решения, прогресс, рекомендации
 ├── sandbox-service/         # Интеграция с Judge0

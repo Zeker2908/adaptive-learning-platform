@@ -77,7 +77,7 @@ services:
       bash -c "
         kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.request --partitions 32 --replication-factor 1 &&
         kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.result --partitions 32 --replication-factor 1 &&
-        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.notification.events --partitions 32 --replication-factor 1
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.smtp.events --partitions 32 --replication-factor 1
       "
     init: true
     networks:
@@ -177,12 +177,12 @@ services:
     networks:
       - internal
 
-  # === Notification Service ===
-  notification-service:
-    image: notification-service:latest
+  # === SMTP Service ===
+  smtp-service:
+    image: smtp-service:latest
     build:
       context: .
-      dockerfile: notification-service/Dockerfile
+      dockerfile: smtp-service/Dockerfile
       args:
         DOCKER_BUILDKIT: 1
     restart: always

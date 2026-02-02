@@ -22,8 +22,8 @@ import ru.zeker.authentication.domain.model.entity.User;
 import ru.zeker.authentication.exception.InvalidTokenException;
 import ru.zeker.authentication.exception.TooManyRequestsException;
 import ru.zeker.authentication.exception.UserAlreadyEnableException;
-import ru.zeker.common.dto.kafka.notification.EmailEvent;
-import ru.zeker.common.dto.kafka.notification.EmailEventType;
+import ru.zeker.common.dto.kafka.smtp.EmailEvent;
+import ru.zeker.common.dto.kafka.smtp.EmailEventType;
 import ru.zeker.common.util.JwtUtils;
 
 import java.util.Map;
