@@ -100,7 +100,7 @@ services:
     networks:
       - internal
 
-  # https://github.com/judge0/judge0/releases
+    # https://github.com/judge0/judge0/releases
     # === Judge0 Worker ===
   judge0:
     image: judge0/judge0:1.13.1
@@ -256,6 +256,8 @@ services:
       kafka:
         condition: service_healthy
       solution-service:
+        condition: service_started
+      judge0:
         condition: service_started
     networks:
       - internal

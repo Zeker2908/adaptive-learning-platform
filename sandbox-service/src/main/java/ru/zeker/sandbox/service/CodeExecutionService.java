@@ -44,7 +44,7 @@ public class CodeExecutionService {
         }
 
         var encodedCode = Base64.getEncoder()
-                .encodeToString(request.getCode().getBytes(StandardCharsets.UTF_8));
+                .encodeToString(request.getAnswer().getBytes(StandardCharsets.UTF_8));
         var encodedStdin = Base64.getEncoder()
                 .encodeToString(stdin.getBytes(StandardCharsets.UTF_8));
 

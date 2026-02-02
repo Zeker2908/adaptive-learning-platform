@@ -19,6 +19,6 @@ public class SolutionExecRequest {
 
     private String solutionId;
     private Language language;
-    private String code;
+    private String answer;
     private List<TestCase> tests;
 }
