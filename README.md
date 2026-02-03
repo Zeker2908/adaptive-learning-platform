@@ -45,6 +45,7 @@ export CLIENT_SECRET=<Google OAuth2 Client Secret>
 export ADMIN_EMAIL=<email администратора по умолчанию>
 export MAIL_USERNAME=<SMTP username>
 export MAIL_PASSWORD=<SMTP password>
+export FRONT_URL=<http://localhost:5173> # или укажите свой
 export JUDGE0_URL=http://<ваш-judge0-хост>:2358  # или публичный
 ```
 

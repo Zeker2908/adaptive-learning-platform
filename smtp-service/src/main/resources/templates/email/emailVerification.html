@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email confirmation</title>
+  <title>Подтверждение электронной почты</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -54,22 +54,19 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>Welcome!</h1>
+    <h1>Добро пожаловать!</h1>
   </div>
   <div class="content">
-    <p>Thank you for registering. To complete the process, please confirm your email by clicking the button below.:</p>
+    <p>Спасибо за регистрацию. Для завершения процесса, пожалуйста, подтвердите свой адрес электронной почты, нажав кнопку ниже:</p>
 
     <p style="text-align: center;">
-      <a th:href="${actionUrl}" class="button" style="display: inline-block; padding: 12px 24px; background-color: #4a6fa5; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Confirm email</a>
+      <a th:href="${actionUrl}" class="button" style="display: inline-block; padding: 12px 24px; background-color: #4a6fa5; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Подтвердите адрес электронной почты</a>
     </p>
 
-    <p>If the button doesn't work, copy and paste this link into your browser.:</p>
-    <p><code th:text="${actionUrl}" style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">[Confirmation link]</code></p>
-
-    <p>If you haven't registered with us, please ignore this email</p>
+    <p>Если вы не регистрировались у нас, пожалуйста, проигнорируйте это письмо</p>
   </div>
   <div class="footer">
-    <p th:text="'© ' + ${currentYear} + ' ' + ${companyName} + '. All rights reserved.'">© 2026. All rights reserved.</p>
+    <p th:text="'© ' + ${currentYear} + ' ' + ${companyName} + '. Все права защищены.'">© 2026. Все права защищены.</p>
   </div>
 </div>
 </body>

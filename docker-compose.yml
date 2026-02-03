@@ -190,6 +190,7 @@ services:
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       COMPANY_NAME: learning
+      FRONT_URL: ${FRONT_URL}
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
