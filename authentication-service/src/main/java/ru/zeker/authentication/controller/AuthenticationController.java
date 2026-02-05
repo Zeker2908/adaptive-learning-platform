@@ -92,7 +92,7 @@ public class AuthenticationController {
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
         var tokens = authenticationService.login(request);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(durationDays));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -115,7 +115,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request,
                                                                HttpServletResponse response) {
         var tokens = authenticationService.confirmEmail(request);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(durationDays));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -194,7 +194,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         var tokens = authenticationService.refreshToken(refreshToken);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(durationDays));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }

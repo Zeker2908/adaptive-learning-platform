@@ -169,9 +169,9 @@ server:
 jwt:
   public-key-path: ${PUBLIC_KEY}
   access:
-    expiration: 900000
+    expiration: ${ACCESS_TOKEN_DURATION}
   refresh:
-    expiration: 604800000
+    expiration: ${REFRESH_TOKEN_DURATION}
 
 logging:
   level:

@@ -69,7 +69,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             var accessToken = jwtService.generateAccessToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
 
-            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(durationDays));
+            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofMillis(durationDays));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             response.setContentType("application/json;charset=UTF-8");

@@ -138,6 +138,8 @@ services:
       retries: 5
     environment:
       PUBLIC_KEY: file:///app/keys/public.pem
+      ACCESS_TOKEN_DURATION: ${ACCESS_TOKEN_DURATION}
+      REFRESH_TOKEN_DURATION: ${REFRESH_TOKEN_DURATION}
     volumes:
       - keys:/app/keys:ro
     depends_on:
