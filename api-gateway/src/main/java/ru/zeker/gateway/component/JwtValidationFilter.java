@@ -2,7 +2,6 @@ package ru.zeker.gateway.component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -80,10 +79,10 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                     try {
                         return jwtUtils.extractAllClaims(token);
                     } catch (ExpiredJwtException e) {
-                        log.warn(e.getMessage());
+                        log.warn(e.getMessage(), e);
                         throw new AuthException("The token has expired.", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
                     } catch (Exception e) {
-                        log.warn(e.getMessage());
+                        log.error(e.getMessage(), e);
                         throw new AuthException("Invalid token", HttpStatus.UNAUTHORIZED);
                     }
                 })
@@ -131,9 +130,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         body.put("status", ex.getStatus().value());
         body.put("error", ex.getStatus().getReasonPhrase());
         body.put("message", ex.getMessage());
-        if (StringUtils.isNotBlank(ex.getReason())) {
-            body.put("reason", ex.getReason());
-        }
+        body.put("reason", ex.getReason());
 
         return response.writeWith(
                 jsonEncoder.encode(
