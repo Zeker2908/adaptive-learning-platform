@@ -25,7 +25,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Getter
 public class JwtUtils {
-    private static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
+    public static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
 
     private final JwtProperties jwtProperties;
     private final Cache<String, Claims> claimsCache;
@@ -75,7 +75,7 @@ public class JwtUtils {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            throw new AuthException(e.getMessage(), TOKEN_EXPIRED_REASON);
+            throw new AuthException("The token has expired", TOKEN_EXPIRED_REASON);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse token: " + e.getMessage(), e);
         }

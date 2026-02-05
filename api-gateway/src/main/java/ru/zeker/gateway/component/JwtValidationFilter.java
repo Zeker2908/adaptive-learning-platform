@@ -30,6 +30,7 @@ import java.util.Optional;
 import static ru.zeker.common.headers.AppHeaders.USER_ID;
 import static ru.zeker.common.headers.AppHeaders.USER_NAME;
 import static ru.zeker.common.headers.AppHeaders.USER_ROLE;
+import static ru.zeker.common.util.JwtUtils.TOKEN_EXPIRED_REASON;
 
 @Slf4j
 @Component
@@ -75,6 +76,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
 
         return Mono.fromCallable(() -> {
                     try {
+                        if (jwtUtils.isTokenExpired(token)) {
+                            throw new AuthException("The token has expired", TOKEN_EXPIRED_REASON);
+                        }
                         return jwtUtils.extractAllClaims(token);
                     } catch (AuthException e) {
                         log.warn(e.getMessage());
