@@ -157,6 +157,7 @@ services:
         DOCKER_BUILDKIT: 1
     restart: always
     environment:
+      FRONT_URL: ${FRONT_URL}
       PRIVATE_KEY: file:///app/keys/private.pem
       PUBLIC_KEY: file:///app/keys/public.pem
       POSTGRES_HOST: postgres:5432
