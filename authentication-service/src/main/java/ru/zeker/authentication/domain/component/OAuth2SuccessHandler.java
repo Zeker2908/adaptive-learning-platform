@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -28,6 +29,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final OAuth2Service oAuth2Service;
     private final ObjectMapper objectMapper;
+
+    @Value("${jwt.refresh.expiration}")
+    private long durationDays;
 
     /**
      * Handler for successful OAuth2 authentication.
@@ -65,7 +69,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             var accessToken = jwtService.generateAccessToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
 
-            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(7));
+            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofDays(durationDays));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             response.setContentType("application/json;charset=UTF-8");

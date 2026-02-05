@@ -135,7 +135,7 @@ public class AuthenticationService {
      * @throws InvalidTokenException      if token is invalid
      * @throws UserAlreadyEnableException if email is already confirmed
      */
-    public void confirmEmail(ConfirmationEmailRequest request) {
+    public Tokens confirmEmail(ConfirmationEmailRequest request) {
         log.info("Email confirmation request");
         var token = request.getToken();
 
@@ -155,6 +155,15 @@ public class AuthenticationService {
         userService.update(user);
 
         log.info("Email successfully confirmed for user: {}", user.getEmail());
+        var jwtToken = jwtService.generateAccessToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(user);
+
+        log.info("User successfully logged in: {}", user.getEmail());
+
+        return Tokens.builder()
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     /**

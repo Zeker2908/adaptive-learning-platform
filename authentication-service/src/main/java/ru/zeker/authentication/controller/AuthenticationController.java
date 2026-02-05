@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -49,6 +50,9 @@ import java.time.Duration;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
+
+    @Value("${jwt.refresh.expiration}")
+    private long durationDays;
 
     /**
      * Registers a new user and sends a confirmation email.
@@ -88,7 +92,7 @@ public class AuthenticationController {
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
         var tokens = authenticationService.login(request);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -97,19 +101,23 @@ public class AuthenticationController {
      * Confirms user email using confirmation token.
      *
      * @param request {@link ConfirmationEmailRequest} - confirmation token
-     * @return {@link ResponseEntity} with HTTP status 200 (OK)
+     * @return {@link ResponseEntity} with {@link AuthenticationResponse} (access token)
      * @throws jakarta.validation.ConstraintViolationException if token is invalid
      * @throws TokenExpiredException                           if token is expired
      */
     @Operation(summary = "Email confirmation", description = "Confirms email using provided token")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Email successfully confirmed"),
+            @ApiResponse(responseCode = "200", description = "Email confirmed successful",
+                    content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid token")
     })
     @PatchMapping("/email/verify")
-    public ResponseEntity<Void> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request) {
-        authenticationService.confirmEmail(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AuthenticationResponse> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request,
+                                                               HttpServletResponse response) {
+        var tokens = authenticationService.confirmEmail(request);
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
 
     /**
@@ -186,7 +194,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         var tokens = authenticationService.refreshToken(refreshToken);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(7));
+        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofDays(durationDays));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
