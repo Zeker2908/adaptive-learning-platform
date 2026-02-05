@@ -44,7 +44,11 @@ public class DataInitializer implements CommandLineRunner {
         if (!userService.existsByEmail(adminName)) {
             final var password = generateRandomPassword();
             log.info("Creating an administrator with email: {}", adminName);
-            var request = RegisterRequest.builder().email(adminName).password(password).build();
+            var request = RegisterRequest.builder()
+                    .email(adminName)
+                    .password(password)
+                    .firstName("ADMIN")
+                    .build();
             var admin = userMapper.toAdmin(request, passwordEncoder);
             userService.create(admin);
             passwordHistoryService.create(admin, password);
