@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-add-firstname-lastname-to-users
+      author: zeker
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: true

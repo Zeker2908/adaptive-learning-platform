@@ -8,4 +8,6 @@ import lombok.Data;
 public class OAuth2UserInfo {
     private String email;
     private String oAuthId;
+    private String firstName;
+    private String lastName;
 }

@@ -11,7 +11,9 @@ public enum OAuth2Provider {
         public OAuth2UserInfo extractUserInfo(Map<String, Object> attributes) {
             return new OAuth2UserInfo(
                     (String) attributes.get("email"),
-                    (String) attributes.get("sub")
+                    (String) attributes.get("sub"),
+                    (String) attributes.get("given_name"),  // First name
+                    (String) attributes.get("family_name")   // Last name
             );
 
         }

@@ -28,6 +28,11 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String firstName;
+
+    private String lastName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

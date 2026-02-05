@@ -34,4 +34,13 @@ public class RegisterRequest {
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 8, max = 255, message = "Password length must be between 8 and 255 characters")
     private String password;
+
+    @Schema(description = "User first name", example = "John", required = true)
+    @NotBlank(message = "First name cannot be empty")
+    @Size(min = 1, max = 100, message = "First name must contain between 1 and 100 characters")
+    private String firstName;
+
+    @Schema(description = "User last name", example = "Doe")
+    @Size(max = 100, message = "Last name must not exceed 100 characters")
+    private String lastName;
 }
