@@ -1,12 +1,16 @@
-package ru.zeker.gateway.exception;
+package ru.zeker.common.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import ru.zeker.common.exception.BaseException;
 
 @Getter
 public class AuthException extends BaseException {
     private final String reason;
+
+    public AuthException(String message, String reason) {
+        super(message, HttpStatus.UNAUTHORIZED);
+        this.reason = reason;
+    }
 
     public AuthException(String message, HttpStatus status) {
         super(message, status);

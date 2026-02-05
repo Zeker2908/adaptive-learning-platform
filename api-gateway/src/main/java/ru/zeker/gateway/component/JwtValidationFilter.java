@@ -1,7 +1,6 @@
 package ru.zeker.gateway.component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import ru.zeker.common.exception.AuthException;
 import ru.zeker.common.util.JwtUtils;
-import ru.zeker.gateway.exception.AuthException;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -39,7 +38,6 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String AUTH_REQUIRED_KEY = "auth-required";
     private static final String REQUIRED_ROLE_KEY = "required-role";
-    private static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
 
     private final JwtUtils jwtUtils;
     private final Jackson2JsonEncoder jsonEncoder;
@@ -78,9 +76,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         return jwtUtils.extractAllClaims(token);
-                    } catch (ExpiredJwtException e) {
-                        log.warn(e.getMessage(), e);
-                        throw new AuthException("The token has expired.", HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_REASON);
+                    } catch (AuthException e) {
+                        log.warn(e.getMessage());
+                        throw e;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                         throw new AuthException("Invalid token", HttpStatus.UNAUTHORIZED);
@@ -130,7 +128,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         body.put("status", ex.getStatus().value());
         body.put("error", ex.getStatus().getReasonPhrase());
         body.put("message", ex.getMessage());
-        body.put("reason", ex.getReason());
+        if (StringUtils.isNotBlank(ex.getReason())) {
+            body.put("reason", ex.getReason());
+        }
 
         return response.writeWith(
                 jsonEncoder.encode(

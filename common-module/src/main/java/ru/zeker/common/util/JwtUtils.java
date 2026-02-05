@@ -2,12 +2,14 @@ package ru.zeker.common.util;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.zeker.common.config.JwtProperties;
+import ru.zeker.common.exception.AuthException;
 
 import java.io.IOException;
 import java.security.Key;
@@ -23,6 +25,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Getter
 public class JwtUtils {
+    private static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
+
     private final JwtProperties jwtProperties;
     private final Cache<String, Claims> claimsCache;
 
@@ -70,6 +74,8 @@ public class JwtUtils {
     private Claims parseClaimsJws(String token) {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            throw new AuthException(e.getMessage(), TOKEN_EXPIRED_REASON);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse token: " + e.getMessage(), e);
         }
