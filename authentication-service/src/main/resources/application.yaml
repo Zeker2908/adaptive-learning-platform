@@ -64,6 +64,7 @@ springdoc:
     path: /swagger-ui.html
 
 app:
+  frontend-url: ${FRONT_URL}
   domain: http://localhost:8080
   version: 1
   admin:

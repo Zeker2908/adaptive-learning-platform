@@ -1,6 +1,5 @@
 package ru.zeker.authentication.domain.component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,9 @@ import ru.zeker.authentication.service.OAuth2Service;
 import ru.zeker.authentication.util.CookieUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -28,10 +28,12 @@ import java.util.Objects;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final OAuth2Service oAuth2Service;
-    private final ObjectMapper objectMapper;
 
     @Value("${jwt.refresh.expiration}")
     private long durationDays;
+
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
 
     /**
      * Handler for successful OAuth2 authentication.
@@ -72,19 +74,16 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofMillis(durationDays));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-            response.setContentType("application/json;charset=UTF-8");
-            objectMapper.writeValue(response.getWriter(), Map.of(
-                    "access_token", accessToken,
-                    "token_type", "Bearer"
-            ));
+            String frontendCallbackUrl = frontendUrl + "/oauth/callback?token=" + accessToken;
+            response.sendRedirect(frontendCallbackUrl);
         } catch (Exception e) {
             log.error("OAuth2SuccessHandler error: {}", e.getMessage(), e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            objectMapper.writeValue(response.getWriter(), Map.of(
-                    "error", "OAuth2 authentication failed",
-                    "message", e.getMessage()
-            ));
+
+            String errorMessage = "OAuth2 authentication failed: " + e.getMessage();
+            String encodedErrorMessage = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            String errorRedirectUrl = frontendUrl + "/oauth/callback?error=" + encodedErrorMessage;
+
+            response.sendRedirect(errorRedirectUrl);
         }
     }
 
