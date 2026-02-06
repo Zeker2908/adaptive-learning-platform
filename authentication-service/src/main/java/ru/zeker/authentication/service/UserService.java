@@ -19,6 +19,7 @@ import ru.zeker.authentication.domain.model.enums.Role;
 import ru.zeker.authentication.exception.UserAlreadyExistsException;
 import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.UserRepository;
+import ru.zeker.common.exception.ErrorCode;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -34,13 +35,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found", ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public User findById(UUID id) {
         return repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found", ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +52,7 @@ public class UserService {
     @Transactional(propagation = Propagation.REQUIRED)
     public User create(@NotNull User user) {
         if (repository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists");
+            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists", ErrorCode.USER_ALREADY_EXIST);
         }
 
         repository.save(user);
@@ -71,7 +72,7 @@ public class UserService {
         var user = findById(UUID.fromString(userId));
 
         if (Objects.nonNull(user.getLocalAuth())) {
-            throw new UserAlreadyExistsException("User already has password bound");
+            throw new UserAlreadyExistsException("User already has password bound", ErrorCode.USER_ALREADY_PASSWORD_BOUND);
         }
 
         user.setLocalAuth(LocalAuth.builder()
@@ -111,7 +112,7 @@ public class UserService {
     public User grantAdmin(GrantAdminRequest request) {
         var user = findById(request.userId());
         if (user.getRole() == Role.ADMIN) {
-            throw new UserAlreadyExistsException("The user already has the admin role");
+            throw new UserAlreadyExistsException("The user already has the admin role", ErrorCode.USER_ALREADY_ADMIN);
         }
         user.setRole(Role.ADMIN);
         return update(user);
@@ -120,7 +121,7 @@ public class UserService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteById(UUID id) {
         if (!repository.existsById(id)) {
-            throw new UserNotFoundException("User with ID " + id + " not found");
+            throw new UserNotFoundException("User with ID " + id + " not found", ErrorCode.USER_NOT_FOUND);
         }
         repository.deleteById(id);
         log.info("Deleted user with ID: {}", id);

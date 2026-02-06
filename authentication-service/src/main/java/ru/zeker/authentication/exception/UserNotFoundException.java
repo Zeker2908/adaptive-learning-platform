@@ -2,12 +2,10 @@ package ru.zeker.authentication.exception;
 
 import org.springframework.http.HttpStatus;
 import ru.zeker.common.exception.BaseException;
+import ru.zeker.common.exception.ErrorCode;
 
 public class UserNotFoundException extends BaseException {
-    public UserNotFoundException(String message) {
-        super(message, HttpStatus.NOT_FOUND);
-    }
-    public UserNotFoundException() {
-        super("User not found", HttpStatus.NOT_FOUND);
+    public UserNotFoundException(String message, ErrorCode errorCode) {
+        super(message, HttpStatus.NOT_FOUND, errorCode);
     }
 }

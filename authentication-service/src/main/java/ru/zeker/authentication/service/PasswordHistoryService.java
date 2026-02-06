@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zeker.authentication.domain.model.entity.PasswordHistory;
 import ru.zeker.authentication.domain.model.entity.User;
+import ru.zeker.authentication.exception.LocalAuthUserNotFoundException;
 import ru.zeker.authentication.exception.PasswordHistoryException;
 import ru.zeker.authentication.repository.PasswordHistoryRepository;
 
@@ -31,7 +32,7 @@ public class PasswordHistoryService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void create(User user, String rawPassword) {
         if (Objects.isNull(user.getLocalAuth())) {
-            throw new IllegalStateException("LocalAuth not found for user");
+            throw new LocalAuthUserNotFoundException("LocalAuth not found for user");
         }
         var existingPasswords = findAllByUserId(user.getId());
 

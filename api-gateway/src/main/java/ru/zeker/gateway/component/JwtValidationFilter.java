@@ -19,6 +19,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import ru.zeker.common.exception.AuthException;
+import ru.zeker.common.exception.ErrorCode;
 import ru.zeker.common.util.JwtUtils;
 
 import java.time.Instant;
@@ -30,7 +31,6 @@ import java.util.Optional;
 import static ru.zeker.common.headers.AppHeaders.USER_ID;
 import static ru.zeker.common.headers.AppHeaders.USER_NAME;
 import static ru.zeker.common.headers.AppHeaders.USER_ROLE;
-import static ru.zeker.common.util.JwtUtils.TOKEN_EXPIRED_REASON;
 
 @Slf4j
 @Component
@@ -77,7 +77,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         if (jwtUtils.isTokenExpired(token)) {
-                            throw new AuthException("The token has expired", TOKEN_EXPIRED_REASON);
+                            throw new AuthException("The token has expired", ErrorCode.TOKEN_EXPIRED);
                         }
                         return jwtUtils.extractAllClaims(token);
                     } catch (AuthException e) {
@@ -95,7 +95,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         var userRole = claims.get("role", String.class);
         if (Objects.isNull(userRole)) {
             log.warn("The user's role is not specified in the token.");
-            return Mono.error(new AuthException("The user's role is not specified in the token.", HttpStatus.FORBIDDEN));
+            return Mono.error(new AuthException("The user's role is not specified in the token.", HttpStatus.FORBIDDEN, ErrorCode.ACCESS_DENIED));
         }
         var route = (Route) exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         var requiredRole = Optional.ofNullable(route)
@@ -105,7 +105,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                 .orElse(null);
         if (Objects.nonNull(requiredRole) && !requiredRole.equals(userRole)) {
             log.warn("Insufficient privileges");
-            return Mono.error(new AuthException("Insufficient privileges", HttpStatus.FORBIDDEN));
+            return Mono.error(new AuthException("Insufficient privileges", HttpStatus.FORBIDDEN, ErrorCode.ACCESS_DENIED));
         }
         return Mono.just(claims);
     }
@@ -131,10 +131,8 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         body.put("path", exchange.getRequest().getPath().toString());
         body.put("status", ex.getStatus().value());
         body.put("error", ex.getStatus().getReasonPhrase());
+        body.put("errorCode", ex.getErrorCode());
         body.put("message", ex.getMessage());
-        if (StringUtils.isNotBlank(ex.getReason())) {
-            body.put("reason", ex.getReason());
-        }
 
         return response.writeWith(
                 jsonEncoder.encode(

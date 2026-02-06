@@ -16,6 +16,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.zeker.common.exception.BaseException;
+import ru.zeker.common.exception.ErrorCode;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -24,12 +25,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class GlobalExceptionHandler {
-    private Map<String, Object> buildBaseErrorResponse(HttpStatus status, String message, String path, String requestId) {
+    private Map<String, Object> buildBaseErrorResponse(HttpStatus status, String message, String path, String requestId, ErrorCode errorCode) {
         var response = new LinkedHashMap<String, Object>();
         response.put("timestamp", Instant.now().toString());
         response.put("path", path);
         response.put("status", status.value());
         response.put("error", status.getReasonPhrase());
+        response.put("errorCode", errorCode);
         response.put("message", message);
         response.put("requestId", requestId);
         return response;
@@ -39,16 +41,26 @@ public class GlobalExceptionHandler {
             HttpStatus status,
             String message,
             String path,
+            String requestId,
+            ErrorCode errorCode
+    ) {
+        var errorResponse = buildBaseErrorResponse(status, message, path, requestId, errorCode);
+        log.error("Error: {} - {}", status, message);
+        return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    protected ResponseEntity<Map<String, Object>> buildErrorResponse(
+            HttpStatus status,
+            String message,
+            String path,
             String requestId
     ) {
-        var errorResponse = buildBaseErrorResponse(status, message, path, requestId);
-        log.error("Ошибка: {} - {}", status, message);
-        return ResponseEntity.status(status).body(errorResponse);
+        return buildErrorResponse(status, message, path, requestId, ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Map<String, Object>> handleApiException(BaseException ex, HttpServletRequest request) {
-        return buildErrorResponse(ex.getStatus(), ex.getMessage(), request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(ex.getStatus(), ex.getMessage(), request.getRequestURI(), request.getRequestId(), ex.getErrorCode());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -78,14 +90,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadable(HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Incorrect request body format", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request) {
         String message = String.format("Required parameter '%s' is missing", ex.getParameterName());
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request.getRequestURI(), request.getRequestId(), ErrorCode.MISSING_PARAMETER);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -99,7 +111,7 @@ public class GlobalExceptionHandler {
                         ConstraintViolation::getMessage
                 ));
         var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Parameter validation error", request.getRequestURI(), request.getRequestId());
+                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.VALIDATION_ERROR);
         errorResponse.put("details", errors);
 
         log.error("Parameter validation error: {}", errors);
@@ -117,7 +129,7 @@ public class GlobalExceptionHandler {
                         (existing, replacement) -> existing
                 ));
         var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Parameter validation error", request.getRequestURI(), request.getRequestId());
+                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.VALIDATION_ERROR);
         errorResponse.put("details", validationErrors);
 
         log.error("Validation error: {}", validationErrors);

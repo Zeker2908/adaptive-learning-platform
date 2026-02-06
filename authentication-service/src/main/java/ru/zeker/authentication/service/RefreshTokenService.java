@@ -10,6 +10,7 @@ import ru.zeker.authentication.exception.TokenNotFoundException;
 import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.RefreshTokenRepository;
 import ru.zeker.common.config.JwtProperties;
+import ru.zeker.common.exception.ErrorCode;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -126,7 +127,7 @@ public class RefreshTokenService {
 
         var tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
             log.warn("User with ID: {} has no refresh tokens", userId);
-            return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens");
+            return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
         });
 
         refreshTokenRepository.deleteAll(tokens);

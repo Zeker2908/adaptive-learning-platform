@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.exception.AuthException;
+import ru.zeker.common.exception.ErrorCode;
 
 import java.io.IOException;
 import java.security.Key;
@@ -25,8 +26,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Getter
 public class JwtUtils {
-    public static final String TOKEN_EXPIRED_REASON = "TOKEN_EXPIRED";
-
     private final JwtProperties jwtProperties;
     private final Cache<String, Claims> claimsCache;
 
@@ -75,7 +74,7 @@ public class JwtUtils {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            throw new AuthException("The token has expired", TOKEN_EXPIRED_REASON);
+            throw new AuthException("The token has expired", ErrorCode.TOKEN_EXPIRED);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse token: " + e.getMessage(), e);
         }
