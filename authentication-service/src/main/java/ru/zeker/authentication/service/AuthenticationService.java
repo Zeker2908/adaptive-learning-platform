@@ -1,5 +1,6 @@
 package ru.zeker.authentication.service;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import ru.zeker.authentication.exception.TooManyRequestsException;
 import ru.zeker.authentication.exception.UserAlreadyEnableException;
 import ru.zeker.common.dto.kafka.smtp.EmailEvent;
 import ru.zeker.common.dto.kafka.smtp.EmailEventType;
+import ru.zeker.common.exception.ErrorCode;
 import ru.zeker.common.util.JwtUtils;
 
 import java.util.Map;
@@ -136,34 +138,37 @@ public class AuthenticationService {
      * @throws UserAlreadyEnableException if email is already confirmed
      */
     public Tokens confirmEmail(ConfirmationEmailRequest request) {
-        log.info("Email confirmation request");
-        var token = request.getToken();
+        try {
+            log.info("Email confirmation request");
+            var token = request.getToken();
 
-        var user = userService.findById(jwtService.extractUserId(token));
+            var user = userService.findById(jwtService.extractUserId(token));
+            if (!jwtService.isTokenValid(token, user)) {
+                log.warn("Attempt to confirm email with invalid token");
+                throw new InvalidTokenException("Email confirmation token invalid", ErrorCode.INVALID_EMAIL_TOKEN);
+            }
 
-        if (!jwtService.isTokenValid(token, user)) {
-            log.warn("Attempt to confirm email with invalid token");
-            throw new InvalidTokenException();
+            if (user.isEnabled()) {
+                log.warn("Attempt to re-confirm already activated account: {}", user.getEmail());
+                throw new UserAlreadyEnableException();
+            }
+
+            user.getLocalAuth().setEnabled(true);
+            userService.update(user);
+
+            log.info("Email successfully confirmed for user: {}", user.getEmail());
+            var jwtToken = jwtService.generateAccessToken(user);
+            var refreshToken = refreshTokenService.createRefreshToken(user);
+
+            log.info("User successfully logged in: {}", user.getEmail());
+
+            return Tokens.builder()
+                    .token(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } catch (ExpiredJwtException e) {
+            throw new InvalidTokenException("Email confirmation token expired", ErrorCode.EMAIL_TOKEN_EXPIRED);
         }
-
-        if (user.isEnabled()) {
-            log.warn("Attempt to re-confirm already activated account: {}", user.getEmail());
-            throw new UserAlreadyEnableException();
-        }
-
-        user.getLocalAuth().setEnabled(true);
-        userService.update(user);
-
-        log.info("Email successfully confirmed for user: {}", user.getEmail());
-        var jwtToken = jwtService.generateAccessToken(user);
-        var refreshToken = refreshTokenService.createRefreshToken(user);
-
-        log.info("User successfully logged in: {}", user.getEmail());
-
-        return Tokens.builder()
-                .token(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
     }
 
     /**
@@ -195,37 +200,40 @@ public class AuthenticationService {
      */
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        log.info("Password reset request");
-        var token = request.getToken();
-        var password = request.getPassword();
-        var encodedPassword = passwordEncoder.encode(password);
+        try {
+            log.info("Password reset request");
+            var token = request.getToken();
+            var password = request.getPassword();
+            var encodedPassword = passwordEncoder.encode(password);
+            var user = userService.findById(jwtService.extractUserId(token));
 
-        // Combined token validation
-        if (jwtUtils.isTokenExpired(token) ||
-                !userService.findById(jwtService.extractUserId(token)).getVersion().equals(jwtService.extractVersion(token)) ||
-                !jwtUtils.isValidUsername(token, userService.findById(jwtService.extractUserId(token)).getEmail())) {
-            log.warn("Invalid token for password reset");
-            throw new InvalidTokenException();
+            // Combined token validation
+            if (jwtUtils.isTokenExpired(token) ||
+                    !user.getVersion().equals(jwtService.extractVersion(token)) ||
+                    !jwtUtils.isValidUsername(token, user.getEmail())) {
+                log.warn("Invalid token for password reset");
+                throw new InvalidTokenException("Invalid token for password reset", ErrorCode.INVALID_EMAIL_TOKEN);
+            }
+
+            var localAuth = Optional.ofNullable(user.getLocalAuth())
+                    .orElseGet(() -> {
+                        var localAuthNew = LocalAuth.builder()
+                                .user(user)
+                                .enabled(true)
+                                .build();
+                        user.setLocalAuth(localAuthNew);
+                        return localAuthNew;
+                    });
+            localAuth.setPassword(encodedPassword);
+
+            passwordHistoryService.create(user, password);
+            userService.update(user);
+            refreshTokenService.revokeAllUserTokens(token);
+
+            log.info("Password successfully reset for user: {}", user.getEmail());
+        } catch (ExpiredJwtException e) {
+            throw new InvalidTokenException("Password reset token expired", ErrorCode.EMAIL_TOKEN_EXPIRED);
         }
-
-        var user = userService.findById(jwtService.extractUserId(token));
-
-        var localAuth = Optional.ofNullable(user.getLocalAuth())
-                .orElseGet(() -> {
-                    var localAuthNew = LocalAuth.builder()
-                            .user(user)
-                            .enabled(true)
-                            .build();
-                    user.setLocalAuth(localAuthNew);
-                    return localAuthNew;
-                });
-        localAuth.setPassword(encodedPassword);
-
-        passwordHistoryService.create(user, password);
-        userService.update(user);
-        refreshTokenService.revokeAllUserTokens(token);
-
-        log.info("Password successfully reset for user: {}", user.getEmail());
     }
 
     /**

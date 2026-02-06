@@ -74,7 +74,7 @@ public class JwtUtils {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            throw new AuthException("The token has expired", ErrorCode.TOKEN_EXPIRED);
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse token: " + e.getMessage(), e);
         }
