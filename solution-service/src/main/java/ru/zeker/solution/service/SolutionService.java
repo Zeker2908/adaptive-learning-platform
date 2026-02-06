@@ -98,7 +98,7 @@ public class SolutionService {
         updateProgress(solution, task, success);
     }
 
-    public List<DailyActivity> getUserActivity(UUID userId, int lastDays) {
+    public List<DailyActivity> getUserActivity(UUID userId, long lastDays) {
         var since = LocalDateTime.now().minusDays(lastDays);
         var results = repository.findActivityByDay(userId, since);
 
@@ -106,7 +106,7 @@ public class SolutionService {
                 .map(row -> {
                     var sqlDate = (Date) row[0];
                     var localDate = sqlDate.toLocalDate();
-                    var count = (Integer) row[1];
+                    var count = (Long) row[1];
                     return new DailyActivity(localDate.toString(), count);
                 })
                 .toList();

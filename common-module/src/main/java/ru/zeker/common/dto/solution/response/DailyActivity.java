@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class DailyActivity {
 
     private String date;
-    private int count;
+    private long count;
 }

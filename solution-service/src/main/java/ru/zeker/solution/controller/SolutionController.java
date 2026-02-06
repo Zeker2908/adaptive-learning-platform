@@ -176,7 +176,7 @@ public class SolutionController {
             @RequestParam(value = "days", defaultValue = "14")
             @Min(1)
             @Max(30)
-            int days
+            long days
     ) {
         return ResponseEntity.ok(solutionService.getUserActivity(UUID.fromString(userId), days));
     }
