@@ -3,7 +3,6 @@ package ru.zeker.common.exception;
 public enum ErrorCode {
     INTERNAL_SERVER_ERROR,
     MISSING_PARAMETER,
-    VALIDATION_ERROR,
     INVALID_INPUT,
     TOKEN_EXPIRED,
     REFRESH_TOKEN_EXPIRED,

@@ -111,7 +111,7 @@ public class GlobalExceptionHandler {
                         ConstraintViolation::getMessage
                 ));
         var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.VALIDATION_ERROR);
+                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.INVALID_INPUT);
         errorResponse.put("details", errors);
 
         log.error("Parameter validation error: {}", errors);
@@ -129,7 +129,7 @@ public class GlobalExceptionHandler {
                         (existing, replacement) -> existing
                 ));
         var errorResponse = buildBaseErrorResponse(HttpStatus.BAD_REQUEST,
-                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.VALIDATION_ERROR);
+                "Parameter validation error", request.getRequestURI(), request.getRequestId(), ErrorCode.INVALID_INPUT);
         errorResponse.put("details", validationErrors);
 
         log.error("Validation error: {}", validationErrors);

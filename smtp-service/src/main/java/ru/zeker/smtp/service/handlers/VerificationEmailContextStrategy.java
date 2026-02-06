@@ -34,7 +34,7 @@ public class VerificationEmailContextStrategy implements EmailContextStrategy {
 
         return emailService.createEmailContext(
                 event,
-                "Confirmation of registration",
+                "Подтверждение регистрации",
                 EMAIL_VERIFICATION_TEMPLATE,
                 Map.of(ThymeleafUtils.ACTION_URL,verificationUrl)
         );

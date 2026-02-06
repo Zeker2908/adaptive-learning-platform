@@ -35,7 +35,7 @@ public class ForgotPasswordEmailContextStrategy implements EmailContextStrategy 
 
         return emailService.createEmailContext(
                 event,
-                "Password recovery",
+                "Восстановление пароля",
                 FORGOT_PASSWORD_TEMPLATE,
                 Map.of(ThymeleafUtils.ACTION_URL, resetPasswordUrl)
         );

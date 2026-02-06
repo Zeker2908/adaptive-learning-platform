@@ -111,7 +111,7 @@ public class AuthenticationController {
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid token")
     })
-    @PatchMapping("/email/verify")
+    @PostMapping("/verify-email")
     public ResponseEntity<AuthenticationResponse> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request,
                                                                HttpServletResponse response) {
         var tokens = authenticationService.confirmEmail(request);
@@ -132,7 +132,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "202", description = "Email sent"),
             @ApiResponse(responseCode = "429", description = "Email already sent, retry after 60 seconds")
     })
-    @PostMapping("/email/resend-verification")
+    @PostMapping("/resend-verification")
     public ResponseEntity<Void> resendConfirmationEmail(
             @RequestBody @Valid ResendVerificationRequest request) {
         authenticationService.resendVerificationEmail(request);
@@ -148,7 +148,7 @@ public class AuthenticationController {
      */
     @Operation(summary = "Password reset request", description = "Sends email with password reset link")
     @ApiResponse(responseCode = "202", description = "Password reset email sent")
-    @PostMapping("/password/reset-request")
+    @PostMapping("/password/forgot")
     public ResponseEntity<Void> forgotPassword(@RequestBody @Valid UserUpdateRequest request) {
         authenticationService.forgotPassword(request);
         return ResponseEntity.accepted().build();
@@ -168,7 +168,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "200", description = "Password successfully reset"),
             @ApiResponse(responseCode = "400", description = "Invalid or expired token", content = @Content)
     })
-    @PatchMapping("/password")
+    @PatchMapping("/password/reset")
     public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         authenticationService.resetPassword(request);
         return ResponseEntity.ok().build();
@@ -189,7 +189,7 @@ public class AuthenticationController {
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
             @ApiResponse(responseCode = "401", description = "Invalid or expired refresh token", content = @Content)
     })
-    @PostMapping("/token/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
@@ -212,7 +212,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "204", description = "Logout successful"),
             @ApiResponse(responseCode = "400", description = "Invalid refresh token", content = @Content)
     })
-    @DeleteMapping("/sessions/current")
+    @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
@@ -235,7 +235,7 @@ public class AuthenticationController {
             @ApiResponse(responseCode = "204", description = "All sessions terminated"),
             @ApiResponse(responseCode = "400", description = "Invalid refresh token", content = @Content)
     })
-    @DeleteMapping("/sessions")
+    @DeleteMapping("/logout/all")
     public ResponseEntity<Void> revokeAllRefreshTokens(
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {

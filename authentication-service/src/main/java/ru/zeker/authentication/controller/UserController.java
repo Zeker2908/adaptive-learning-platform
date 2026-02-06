@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +93,7 @@ public class UserController {
                     @ApiResponse(responseCode = "409", description = "Password already bound")
             }
     )
-    @PutMapping("/me/password")
+    @PostMapping("/me/password/bind")
     public ResponseEntity<Void> bindPassword(
             @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
@@ -107,10 +107,10 @@ public class UserController {
     /**
      * Changes user password and logs out from all devices.
      *
-     * @param id                     User ID passed in the request header (required, non-empty)
+     * @param id                    User ID passed in the request header (required, non-empty)
      * @param changePasswordRequest {@link ChangePasswordRequest} with current and new password
-     * @param refreshToken           Refresh token from cookie (required, non-empty)
-     * @param response               {@link HttpServletResponse} for clearing cookies
+     * @param refreshToken          Refresh token from cookie (required, non-empty)
+     * @param response              {@link HttpServletResponse} for clearing cookies
      * @return {@link ResponseEntity} with status code 204 (No Content)
      * @throws jakarta.validation.ConstraintViolationException if parameters are invalid
      */
