@@ -17,7 +17,7 @@ public class SolutionResponse {
     private UUID id;
     private UUID userId;
     private UUID taskId;
-    private String code;
+    private String answer;
     private Language language;
     private String status;
     private String feedback;
