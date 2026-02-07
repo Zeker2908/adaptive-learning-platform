@@ -13,6 +13,9 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -135,14 +138,13 @@ public class SolutionController {
                     @ApiResponse(responseCode = "401", description = "Missing or invalid USER_ID header")
             }
     )
-    public ResponseEntity<List<UserProgressResponse>> getUserProgress(
+    public ResponseEntity<Page<UserProgressResponse>> getUserProgress(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String userId
+            @RequestHeader(USER_ID) @NotBlank String userId,
+            @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(userProgressService.getUserProgress(UUID.fromString(userId))
-                .stream()
-                .map(userProgressMapper::toResponse)
-                .toList());
+        return ResponseEntity.ok(userProgressService.getUserProgress(UUID.fromString(userId), pageable)
+                .map(userProgressMapper::toResponse));
     }
 
     @Operation(

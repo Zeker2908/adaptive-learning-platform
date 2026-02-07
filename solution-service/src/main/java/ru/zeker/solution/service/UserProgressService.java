@@ -3,7 +3,9 @@ package ru.zeker.solution.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.zeker.solution.domain.model.entity.UserProgress;
 import ru.zeker.solution.repository.UserProgressRepository;
@@ -28,8 +30,8 @@ public class UserProgressService {
 
     private final UserProgressRepository repository;
 
-    public List<UserProgress> getUserProgress(UUID userId) {
-        return repository.findByUserId(userId);
+    public Page<UserProgress> getUserProgress(UUID userId, Pageable pageable) {
+        return repository.findByUserId(userId, pageable);
     }
 
     public List<String> getWeakestTopics(UUID userId, int maxTopics) {

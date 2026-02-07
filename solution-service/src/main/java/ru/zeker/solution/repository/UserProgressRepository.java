@@ -1,5 +1,6 @@
 package ru.zeker.solution.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ import java.util.UUID;
 @Repository
 public interface UserProgressRepository extends JpaRepository<UserProgress, UUID> {
     List<UserProgress> findByUserId(UUID userId);
+
+    Page<UserProgress> findByUserId(UUID userId, Pageable pageable);
 
     Optional<UserProgress> findByUserIdAndTopic(UUID userId, String topic);
 
