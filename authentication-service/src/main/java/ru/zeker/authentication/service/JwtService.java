@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.zeker.authentication.domain.model.entity.User;
-import ru.zeker.authentication.exception.InvalidTokenException;
 import ru.zeker.common.config.JwtProperties;
+import ru.zeker.common.consts.JwtKeys;
 import ru.zeker.common.util.JwtUtils;
 
 import java.io.IOException;
@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -66,22 +65,11 @@ public class JwtService {
         }
     }
 
-    public UUID extractUserId(String token) {
-        var id = jwtUtils.extractClaim(token, claims -> claims.get("id", String.class));
-        if (Objects.isNull(id)) throw new InvalidTokenException("Invalid user ID");
-        return UUID.fromString(id);
-    }
-
-    public Long extractVersion(String token) {
-        return jwtUtils.extractClaim(token, claims -> claims.get("version", Long.class));
-    }
-
-
     public String generateAccessToken(UserDetails userDetails) {
         var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
-            claims.put("id", customUserDetails.getId());
-            claims.put("role", customUserDetails.getRole());
+            claims.put(JwtKeys.ID_KEY, customUserDetails.getId());
+            claims.put(JwtKeys.ROLE_KEY, customUserDetails.getRole());
         }
         return generateToken(userDetails, claims, jwtProperties.getAccess().getExpiration());
     }
@@ -89,7 +77,8 @@ public class JwtService {
     public String generateRefreshToken(UserDetails userDetails) {
         var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
-            claims.put("id", customUserDetails.getId());
+            claims.put(JwtKeys.ID_KEY, customUserDetails.getId());
+            claims.put(JwtKeys.ROLE_KEY, customUserDetails.getRole());
         }
         return generateToken(userDetails, claims, jwtProperties.getRefresh().getExpiration());
     }
@@ -97,8 +86,8 @@ public class JwtService {
     public String generateEmailToken(UserDetails userDetails) {
         var claims = new HashMap<String, Object>();
         if (userDetails instanceof User customUserDetails) {
-            claims.put("id", customUserDetails.getId());
-            claims.put("version", customUserDetails.getVersion());
+            claims.put(JwtKeys.ID_KEY, customUserDetails.getId());
+            claims.put(JwtKeys.VERSION_KEY, customUserDetails.getVersion());
         }
         return generateToken(userDetails, claims, jwtProperties.getAccess().getExpiration());
     }

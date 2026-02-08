@@ -18,6 +18,7 @@ import ru.zeker.authentication.domain.dto.request.ResetPasswordRequest;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
+import ru.zeker.authentication.domain.model.enums.Role;
 import ru.zeker.authentication.exception.InvalidTokenException;
 import ru.zeker.authentication.exception.TooManyRequestsException;
 import ru.zeker.authentication.exception.UserAlreadyEnableException;
@@ -117,7 +118,12 @@ public class AuthenticationService {
         log.debug("Token refresh request");
 
         var token = refreshTokenService.verifyRefreshToken(refreshToken);
-        var user = userService.findById(token.getUserId());
+        var claims = jwtUtils.parseClaimsJws(refreshToken);
+        var user = User.builder()
+                .email(jwtUtils.getUsername(claims))
+                .role(Role.fromString(jwtUtils.getRole(claims)))
+                .build();
+        user.setId(UUID.fromString(jwtUtils.getUserId(claims)));
 
         var jwtToken = jwtService.generateAccessToken(user);
         var newRefreshToken = refreshTokenService.rotateRefreshToken(token, user);
@@ -142,7 +148,7 @@ public class AuthenticationService {
             log.info("Email confirmation request");
             var token = request.getToken();
 
-            var user = userService.findById(jwtService.extractUserId(token));
+            var user = userService.findById(UUID.fromString(jwtUtils.extractUserId(token)));
             if (!jwtService.isTokenValid(token, user)) {
                 log.warn("Attempt to confirm email with invalid token");
                 throw new InvalidTokenException("Email confirmation token invalid", ErrorCode.INVALID_EMAIL_TOKEN);
@@ -205,11 +211,11 @@ public class AuthenticationService {
             var token = request.getToken();
             var password = request.getPassword();
             var encodedPassword = passwordEncoder.encode(password);
-            var user = userService.findById(jwtService.extractUserId(token));
+            var user = userService.findById(UUID.fromString(jwtUtils.extractUserId(token)));
 
             // Combined token validation
             if (jwtUtils.isTokenExpired(token) ||
-                    !user.getVersion().equals(jwtService.extractVersion(token)) ||
+                    !user.getVersion().equals(jwtUtils.extractVersion(token)) ||
                     !jwtUtils.isValidUsername(token, user.getEmail())) {
                 log.warn("Invalid token for password reset");
                 throw new InvalidTokenException("Invalid token for password reset", ErrorCode.INVALID_EMAIL_TOKEN);

@@ -11,8 +11,10 @@ import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.RefreshTokenRepository;
 import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.exception.ErrorCode;
+import ru.zeker.common.util.JwtUtils;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RefreshTokenService {
     private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
     private final JwtProperties jwtProperties;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -120,10 +123,10 @@ public class RefreshTokenService {
      * @param token user token
      */
     public void revokeAllUserTokens(String token) {
-        var userId = jwtService.extractUserId(token);
+        var userId = jwtUtils.extractUserId(token);
         log.info("Revoking all refresh tokens for user with ID: {}", userId);
 
-        var tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
+        var tokens = refreshTokenRepository.findAllByUserId(UUID.fromString(userId)).orElseThrow(() -> {
             log.warn("User with ID: {} has no refresh tokens", userId);
             return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
         });

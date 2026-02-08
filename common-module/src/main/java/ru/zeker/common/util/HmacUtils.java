@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @UtilityClass
-public final class HmacUtil {
+public final class HmacUtils {
 
     public static String sign(String data, String secret, String algorithm) throws NoSuchAlgorithmException, InvalidKeyException {
         var secretKeySpec = new SecretKeySpec(secret.getBytes(), algorithm);

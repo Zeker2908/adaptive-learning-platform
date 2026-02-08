@@ -9,8 +9,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.zeker.common.config.JwtProperties;
-import ru.zeker.common.exception.AuthException;
-import ru.zeker.common.exception.ErrorCode;
+import ru.zeker.common.consts.JwtKeys;
 
 import java.io.IOException;
 import java.security.Key;
@@ -21,6 +20,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -70,7 +70,7 @@ public class JwtUtils {
         return claimsCache.get(token, this::parseClaimsJws);
     }
 
-    private Claims parseClaimsJws(String token) {
+    public Claims parseClaimsJws(String token) {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
@@ -89,8 +89,18 @@ public class JwtUtils {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String getUsername(Claims claims) {
+        return Optional.ofNullable(claims.getSubject())
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain subject"));
+    }
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Date getExpiration(Claims claims) {
+        return Optional.ofNullable(claims.getExpiration())
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain expiration"));
     }
 
     public Date extractIssuedAt(String token) {
@@ -101,8 +111,16 @@ public class JwtUtils {
         return extractExpiration(token).before(new Date());
     }
 
+    public boolean isTokenExpired(Claims claims) {
+        return getExpiration(claims).before(new Date());
+    }
+
     public boolean isValidUsername(String token, String username) {
         return extractUsername(token).equals(username);
+    }
+
+    public boolean isValidUsername(Claims claims, String username) {
+        return getUsername(claims).equals(username);
     }
 
     public void invalidateToken(String token) {
@@ -112,4 +130,39 @@ public class JwtUtils {
     public void invalidateAll() {
         claimsCache.invalidateAll();
     }
+
+    public String extractUserId(String token) {
+        return Optional.ofNullable(extractClaim(token, claims -> claims.get(JwtKeys.ID_KEY, String.class)))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain user ID"));
+    }
+
+    public String getUserId(Claims claims) {
+        return Optional.ofNullable(claims.get(JwtKeys.ID_KEY, String.class))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain user ID"));
+    }
+
+    public Long extractVersion(String token) {
+        return Optional.ofNullable(extractClaim(token, claims -> claims.get(JwtKeys.VERSION_KEY, Long.class)))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain version"));
+    }
+
+    public Long getVersion(Claims claims) {
+        return Optional.ofNullable(claims.get(JwtKeys.VERSION_KEY, Long.class))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain version"));
+    }
+
+    public boolean isValidVersion(Claims claims, Long version) {
+        return getVersion(claims).equals(version);
+    }
+
+    public String extractRole(String token) {
+        return Optional.ofNullable(extractClaim(token, claims -> claims.get(JwtKeys.ROLE_KEY, String.class)))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain role"));
+    }
+
+    public String getRole(Claims claims) {
+        return Optional.ofNullable(claims.get(JwtKeys.ROLE_KEY, String.class))
+                .orElseThrow(() -> new IllegalArgumentException("JWT token does not contain role"));
+    }
+
 }

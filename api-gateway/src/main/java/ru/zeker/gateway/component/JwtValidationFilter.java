@@ -96,7 +96,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Claims> verifyRole(ServerWebExchange exchange, Claims claims) {
-        var userRole = claims.get("role", String.class);
+        var userRole = jwtUtils.getRole(claims);
         if (Objects.isNull(userRole)) {
             log.warn("The user's role is not specified in the token.");
             return Mono.error(new AuthException("The user's role is not specified in the token.", HttpStatus.FORBIDDEN, ErrorCode.ACCESS_DENIED));
@@ -116,9 +116,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
 
     private ServerWebExchange withUserHeaders(ServerWebExchange exchange, Claims claims) {
         var mutated = exchange.getRequest().mutate()
-                .header(USER_ID, claims.get("id", String.class))
-                .header(USER_NAME, claims.getSubject())
-                .header(USER_ROLE, claims.get("role", String.class))
+                .header(USER_ID, jwtUtils.getUserId(claims))
+                .header(USER_NAME, jwtUtils.getUsername(claims))
+                .header(USER_ROLE, jwtUtils.getRole(claims))
                 .headers(headers -> headers.remove(HttpHeaders.AUTHORIZATION))
                 .build();
         return exchange.mutate().request(mutated).build();

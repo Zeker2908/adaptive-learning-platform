@@ -46,7 +46,7 @@ public class AuthenticationBeansConfig {
     public Cache<String, Claims> claimsCache() {
         return Caffeine.newBuilder()
                 .maximumSize(10_000)
-                .expireAfterAccess(5, TimeUnit.SECONDS)
+                .expireAfterAccess(1, TimeUnit.SECONDS)
                 .build();
     }
 
