@@ -33,6 +33,7 @@ public class UserService {
     private final UserRepository repository;
     private final PasswordHistoryService passwordHistoryService;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
@@ -129,7 +130,9 @@ public class UserService {
             throw new UserAlreadyExistsException("The user already has the admin role", ErrorCode.USER_ALREADY_ADMIN);
         }
         user.setRole(Role.ADMIN);
-        return update(user);
+        var updateUser = update(user);
+        refreshTokenService.revokeAllUserTokens(user.getId());
+        return updateUser;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

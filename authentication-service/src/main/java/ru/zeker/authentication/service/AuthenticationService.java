@@ -234,7 +234,7 @@ public class AuthenticationService {
 
             passwordHistoryService.create(user, password);
             userService.update(user);
-            refreshTokenService.revokeAllUserTokens(token);
+            refreshTokenService.revokeAllUserTokens(user.getId());
 
             log.info("Password successfully reset for user: {}", user.getEmail());
         } catch (ExpiredJwtException e) {

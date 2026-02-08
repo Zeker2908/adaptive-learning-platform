@@ -123,10 +123,13 @@ public class RefreshTokenService {
      * @param token user token
      */
     public void revokeAllUserTokens(String token) {
-        var userId = jwtUtils.extractUserId(token);
+        revokeAllUserTokens(UUID.fromString(jwtUtils.extractUserId(token)));
+    }
+
+    public void revokeAllUserTokens(UUID userId) {
         log.info("Revoking all refresh tokens for user with ID: {}", userId);
 
-        var tokens = refreshTokenRepository.findAllByUserId(UUID.fromString(userId)).orElseThrow(() -> {
+        var tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
             log.warn("User with ID: {} has no refresh tokens", userId);
             return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
         });
