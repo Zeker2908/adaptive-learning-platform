@@ -28,7 +28,7 @@ import ru.zeker.authentication.domain.dto.request.LoginRequest;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
 import ru.zeker.authentication.domain.dto.request.ResendVerificationRequest;
 import ru.zeker.authentication.domain.dto.request.ResetPasswordRequest;
-import ru.zeker.authentication.domain.dto.request.UserUpdateRequest;
+import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
 import ru.zeker.authentication.domain.dto.response.AuthenticationResponse;
 import ru.zeker.authentication.exception.TokenExpiredException;
 import ru.zeker.authentication.service.AuthenticationService;
@@ -142,14 +142,14 @@ public class AuthenticationController {
     /**
      * Initiates password recovery process.
      *
-     * @param request {@link UserUpdateRequest} - user email
+     * @param request {@link ForgotPasswordRequest} - user email
      * @return {@link ResponseEntity} with HTTP status 202 (Accepted)
      * @throws jakarta.validation.ConstraintViolationException if email is invalid
      */
     @Operation(summary = "Password reset request", description = "Sends email with password reset link")
     @ApiResponse(responseCode = "202", description = "Password reset email sent")
     @PostMapping("/password/forgot")
-    public ResponseEntity<Void> forgotPassword(@RequestBody @Valid UserUpdateRequest request) {
+    public ResponseEntity<Void> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
         authenticationService.forgotPassword(request);
         return ResponseEntity.accepted().build();
     }

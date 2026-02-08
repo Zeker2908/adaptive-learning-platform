@@ -14,7 +14,7 @@ import ru.zeker.authentication.domain.dto.request.LoginRequest;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
 import ru.zeker.authentication.domain.dto.request.ResendVerificationRequest;
 import ru.zeker.authentication.domain.dto.request.ResetPasswordRequest;
-import ru.zeker.authentication.domain.dto.request.UserUpdateRequest;
+import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
@@ -177,7 +177,7 @@ public class AuthenticationService {
      *
      * @param request request with user email
      */
-    public void forgotPassword(UserUpdateRequest request) {
+    public void forgotPassword(ForgotPasswordRequest request) {
         var email = request.getEmail().toLowerCase();
         log.info("Password recovery request for: {}", email);
 

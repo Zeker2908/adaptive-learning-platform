@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zeker.authentication.domain.dto.request.BindPasswordRequest;
 import ru.zeker.authentication.domain.dto.request.GrantAdminRequest;
+import ru.zeker.authentication.domain.dto.request.UserUpdateRequest;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
 import ru.zeker.authentication.domain.model.enums.Role;
@@ -22,6 +23,7 @@ import ru.zeker.authentication.repository.UserRepository;
 import ru.zeker.common.exception.ErrorCode;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -65,6 +67,18 @@ public class UserService {
         repository.save(updatedUser);
         log.info("Updated user with ID: {}", updatedUser.getId());
         return updatedUser;
+    }
+
+    @Transactional
+    public User updatePerson(UserUpdateRequest request, String userId) {
+        var user = findById(UUID.fromString(userId));
+
+        Optional.ofNullable(request.firstName())
+                .ifPresent(user::setFirstName);
+        Optional.ofNullable(request.lastName())
+                .ifPresent(user::setLastName);
+
+        return update(user);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

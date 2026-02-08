@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.authentication.domain.dto.request.BindPasswordRequest;
 import ru.zeker.authentication.domain.dto.request.ChangePasswordRequest;
+import ru.zeker.authentication.domain.dto.request.UserUpdateRequest;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.RefreshTokenService;
@@ -75,6 +77,49 @@ public class UserController {
             @RequestHeader(USER_ID) @NotBlank String id) {
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(UUID.fromString(id))));
     }
+
+    /**
+     * Updates information about the current authenticated user.
+     *
+     * <p>Allows partial update of user data. At least one field must be provided.</p>
+     *
+     * @param id User ID passed in the request header (required, non-empty)
+     * @param request Request body containing fields to update (first name and/or last name)
+     * @return {@link ResponseEntity} with updated user data in {@link UserResponse} format
+     * @throws jakarta.validation.ConstraintViolationException if header ID is empty or invalid
+     */
+    @Operation(
+            summary = "Update user information",
+            description = "Updates data of the current authenticated user. "
+                    + "Supports partial update — you can update first name, last name, or both.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User data updated successfully",
+                            content = @Content(schema = @Schema(implementation = UserResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Validation error (invalid input data)"
+                    )
+            }
+    )
+    @PutMapping("/me")
+    public ResponseEntity<UserResponse> updateCurrentUser(
+            @Parameter(description = "Unique user identifier", hidden = true)
+            @RequestHeader(USER_ID) @NotBlank String id,
+
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "User fields to update. At least one field must be provided.",
+                    required = true
+            )
+            @RequestBody @Valid UserUpdateRequest request) {
+
+        return ResponseEntity.ok(
+                userMapper.toResponse(userService.updatePerson(request, id))
+        );
+    }
+
 
     /**
      * Binds a password to the user account.

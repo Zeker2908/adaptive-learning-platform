@@ -61,10 +61,6 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>ru.zeker</groupId>
 			<artifactId>common-module</artifactId>
 			<version>1.0.0</version>

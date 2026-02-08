@@ -84,21 +84,21 @@ services:
       - internal
 
   # === Kafka UI ===
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "8089:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-      KAFKA_CLUSTERS_0_READONLY: "false"
-    depends_on:
-      - kafka
-      - zookeeper
-    networks:
-      - internal
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui:latest
+#    container_name: kafka-ui
+#    ports:
+#      - "8089:8080"
+#    environment:
+#      KAFKA_CLUSTERS_0_NAME: local
+#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+#      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+#      KAFKA_CLUSTERS_0_READONLY: "false"
+#    depends_on:
+#      - kafka
+#      - zookeeper
+#    networks:
+#      - internal
 
     # https://github.com/judge0/judge0/releases
     # === Judge0 Worker ===
