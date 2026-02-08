@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +19,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.zeker.authentication.domain.dto.request.GrantAdminRequest;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
+import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.UserService;
 
 import java.util.UUID;
@@ -43,6 +42,7 @@ public class AdminController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * Retrieves a paginated list of all users.
@@ -89,8 +89,8 @@ public class AdminController {
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserResponse> getUserById(
             @Parameter(description = "Unique user identifier (UUID)", required = true)
-            @PathVariable @NotBlank String userId) {
-        return ResponseEntity.ok(userMapper.toResponse(userService.findById(UUID.fromString(userId))));
+            @PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userMapper.toResponse(userService.findById(userId)));
     }
 
 
@@ -122,7 +122,7 @@ public class AdminController {
     /**
      * Grants admin role to a user.
      *
-     * @param request {@link GrantAdminRequest} containing user ID
+     * @param userId {@link UUID} user ID
      * @return {@link ResponseEntity} with status code 204 (No Content)
      */
     @Operation(
@@ -134,11 +134,60 @@ public class AdminController {
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
-    @PatchMapping("/users/grant-admin")
+    @PatchMapping("/users/{userId}/grant-admin")
     public ResponseEntity<UserResponse> grantAdmin(
             @Parameter(description = "User ID to grant admin role", required = true)
-            @RequestBody @Valid GrantAdminRequest request) {
-        return ResponseEntity.ok(userMapper.toResponse(userService.grantAdmin(request)));
+            @PathVariable @NotNull UUID userId) {
+        return ResponseEntity.ok(userMapper.toResponse(userService.grantAdmin(userId)));
+    }
+
+    /**
+     * Blocks a user.
+     *
+     * @param userId ID of the user to block
+     * @return {@link ResponseEntity} with status code 204 (No Content)
+     */
+    @Operation(
+            summary = "Block user",
+            description = "Blocks the specified user and revokes all active refresh tokens",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "User blocked successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid user ID"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            }
+    )
+    @PatchMapping("/users/{userId}/block")
+    public ResponseEntity<Void> blockUser(
+            @Parameter(description = "User ID to block", required = true)
+            @PathVariable @NotNull UUID userId
+    ) {
+        userService.setUserBlocked(userId, true);
+        refreshTokenService.revokeAllUserTokens(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Unblock a user.
+     *
+     * @param userId ID of the user to Unblock
+     * @return {@link ResponseEntity} with status code 204 (No Content)
+     */
+    @Operation(
+            summary = "Unblock user",
+            description = "Unblock the specified user and revokes all active refresh tokens",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "User unblock successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid user ID"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            }
+    )
+    @PatchMapping("/users/{userId}/unblock")
+    public ResponseEntity<Void> unblockUser(
+            @Parameter(description = "User ID to unblock", required = true)
+            @PathVariable @NotNull UUID userId
+    ) {
+        userService.setUserBlocked(userId, false);
+        return ResponseEntity.noContent().build();
     }
 
 }

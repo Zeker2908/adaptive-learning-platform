@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,7 +82,7 @@ public class UserController {
      *
      * <p>Allows partial update of user data. At least one field must be provided.</p>
      *
-     * @param id User ID passed in the request header (required, non-empty)
+     * @param id      User ID passed in the request header (required, non-empty)
      * @param request Request body containing fields to update (first name and/or last name)
      * @return {@link ResponseEntity} with updated user data in {@link UserResponse} format
      * @throws jakarta.validation.ConstraintViolationException if header ID is empty or invalid
@@ -181,50 +180,10 @@ public class UserController {
 
             HttpServletResponse response) {
         userService.changePassword(id, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
-        revokeTokenAndClearCookie(refreshToken, response);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Deletes user account and logs out from all devices.
-     *
-     * @param id           User ID passed in the request header (required, non-empty)
-     * @param refreshToken Refresh token from cookie
-     * @param response     {@link HttpServletResponse} for clearing cookies
-     * @return {@link ResponseEntity} with status code 204 (No Content)
-     * @throws jakarta.validation.ConstraintViolationException if user ID is invalid
-     */
-    @Operation(
-            summary = "Delete account",
-            description = "Deletes user account and logs out from all devices",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Account deleted successfully"),
-                    @ApiResponse(responseCode = "400", description = "Invalid user ID")
-            }
-    )
-    @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteCurrentUser(
-            @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String id,
-
-            @Parameter(description = "Refresh token from cookie")
-            @CookieValue(name = "refresh_token") String refreshToken,
-
-            HttpServletResponse response) {
-        userService.deleteById(UUID.fromString(id));
-        revokeTokenAndClearCookie(refreshToken, response);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Revokes the refresh token and clears the cookie.
-     *
-     * @param refreshToken Refresh token to revoke
-     * @param response     {@link HttpServletResponse} for clearing cookies
-     */
-    private void revokeTokenAndClearCookie(String refreshToken, HttpServletResponse response) {
         refreshTokenService.revokeAllUserTokens(refreshToken);
         response.addHeader(HttpHeaders.SET_COOKIE,
                 CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO).toString());
+        return ResponseEntity.noContent().build();
     }
+
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zeker.authentication.domain.dto.request.BindPasswordRequest;
-import ru.zeker.authentication.domain.dto.request.GrantAdminRequest;
 import ru.zeker.authentication.domain.dto.request.UserUpdateRequest;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
@@ -124,8 +123,8 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public User grantAdmin(GrantAdminRequest request) {
-        var user = findById(request.userId());
+    public User grantAdmin(UUID userId) {
+        var user = findById(userId);
         if (user.getRole() == Role.ADMIN) {
             throw new UserAlreadyExistsException("The user already has the admin role", ErrorCode.USER_ALREADY_ADMIN);
         }
@@ -149,6 +148,14 @@ public class UserService {
         var user = findByEmail(email);
         repository.delete(user);
         log.info("Deleted user with email: {}", email);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void setUserBlocked(UUID userId, boolean blocked) {
+        var user = findById(userId);
+        user.setLocked(blocked);
+        repository.save(user);
+        log.info("User {} has been {}", userId, blocked ? "blocked" : "unblocked");
     }
 
     public boolean existsByEmail(String email) {

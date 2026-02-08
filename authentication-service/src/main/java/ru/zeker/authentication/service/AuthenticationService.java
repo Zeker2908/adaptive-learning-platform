@@ -119,11 +119,10 @@ public class AuthenticationService {
 
         var token = refreshTokenService.verifyRefreshToken(refreshToken);
         var claims = jwtUtils.parseClaimsJws(refreshToken);
-        var user = User.builder()
-                .email(jwtUtils.getUsername(claims))
-                .role(Role.fromString(jwtUtils.getRole(claims)))
-                .build();
+        var user = new User();
         user.setId(UUID.fromString(jwtUtils.getUserId(claims)));
+        user.setEmail(jwtUtils.getUsername(claims));
+        user.setRole(Role.fromString(jwtUtils.getRole(claims)));
 
         var jwtToken = jwtService.generateAccessToken(user);
         var newRefreshToken = refreshTokenService.rotateRefreshToken(token, user);
