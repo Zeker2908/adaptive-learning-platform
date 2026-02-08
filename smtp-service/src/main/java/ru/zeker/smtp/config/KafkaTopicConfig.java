@@ -12,7 +12,7 @@ public class KafkaTopicConfig {
     public NewTopic emailSMTPDltTopic() {
         return TopicBuilder
                 .name("email.smtp.events" + ".DLT")
-                .partitions(32)
+                .partitions(2)
                 .replicas(1)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000")
                 .build();

@@ -75,9 +75,9 @@ services:
         condition: service_healthy
     command: |
       bash -c "
-        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.request --partitions 32 --replication-factor 1 &&
-        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.result --partitions 32 --replication-factor 1 &&
-        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.smtp.events --partitions 32 --replication-factor 1
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.request --partitions 4 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.result --partitions 4 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.smtp.events --partitions 2 --replication-factor 1
       "
     init: true
     networks:
