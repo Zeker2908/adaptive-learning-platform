@@ -83,23 +83,6 @@ services:
     networks:
       - internal
 
-  # === Kafka UI ===
-#  kafka-ui:
-#    image: provectuslabs/kafka-ui:latest
-#    container_name: kafka-ui
-#    ports:
-#      - "8089:8080"
-#    environment:
-#      KAFKA_CLUSTERS_0_NAME: local
-#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-#      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-#      KAFKA_CLUSTERS_0_READONLY: "false"
-#    depends_on:
-#      - kafka
-#      - zookeeper
-#    networks:
-#      - internal
-
     # https://github.com/judge0/judge0/releases
     # === Judge0 Worker ===
   judge0:
@@ -143,7 +126,8 @@ services:
     volumes:
       - keys:/app/keys:ro
     depends_on:
-      - keygen
+      keygen:
+        condition: service_completed_successfully
     networks:
       - internal
 
@@ -172,10 +156,16 @@ services:
       ACCESS_TOKEN_DURATION: ${ACCESS_TOKEN_DURATION}
       REFRESH_TOKEN_DURATION: ${REFRESH_TOKEN_DURATION}
     depends_on:
-      - keygen
-      - postgres
-      - redis
-      - kafka
+      keygen:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+      init-kafka:
+        condition: service_completed_successfully
     volumes:
       - keys:/app/keys:ro
     networks:
@@ -241,6 +231,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      init-kafka:
+        condition: service_completed_successfully
       postgres:
         condition: service_started
     networks:
@@ -261,6 +253,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      init-kafka:
+        condition: service_completed_successfully
       solution-service:
         condition: service_started
       judge0:

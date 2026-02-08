@@ -26,7 +26,6 @@ public class RefreshTokenService {
     private final JwtService jwtService;
     private final JwtProperties jwtProperties;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
 
     /**
      * Creates a new refresh token for a user
@@ -88,13 +87,12 @@ public class RefreshTokenService {
      * @param token old refresh token object
      * @return new refresh token string
      */
-    public String rotateRefreshToken(RefreshToken token) {
+    public String rotateRefreshToken(RefreshToken token, User user) {
         log.debug("Rotating refresh token for user with ID: {}", token.getUserId());
 
         refreshTokenRepository.delete(token);
         log.debug("Old refresh token deleted");
 
-        var user = userService.findById(token.getUserId());
         var newToken = createRefreshToken(user);
 
         log.info("Refresh token successfully rotated for user with ID: {}", token.getUserId());

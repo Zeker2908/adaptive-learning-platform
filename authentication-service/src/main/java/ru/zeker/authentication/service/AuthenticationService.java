@@ -10,11 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.zeker.authentication.domain.dto.Tokens;
 import ru.zeker.authentication.domain.dto.request.ConfirmationEmailRequest;
+import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
 import ru.zeker.authentication.domain.dto.request.LoginRequest;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
 import ru.zeker.authentication.domain.dto.request.ResendVerificationRequest;
 import ru.zeker.authentication.domain.dto.request.ResetPasswordRequest;
-import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.User;
@@ -120,7 +120,7 @@ public class AuthenticationService {
         var user = userService.findById(token.getUserId());
 
         var jwtToken = jwtService.generateAccessToken(user);
-        var newRefreshToken = refreshTokenService.rotateRefreshToken(token);
+        var newRefreshToken = refreshTokenService.rotateRefreshToken(token, user);
 
         log.debug("Tokens successfully refreshed for user: {}", user.getEmail());
 

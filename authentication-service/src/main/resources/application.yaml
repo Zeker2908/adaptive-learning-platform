@@ -17,6 +17,9 @@ spring:
               - openid
   kafka:
     bootstrap-servers: ${KAFKA_HOST:localhost}
+    properties:
+      retries: 10
+      retry.backoff.ms: 2000
     admin:
       properties:
         offsets.topic.replication-factor: 1

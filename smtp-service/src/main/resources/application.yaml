@@ -4,6 +4,9 @@ spring:
   application:
     name: smtp-service
   kafka:
+    properties:
+      retries: 10
+      retry.backoff.ms: 2000
     bootstrap-servers: ${KAFKA_HOST:localhost}
   mail:
     host: smtp.gmail.com
