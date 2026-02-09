@@ -23,13 +23,13 @@ public class SingleChoiceSolutionSubmissionStrategy implements SolutionSubmissio
     }
 
     @Override
-    public Solution handle(SolutionRequest request, String userId, SingleChoiceTaskContent taskContent) {
+    public Solution handle(SolutionRequest request, UUID userId, SingleChoiceTaskContent taskContent) {
         var status = isCorrectAnswer(request.getAnswer(), taskContent)
                 ? SolutionStatus.SUCCESS
                 : SolutionStatus.FAILED;
 
         var solution = Solution.builder()
-                .userId(UUID.fromString(userId))
+                .userId(userId)
                 .taskId(request.getTaskId())
                 .answer(request.getAnswer())
                 .status(status)

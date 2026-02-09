@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -58,7 +59,7 @@ public class RecommendationController {
     @JsonView(Views.Public.class)
     public ResponseEntity<List<TaskResponse>> getRecommendations(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) String userId,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
 
             @Parameter(
                     description = "Maximum number of tasks to return (from 1 to 10)",
@@ -70,6 +71,6 @@ public class RecommendationController {
             @Max(10)
             int limit
     ) {
-        return ResponseEntity.ok(recommendationService.getRecommendedTasks(UUID.fromString(userId), limit));
+        return ResponseEntity.ok(recommendationService.getRecommendedTasks(userId, limit));
     }
 }

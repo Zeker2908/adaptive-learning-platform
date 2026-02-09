@@ -29,9 +29,9 @@ public class CodingSolutionSubmissionStrategy implements SolutionSubmissionStrat
 
     @Override
     @Transactional
-    public Solution handle(SolutionRequest request, String userId, CodingTaskContent taskContent) {
+    public Solution handle(SolutionRequest request, UUID userId, CodingTaskContent taskContent) {
         var solution = Solution.builder()
-                .userId(UUID.fromString(userId))
+                .userId(userId)
                 .taskId(request.getTaskId())
                 .answer(request.getAnswer())
                 .language(request.getLanguage())

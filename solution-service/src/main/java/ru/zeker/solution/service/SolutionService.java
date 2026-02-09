@@ -39,7 +39,7 @@ public class SolutionService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public Solution submitSolution(SolutionRequest request, String userId) {
+    public Solution submitSolution(SolutionRequest request, UUID userId) {
         var taskResponse = taskClient.getTaskById(request.getTaskId());
         var strategy = strategies.stream()
                 .filter(s -> s.support(taskResponse.getContent()))

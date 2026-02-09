@@ -25,13 +25,13 @@ public class MultipleChoiceSolutionSubmissionStrategy implements SolutionSubmiss
     }
 
     @Override
-    public Solution handle(SolutionRequest request, String userId, MultipleChoiceTaskContent taskContent) {
+    public Solution handle(SolutionRequest request, UUID userId, MultipleChoiceTaskContent taskContent) {
         var status = isCorrectAnswer(request.getAnswer(), taskContent)
                 ? SolutionStatus.SUCCESS
                 : SolutionStatus.FAILED;
 
         var solution = Solution.builder()
-                .userId(UUID.fromString(userId))
+                .userId(userId)
                 .taskId(request.getTaskId())
                 .answer(request.getAnswer())
                 .status(status)

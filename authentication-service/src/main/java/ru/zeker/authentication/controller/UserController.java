@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +57,7 @@ public class UserController {
     /**
      * Retrieves information about the current authenticated user.
      *
-     * @param id User ID passed in the request header (required, non-empty)
+     * @param userId User ID passed in the request header (required, non-empty)
      * @return {@link ResponseEntity} with user data in {@link UserResponse} format
      * @throws jakarta.validation.ConstraintViolationException if ID is empty or invalid
      */
@@ -73,8 +74,8 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String id) {
-        return ResponseEntity.ok(userMapper.toResponse(userService.findById(UUID.fromString(id))));
+            @RequestHeader(USER_ID) @NotNull UUID userId) {
+        return ResponseEntity.ok(userMapper.toResponse(userService.findById(userId)));
     }
 
     /**
@@ -106,7 +107,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<UserResponse> updateCurrentUser(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String id,
+            @RequestHeader(USER_ID) @NotNull UUID id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "User fields to update. At least one field must be provided.",
@@ -123,7 +124,7 @@ public class UserController {
     /**
      * Binds a password to the user account.
      *
-     * @param id      User ID passed in the request header (required, non-empty)
+     * @param userId  User ID passed in the request header (required, non-empty)
      * @param request {@link BindPasswordRequest} with data for binding password
      * @return {@link ResponseEntity} with status code 202 (Accepted)
      * @throws jakarta.validation.ConstraintViolationException if ID or request data is invalid
@@ -140,18 +141,18 @@ public class UserController {
     @PostMapping("/me/password/bind")
     public ResponseEntity<Void> bindPassword(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String id,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
 
             @Parameter(description = "Data for binding password", required = true)
             @RequestBody @Valid BindPasswordRequest request) {
-        userService.bindPassword(id, request);
+        userService.bindPassword(userId, request);
         return ResponseEntity.accepted().build();
     }
 
     /**
      * Changes user password and logs out from all devices.
      *
-     * @param id                    User ID passed in the request header (required, non-empty)
+     * @param userId                User ID passed in the request header (required, non-empty)
      * @param changePasswordRequest {@link ChangePasswordRequest} with current and new password
      * @param refreshToken          Refresh token from cookie (required, non-empty)
      * @param response              {@link HttpServletResponse} for clearing cookies
@@ -170,7 +171,7 @@ public class UserController {
     @PatchMapping("/me/password")
     public ResponseEntity<Void> changePassword(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String id,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
 
             @Parameter(description = "Current and new password", required = true)
             @RequestBody @Valid ChangePasswordRequest changePasswordRequest,
@@ -179,7 +180,7 @@ public class UserController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
 
             HttpServletResponse response) {
-        userService.changePassword(id, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        userService.changePassword(userId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         refreshTokenService.revokeAllUserTokens(refreshToken);
         response.addHeader(HttpHeaders.SET_COOKIE,
                 CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO).toString());

@@ -70,8 +70,8 @@ public class UserService {
     }
 
     @Transactional
-    public User updatePerson(UserUpdateRequest request, String userId) {
-        var user = findById(UUID.fromString(userId));
+    public User updatePerson(UserUpdateRequest request, UUID userId) {
+        var user = findById(userId);
 
         Optional.ofNullable(request.firstName())
                 .ifPresent(user::setFirstName);
@@ -82,8 +82,8 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void bindPassword(String userId, BindPasswordRequest request) {
-        var user = findById(UUID.fromString(userId));
+    public void bindPassword(UUID userId, BindPasswordRequest request) {
+        var user = findById(userId);
 
         if (Objects.nonNull(user.getLocalAuth())) {
             throw new UserAlreadyExistsException("User already has password bound", ErrorCode.USER_ALREADY_PASSWORD_BOUND);
@@ -100,12 +100,12 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void changePassword(String userId, String oldPassword, String newPassword) {
+    public void changePassword(UUID userId, String oldPassword, String newPassword) {
         if (oldPassword.equals(newPassword)) {
             throw new BadCredentialsException("New password must be different from old password");
         }
 
-        var user = findById(UUID.fromString(userId));
+        var user = findById(userId);
 
         if (Objects.isNull(user.getLocalAuth())) {
             throw new IllegalStateException("User is not registered locally");

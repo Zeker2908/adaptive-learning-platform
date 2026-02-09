@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,7 +70,7 @@ public class SolutionController {
     )
     public ResponseEntity<SolutionResponse> submitSolution(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String userId,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
             @Valid @RequestBody SolutionRequest request
     ) {
         return ResponseEntity.ok(solutionMapper.toResponse(solutionService.submitSolution(request, userId)));
@@ -93,11 +93,11 @@ public class SolutionController {
     )
     public ResponseEntity<SolutionResponse> getSolution(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String userId,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
             @Parameter(description = "Solution identifier", required = true, example = "123e4567-e89b-12d3-a456-556642440000")
             @PathVariable("id") UUID id
     ) {
-        return ResponseEntity.ok(solutionMapper.toResponse(solutionService.getSolution(id, UUID.fromString(userId))));
+        return ResponseEntity.ok(solutionMapper.toResponse(solutionService.getSolution(id, userId)));
     }
 
     @GetMapping("/user")
@@ -116,9 +116,9 @@ public class SolutionController {
     )
     public ResponseEntity<List<SolutionResponse>> getUserSolutions(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String userId
+            @RequestHeader(USER_ID) @NotNull UUID userId
     ) {
-        return ResponseEntity.ok(solutionService.getUserSolutions(UUID.fromString(userId))
+        return ResponseEntity.ok(solutionService.getUserSolutions(userId)
                 .stream()
                 .map(solutionMapper::toResponse)
                 .toList());
@@ -140,10 +140,10 @@ public class SolutionController {
     )
     public ResponseEntity<Page<UserProgressResponse>> getUserProgress(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) @NotBlank String userId,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(userProgressService.getUserProgress(UUID.fromString(userId), pageable)
+        return ResponseEntity.ok(userProgressService.getUserProgress(userId, pageable)
                 .map(userProgressMapper::toResponse));
     }
 
@@ -169,7 +169,7 @@ public class SolutionController {
     @GetMapping("/user/activity")
     public ResponseEntity<List<DailyActivity>> getUserActivity(
             @Parameter(description = "Unique user identifier", hidden = true)
-            @RequestHeader(USER_ID) String userId,
+            @RequestHeader(USER_ID) @NotNull UUID userId,
 
             @Parameter(
                     description = "Number of recent days to aggregate (maximum 30)",
@@ -180,7 +180,7 @@ public class SolutionController {
             @Max(90)
             long days
     ) {
-        return ResponseEntity.ok(solutionService.getUserActivity(UUID.fromString(userId), days));
+        return ResponseEntity.ok(solutionService.getUserActivity(userId, days));
     }
 
 }
