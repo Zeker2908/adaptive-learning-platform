@@ -118,7 +118,7 @@ public class AuthenticationService {
         log.debug("Token refresh request");
 
         var token = refreshTokenService.verifyRefreshToken(refreshToken);
-        var claims = jwtUtils.parseClaimsJws(refreshToken);
+        var claims = jwtUtils.extractAllClaims(refreshToken);
         var user = new User();
         user.setId(UUID.fromString(jwtUtils.getUserId(claims)));
         user.setEmail(jwtUtils.getUsername(claims));
@@ -146,9 +146,10 @@ public class AuthenticationService {
         try {
             log.info("Email confirmation request");
             var token = request.getToken();
+            var claims = jwtUtils.extractAllClaims(token);
 
-            var user = userService.findById(UUID.fromString(jwtUtils.extractUserId(token)));
-            if (!jwtService.isTokenValid(token, user)) {
+            var user = userService.findById(UUID.fromString(jwtUtils.getUserId(claims)));
+            if (!jwtUtils.isValidUsername(claims, user.getEmail())) {
                 log.warn("Attempt to confirm email with invalid token");
                 throw new InvalidTokenException("Email confirmation token invalid", ErrorCode.INVALID_EMAIL_TOKEN);
             }
@@ -210,11 +211,11 @@ public class AuthenticationService {
             var token = request.getToken();
             var password = request.getPassword();
             var encodedPassword = passwordEncoder.encode(password);
-            var user = userService.findById(UUID.fromString(jwtUtils.extractUserId(token)));
+            var claims = jwtUtils.extractAllClaims(token);
+            var user = userService.findById(UUID.fromString(jwtUtils.getUserId(claims)));
 
             // Combined token validation
-            if (jwtUtils.isTokenExpired(token) ||
-                    !user.getVersion().equals(jwtUtils.extractVersion(token)) ||
+            if (!jwtUtils.isValidVersion(claims, user.getVersion()) ||
                     !jwtUtils.isValidUsername(token, user.getEmail())) {
                 log.warn("Invalid token for password reset");
                 throw new InvalidTokenException("Invalid token for password reset", ErrorCode.INVALID_EMAIL_TOKEN);

@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import ru.zeker.common.exception.AuthException;
 import ru.zeker.common.exception.ErrorCode;
-import ru.zeker.common.util.JwtUtils;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -41,7 +40,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private static final String AUTH_REQUIRED_KEY = "auth-required";
     private static final String REQUIRED_ROLE_KEY = "required-role";
 
-    private final JwtUtils jwtUtils;
+    private final GatewayJwt jwtUtils;
     private final Jackson2JsonEncoder jsonEncoder;
 
     @Override

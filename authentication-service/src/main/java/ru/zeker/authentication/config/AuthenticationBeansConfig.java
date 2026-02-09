@@ -1,8 +1,5 @@
 package ru.zeker.authentication.config;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +17,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import ru.zeker.authentication.service.UserService;
 import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.util.JwtUtils;
-
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
@@ -43,16 +38,8 @@ public class AuthenticationBeansConfig {
     }
 
     @Bean
-    public Cache<String, Claims> claimsCache() {
-        return Caffeine.newBuilder()
-                .maximumSize(10_000)
-                .expireAfterAccess(1, TimeUnit.SECONDS)
-                .build();
-    }
-
-    @Bean
-    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String, Claims> claimsCache) {
-        return new JwtUtils(jwtProperties, claimsCache);
+    public JwtUtils jwtUtils(JwtProperties jwtProperties) {
+        return new JwtUtils(jwtProperties);
     }
 
     @Bean

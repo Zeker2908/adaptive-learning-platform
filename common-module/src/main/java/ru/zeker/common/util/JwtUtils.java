@@ -1,12 +1,10 @@
 package ru.zeker.common.util;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.consts.JwtKeys;
@@ -24,12 +22,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-@Getter
 public class JwtUtils {
     private final JwtProperties jwtProperties;
-    private final Cache<String, Claims> claimsCache;
-
-    private Key publicKey;
     private JwtParser jwtParser;
 
     @PostConstruct
@@ -49,10 +43,10 @@ public class JwtUtils {
             var keyBytes = Base64.getDecoder().decode(publicKeyPEM);
             var spec = new X509EncodedKeySpec(keyBytes);
             var kf = KeyFactory.getInstance("EC");
-            this.publicKey = kf.generatePublic(spec);
+            Key publicKey = kf.generatePublic(spec);
 
             this.jwtParser = Jwts.parserBuilder()
-                    .setSigningKey(this.publicKey)
+                    .setSigningKey(publicKey)
                     .build();
 
         } catch (NoSuchAlgorithmException e) {
@@ -67,10 +61,10 @@ public class JwtUtils {
     }
 
     public Claims extractAllClaims(String token) {
-        return claimsCache.get(token, this::parseClaimsJws);
+        return parseClaimsJws(token);
     }
 
-    public Claims parseClaimsJws(String token) {
+    protected Claims parseClaimsJws(String token) {
         try {
             return jwtParser.parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
@@ -121,14 +115,6 @@ public class JwtUtils {
 
     public boolean isValidUsername(Claims claims, String username) {
         return getUsername(claims).equals(username);
-    }
-
-    public void invalidateToken(String token) {
-        claimsCache.invalidate(token);
-    }
-
-    public void invalidateAll() {
-        claimsCache.invalidateAll();
     }
 
     public String extractUserId(String token) {

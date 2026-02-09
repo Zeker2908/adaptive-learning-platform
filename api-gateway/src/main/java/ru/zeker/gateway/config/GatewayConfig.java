@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import ru.zeker.common.config.JwtProperties;
-import ru.zeker.common.util.JwtUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,11 +36,6 @@ public class GatewayConfig {
                         log.debug("The token has been evicted from the cache: {}, cause: {}", key, cause))
                 .recordStats()
                 .build();
-    }
-
-    @Bean
-    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String, Claims> claimsCache) {
-        return new JwtUtils(jwtProperties, claimsCache);
     }
 
     @Bean
