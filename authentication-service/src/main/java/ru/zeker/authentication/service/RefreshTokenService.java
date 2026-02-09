@@ -40,18 +40,22 @@ public class RefreshTokenService {
         log.debug("Creating new refresh token for user with ID: {}", user.getId());
 
         var token = jwtService.generateRefreshToken(user);
-        var expiryDate = new Date(System.currentTimeMillis() + jwtProperties.getRefresh().getExpiration());
-        var ttlSeconds = TimeUnit.MILLISECONDS.toSeconds(expiryDate.getTime() - System.currentTimeMillis());
+        var ttlMillis = jwtProperties.getRefresh().getExpiration() - 1000;
 
         var refreshToken = RefreshToken.builder()
                 .token(token)
                 .userId(user.getId())
-                .expiryDate(expiryDate)
-                .ttl(ttlSeconds)
+                .ttl(ttlMillis)
                 .build();
 
         var savedToken = refreshTokenRepository.save(refreshToken);
-        log.debug("Refresh token successfully saved to database, expiration: {} seconds", ttlSeconds);
+
+        String formattedDuration = formatDuration(ttlMillis);
+        Date expirationDate = new Date(System.currentTimeMillis() + ttlMillis);
+
+        log.debug("Refresh token saved | TTL: {} | Expires at: {}",
+                formattedDuration,
+                expirationDate);
 
         return savedToken.getToken();
     }
@@ -69,12 +73,6 @@ public class RefreshTokenService {
 
         return refreshTokenRepository.findByToken(token)
                 .map(t -> {
-                    if (t.getExpiryDate().before(new Date())) {
-                        log.warn("Attempt to use expired token for user with ID: {}", t.getUserId());
-                        refreshTokenRepository.delete(t);
-                        throw new TokenExpiredException("Token expiration date has passed");
-                    }
-
                     log.debug("Refresh token valid for user with ID: {}", t.getUserId());
                     return t;
                 })
@@ -129,13 +127,21 @@ public class RefreshTokenService {
     public void revokeAllUserTokens(UUID userId) {
         log.info("Revoking all refresh tokens for user with ID: {}", userId);
 
-        var tokens = refreshTokenRepository.findAllByUserId(userId).orElseThrow(() -> {
+        var tokens = refreshTokenRepository.findAllByUserId(userId);
+
+        if (tokens.isEmpty()) {
             log.warn("User with ID: {} has no refresh tokens", userId);
-            return new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
-        });
+            throw new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
+        }
 
         refreshTokenRepository.deleteAll(tokens);
+    }
 
-        log.info("Revoked {} tokens for user with ID: {}", tokens.size(), userId);
+    private String formatDuration(long millis) {
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60;
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
+
+        return String.format("%dh %dm %ds", hours, minutes, seconds);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.zeker.authentication.domain.model.entity.User;
 import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.consts.JwtKeys;
-import ru.zeker.common.util.JwtUtils;
 
 import java.io.IOException;
 import java.security.Key;
@@ -28,9 +27,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtService {
 
-    private final JwtUtils jwtUtils;
     private final JwtProperties jwtProperties;
-
     private Key privateKey;
 
     @PostConstruct

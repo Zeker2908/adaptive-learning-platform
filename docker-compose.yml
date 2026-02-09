@@ -85,22 +85,22 @@ services:
 
     # https://github.com/judge0/judge0/releases
     # === Judge0 Worker ===
-#  judge0:
-#    image: judge0/judge0:1.13.1
-#    privileged: true
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    environment:
-#      - DATABASE_URL=postgresql://admin:admin@postgres:5432/judge0
-#      - REDIS_URL=redis://redis:6379/10
-#      - REDIS_HOST=redis
-#      - REDIS_PORT=6379
-#    restart: unless-stopped
-#    depends_on:
-#      - postgres
-#      - redis
-#    networks:
-#      - internal
+  judge0:
+    image: judge0/judge0:1.13.1
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/judge0
+      - REDIS_URL=redis://redis:6379/10
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - internal
 
   # === API Gateway ===
   api-gateway:
@@ -257,8 +257,8 @@ services:
         condition: service_completed_successfully
       solution-service:
         condition: service_started
-#      judge0:
-#        condition: service_started
+      judge0:
+        condition: service_started
     networks:
       - internal
 
