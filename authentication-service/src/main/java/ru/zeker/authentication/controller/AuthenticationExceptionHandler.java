@@ -41,6 +41,11 @@ public class AuthenticationExceptionHandler extends GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.LOCKED, "The user's account has been blocked", request.getRequestURI(), request.getRequestId(), ErrorCode.ACCOUNT_BLOCKED);
     }
 
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Map<String, Object>> handleDisabledException(HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, "The user's account has been created but not activated.", request.getRequestURI(), request.getRequestId(), ErrorCode.ACCOUNT_DISABLED);
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI(), request.getRequestId(), ErrorCode.AUTHORIZATION_ERROR);
@@ -51,7 +56,7 @@ public class AuthenticationExceptionHandler extends GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Invalid token", request.getRequestURI(), request.getRequestId(), ErrorCode.AUTHORIZATION_ERROR);
     }
 
-    @ExceptionHandler({CredentialsExpiredException.class, DisabledException.class, AccountExpiredException.class})
+    @ExceptionHandler({CredentialsExpiredException.class, AccountExpiredException.class})
     public ResponseEntity<Map<String, Object>> handleAccountStatusExceptions(RuntimeException ex, HttpServletRequest request) {
         var status = ex instanceof CredentialsExpiredException
                 ? HttpStatus.UNAUTHORIZED

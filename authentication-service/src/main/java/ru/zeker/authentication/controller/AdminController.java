@@ -89,7 +89,7 @@ public class AdminController {
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserResponse> getUserById(
             @Parameter(description = "Unique user identifier (UUID)", required = true)
-            @PathVariable @NotNull UUID userId) {
+            @PathVariable("userId") @NotNull UUID userId) {
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(userId)));
     }
 
@@ -114,7 +114,7 @@ public class AdminController {
     @GetMapping("/users/email/{email}")
     public ResponseEntity<UserResponse> getUserByEmail(
             @Parameter(description = "User email address", required = true)
-            @PathVariable @NotBlank @Email String email) {
+            @PathVariable("email") @NotBlank @Email String email) {
         var user = userService.findByEmail(email);
         return ResponseEntity.ok(userMapper.toResponse(user));
     }
@@ -137,7 +137,7 @@ public class AdminController {
     @PatchMapping("/users/{userId}/grant-admin")
     public ResponseEntity<UserResponse> grantAdmin(
             @Parameter(description = "User ID to grant admin role", required = true)
-            @PathVariable @NotNull UUID userId) {
+            @PathVariable("userId") @NotNull UUID userId) {
         return ResponseEntity.ok(userMapper.toResponse(userService.grantAdmin(userId)));
     }
 
@@ -159,7 +159,7 @@ public class AdminController {
     @PatchMapping("/users/{userId}/block")
     public ResponseEntity<Void> blockUser(
             @Parameter(description = "User ID to block", required = true)
-            @PathVariable @NotNull UUID userId
+            @PathVariable("userId") @NotNull UUID userId
     ) {
         userService.setUserBlocked(userId, true);
         refreshTokenService.revokeAllUserTokens(userId);
@@ -184,7 +184,7 @@ public class AdminController {
     @PatchMapping("/users/{userId}/unblock")
     public ResponseEntity<Void> unblockUser(
             @Parameter(description = "User ID to unblock", required = true)
-            @PathVariable @NotNull UUID userId
+            @PathVariable("userId") @NotNull UUID userId
     ) {
         userService.setUserBlocked(userId, false);
         return ResponseEntity.noContent().build();

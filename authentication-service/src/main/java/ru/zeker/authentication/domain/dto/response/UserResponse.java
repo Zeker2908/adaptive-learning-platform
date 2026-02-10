@@ -20,4 +20,5 @@ public class UserResponse {
     private Role role;
     boolean isLocalUser;
     boolean isOAuthUser;
+    boolean isUserBlocked;
 }

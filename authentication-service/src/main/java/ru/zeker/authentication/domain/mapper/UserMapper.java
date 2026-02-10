@@ -30,6 +30,7 @@ public interface UserMapper {
 
     @Mapping(target = "isLocalUser", expression = "java(user.getLocalAuth() != null)")
     @Mapping(target = "isOAuthUser", expression = "java(user.getOauthAuth() != null)")
+    @Mapping(target = "isUserBlocked", expression = "java(user.getLocked())")
     UserResponse toResponse(User user);
 
     @AfterMapping

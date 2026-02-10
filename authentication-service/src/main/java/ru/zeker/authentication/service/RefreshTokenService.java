@@ -7,15 +7,12 @@ import ru.zeker.authentication.domain.model.entity.RefreshToken;
 import ru.zeker.authentication.domain.model.entity.User;
 import ru.zeker.authentication.exception.TokenExpiredException;
 import ru.zeker.authentication.exception.TokenNotFoundException;
-import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.RefreshTokenRepository;
 import ru.zeker.common.config.JwtProperties;
-import ru.zeker.common.exception.ErrorCode;
 import ru.zeker.common.util.JwtUtils;
 
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of service for managing refresh tokens
@@ -50,12 +47,9 @@ public class RefreshTokenService {
 
         var savedToken = refreshTokenRepository.save(refreshToken);
 
-        String formattedDuration = formatDuration(ttlMillis);
         Date expirationDate = new Date(System.currentTimeMillis() + ttlMillis);
 
-        log.debug("Refresh token saved | TTL: {} | Expires at: {}",
-                formattedDuration,
-                expirationDate);
+        log.debug("Refresh token saved | Expires at: {}", expirationDate);
 
         return savedToken.getToken();
     }
@@ -131,17 +125,11 @@ public class RefreshTokenService {
 
         if (tokens.isEmpty()) {
             log.warn("User with ID: {} has no refresh tokens", userId);
-            throw new UserNotFoundException("User with ID: " + userId + " has no refresh tokens", ErrorCode.USER_NOT_HAVE_ACTIVE_SESSIONS);
+            return;
         }
 
         refreshTokenRepository.deleteAll(tokens);
+        log.info("Revoked {} tokens for user with ID: {}", tokens.size(), userId);
     }
 
-    private String formatDuration(long millis) {
-        long hours = TimeUnit.MILLISECONDS.toHours(millis);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60;
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
-
-        return String.format("%dh %dm %ds", hours, minutes, seconds);
-    }
 }
