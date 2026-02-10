@@ -82,7 +82,7 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void bindPassword(UUID userId, BindPasswordRequest request) {
+    public User bindPassword(UUID userId, BindPasswordRequest request) {
         var user = findById(userId);
 
         if (Objects.nonNull(user.getLocalAuth())) {
@@ -94,9 +94,10 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .enabled(true)
                 .build());
-        repository.save(user);
+        var updatedUser = repository.save(user);
         passwordHistoryService.create(user, request.getPassword());
         log.info("User {} bound password", user.getEmail());
+        return updatedUser;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

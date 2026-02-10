@@ -126,27 +126,26 @@ public class UserController {
      *
      * @param userId  User ID passed in the request header (required, non-empty)
      * @param request {@link BindPasswordRequest} with data for binding password
-     * @return {@link ResponseEntity} with status code 202 (Accepted)
+     * @return {@link ResponseEntity} with status code 200
      * @throws jakarta.validation.ConstraintViolationException if ID or request data is invalid
      */
     @Operation(
             summary = "Bind password",
             description = "Binds a password to the user account",
             responses = {
-                    @ApiResponse(responseCode = "202", description = "Password binding request accepted"),
+                    @ApiResponse(responseCode = "200", description = "Password binding request accepted"),
                     @ApiResponse(responseCode = "400", description = "Invalid input data"),
                     @ApiResponse(responseCode = "409", description = "Password already bound")
             }
     )
     @PostMapping("/me/password/bind")
-    public ResponseEntity<Void> bindPassword(
+    public ResponseEntity<UserResponse> bindPassword(
             @Parameter(description = "Unique user identifier", hidden = true)
             @RequestHeader(USER_ID) @NotNull UUID userId,
 
             @Parameter(description = "Data for binding password", required = true)
             @RequestBody @Valid BindPasswordRequest request) {
-        userService.bindPassword(userId, request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok(userMapper.toResponse(userService.bindPassword(userId, request)));
     }
 
     /**
