@@ -25,7 +25,7 @@ public class ConsumerKafkaListeners {
 
     @KafkaListener(
             topics = "solution.exec.request",
-            containerFactory = "solutionExecKafkaListenerContainerFactory"
+            containerFactory = "sandboxExecKafkaListenerContainerFactory"
     )
     void listen(
             ConsumerRecord<String, SolutionExecRequest> record

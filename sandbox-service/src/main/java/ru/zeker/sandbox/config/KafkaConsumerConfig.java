@@ -25,7 +25,7 @@ public class KafkaConsumerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    public ConsumerFactory<String, SolutionExecRequest> consumerFactory() {
         var props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "sandbox-service");
@@ -47,7 +47,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, SolutionExecRequest>
-    solutionExecKafkaListenerContainerFactory(
+    sandboxExecKafkaListenerContainerFactory(
             ConsumerFactory<String, SolutionExecRequest> consumerFactory,
             @Qualifier("virtualThreadTaskExecutor") AsyncTaskExecutor executorService
     ) {
