@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -24,7 +21,7 @@ import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 
 /**
  * Service for sending emails using Thymeleaf templates
@@ -42,19 +39,7 @@ public class EmailService {
     @Value("${app.company-name:Adaptive learning platform}")
     private String companyName;
 
-    /**
-     * Asynchronously sends an email based on context data
-     *
-     * @param emailContext context for sending email (recipient, subject, template, parameters)
-     * @return CompletableFuture that completes after sending the email
-     * @throws EmailSendingException if sending fails
-     */
-    @Retryable(
-            retryFor = {EmailSendingException.class},
-            backoff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 10000)
-    )
-    @Async("emailExecutor")
-    public CompletableFuture<Void> sendEmail(EmailContext emailContext) {
+    public void sendEmail(EmailContext emailContext) {
         log.info("Preparing to send email to: {}", emailContext.getTo());
 
         try {
@@ -73,9 +58,8 @@ public class EmailService {
                     thymeleafContext
             );
 
-            var senderName = Objects.nonNull(emailContext.getFromDisplayName())
-                    ? emailContext.getFromDisplayName()
-                    : companyName;
+            var senderName = Optional.ofNullable(emailContext.getFromDisplayName())
+                            .orElse(companyName);
 
             messageHelper.setFrom(emailContext.getFrom(), senderName);
             messageHelper.setTo(emailContext.getTo());
@@ -92,7 +76,6 @@ public class EmailService {
             javaMailSender.send(message);
 
             log.info("Email successfully sent to: {}", emailContext.getTo());
-            return CompletableFuture.completedFuture(null);
 
         } catch (SMTPSenderFailedException e) {
             log.error("Error sending email to {}: {}",

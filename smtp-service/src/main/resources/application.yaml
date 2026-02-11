@@ -24,16 +24,9 @@ spring:
           ssl:
             trust: smtp.gmail.com
       debug: true
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6380}
-      database: 1
 app:
   frontend-url: ${FRONT_URL}
   company-name: ${COMPANY_NAME}
-  redis:
-    duration: 15
   links:
     email-verification: /email-confirmation
     password-reset: /password-reset
