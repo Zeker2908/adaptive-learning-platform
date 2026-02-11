@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.zeker.common.dto.judge0.response.SubmissionResponse;
 import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
@@ -24,7 +23,6 @@ public class ConsumerKafkaListeners {
     private final KafkaProducer kafkaProducer;
     private final CodeExecutionService codeExecutionService;
 
-    @Async("virtualThead")
     @KafkaListener(
             topics = "solution.exec.request",
             containerFactory = "solutionExecKafkaListenerContainerFactory"

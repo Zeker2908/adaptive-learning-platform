@@ -2,12 +2,15 @@ package ru.zeker.authentication.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +23,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -117,6 +122,39 @@ public class AdminController {
             @PathVariable("email") @NotBlank @Email String email) {
         var user = userService.findByEmail(email);
         return ResponseEntity.ok(userMapper.toResponse(user));
+    }
+
+    /**
+     * Searches users by email prefix (autocomplete).
+     *
+     * @param prefix Email prefix to search for (case-insensitive)
+     * @param limit Maximum number of results (default: 10)
+     * @return {@link ResponseEntity} with list of matching users
+     */
+    @Operation(
+            summary = "Search users by email prefix",
+            description = "Returns users whose email starts with the given prefix (case-insensitive, autocomplete)",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Search results",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
+                    )
+            }
+    )
+    @GetMapping("/users/search")
+    public ResponseEntity<List<UserResponse>> searchUsersByEmail(
+            @Parameter(description = "Email prefix to search for", required = true, example = "john")
+            @RequestParam("q") @NotBlank String prefix,
+
+            @Parameter(description = "Maximum number of results", example = "10")
+            @RequestParam(value = "limit", defaultValue = "10") @Min(1) @Max(50) int limit
+    ) {
+        List<UserResponse> users = userService.searchByEmailPrefix(prefix, limit)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(users);
     }
 
     /**

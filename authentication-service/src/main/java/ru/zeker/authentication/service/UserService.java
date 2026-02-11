@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +22,7 @@ import ru.zeker.authentication.exception.UserNotFoundException;
 import ru.zeker.authentication.repository.UserRepository;
 import ru.zeker.common.exception.ErrorCode;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +40,12 @@ public class UserService {
     public User findByEmail(String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found", ErrorCode.USER_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> searchByEmailPrefix(String prefix, int limit) {
+        return repository.findByEmailStartingWithIgnoreCase(prefix, PageRequest.of(0, limit))
+                .getContent();
     }
 
     @Transactional(readOnly = true)
