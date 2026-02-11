@@ -150,7 +150,7 @@ public class AdminController {
             @Parameter(description = "Maximum number of results", example = "10")
             @RequestParam(value = "limit", defaultValue = "10") @Min(1) @Max(50) int limit
     ) {
-        List<UserResponse> users = userService.searchByEmailPrefix(prefix, limit)
+        var users = userService.searchByEmailPrefix(prefix, limit)
                 .stream()
                 .map(userMapper::toResponse)
                 .toList();

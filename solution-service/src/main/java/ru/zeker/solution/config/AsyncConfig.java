@@ -1,14 +1,10 @@
-package ru.zeker.sandbox.config;
+package ru.zeker.solution.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.support.TaskExecutorAdapter;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
-import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 
 import java.util.concurrent.Executors;
 

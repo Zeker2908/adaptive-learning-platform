@@ -3,9 +3,11 @@ package ru.zeker.smtp.config;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -66,12 +68,14 @@ public class KafkaConsumerConfig {
     @Bean("emailKafkaListenerContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, Object>
     emailKafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory,
+                                       @Qualifier("virtualThreadTaskExecutor") AsyncTaskExecutor executorService,
                                        CommonErrorHandler errorHandler) {
         var factory =
                 new ConcurrentKafkaListenerContainerFactory<String, Object>();
         factory.setConsumerFactory(consumerFactory);
-        factory.setConcurrency(16);
+        factory.setConcurrency(2);
         factory.setCommonErrorHandler(errorHandler);
+        factory.getContainerProperties().setListenerTaskExecutor(executorService);
         return factory;
     }
 

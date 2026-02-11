@@ -2,9 +2,11 @@ package ru.zeker.sandbox.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -44,12 +46,17 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object>
-    solutionExecKafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
-        var factory =
-                new ConcurrentKafkaListenerContainerFactory<String, Object>();
+    public ConcurrentKafkaListenerContainerFactory<String, SolutionExecRequest>
+    solutionExecKafkaListenerContainerFactory(
+            ConsumerFactory<String, SolutionExecRequest> consumerFactory,
+            @Qualifier("virtualThreadTaskExecutor") AsyncTaskExecutor executorService
+    ) {
+        var factory = new ConcurrentKafkaListenerContainerFactory<String, SolutionExecRequest>();
         factory.setConsumerFactory(consumerFactory);
-        factory.setConcurrency(16);
+        factory.setConcurrency(4);
+
+        factory.getContainerProperties().setListenerTaskExecutor(executorService);
+
         return factory;
     }
 
