@@ -10,7 +10,6 @@ import ru.zeker.common.config.JwtProperties;
 import ru.zeker.common.consts.JwtKeys;
 
 import java.io.IOException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -43,10 +42,10 @@ public class JwtUtils {
             var keyBytes = Base64.getDecoder().decode(publicKeyPEM);
             var spec = new X509EncodedKeySpec(keyBytes);
             var kf = KeyFactory.getInstance("EC");
-            Key publicKey = kf.generatePublic(spec);
+            var publicKey = kf.generatePublic(spec);
 
-            this.jwtParser = Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
+            this.jwtParser = Jwts.parser()
+                    .verifyWith(publicKey)
                     .build();
 
         } catch (NoSuchAlgorithmException e) {
@@ -66,7 +65,7 @@ public class JwtUtils {
 
     protected Claims parseClaimsJws(String token) {
         try {
-            return jwtParser.parseClaimsJws(token).getBody();
+            return jwtParser.parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
             throw e;
         } catch (Exception e) {

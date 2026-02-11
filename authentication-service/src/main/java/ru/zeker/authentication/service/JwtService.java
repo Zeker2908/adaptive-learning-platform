@@ -1,7 +1,6 @@
 package ru.zeker.authentication.service;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -93,11 +92,11 @@ public class JwtService {
         var currentTimeMillis = System.currentTimeMillis();
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(currentTimeMillis))
-                .setExpiration(new Date(currentTimeMillis + expiration))
-                .signWith(privateKey, SignatureAlgorithm.ES256)
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(currentTimeMillis))
+                .expiration(new Date(currentTimeMillis + expiration))
+                .signWith(privateKey)
                 .compact();
     }
 

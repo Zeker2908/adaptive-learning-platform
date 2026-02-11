@@ -13,7 +13,6 @@
 	<name>api-gateway</name>
 	<properties>
 		<java.version>21</java.version>
-		<jwt.version>0.11.5</jwt.version>
 	</properties>
 	<dependencies>
 		<dependency>

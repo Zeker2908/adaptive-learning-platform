@@ -16,10 +16,16 @@ public interface PasswordHistoryRepository extends JpaRepository<PasswordHistory
     Set<PasswordHistory> findAllByLocalAuthId(UUID localAuthId);
 
     @Modifying
-    @Query("DELETE FROM PasswordHistory ph WHERE ph.id IN ("
-            + "SELECT ph2.id FROM PasswordHistory ph2 "
-            + "WHERE ph2.localAuth.id = :localAuthId "
-            + "ORDER BY ph2.createdAt ASC LIMIT :count)")
+    @Query(
+            value = "DELETE FROM password_history " +
+                    "WHERE id IN (" +
+                    "  SELECT id FROM password_history " +
+                    "  WHERE local_auth_id = :localAuthId " +
+                    "  ORDER BY created_at ASC " +
+                    "  LIMIT :count" +
+                    ")",
+            nativeQuery = true
+    )
     void deleteOldestByLocalAuthId(@Param("localAuthId") UUID localAuthId,
                                    @Param("count") int count);
 }
