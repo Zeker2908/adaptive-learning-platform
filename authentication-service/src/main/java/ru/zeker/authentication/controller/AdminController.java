@@ -22,17 +22,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.authentication.domain.dto.response.AdminUserResponse;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
+import ru.zeker.authentication.exception.AdminNoneBlockException;
 import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.UserService;
 
 import java.util.List;
 import java.util.UUID;
+
+import static ru.zeker.common.headers.AppHeaders.USER_ID;
 
 /**
  * Admin controller for managing users.
@@ -129,7 +133,7 @@ public class AdminController {
      * Searches users by email prefix (autocomplete).
      *
      * @param prefix Email prefix to search for (case-insensitive)
-     * @param limit Maximum number of results (default: 10)
+     * @param limit  Maximum number of results (default: 10)
      * @return {@link ResponseEntity} with list of matching users
      */
     @Operation(
@@ -198,8 +202,12 @@ public class AdminController {
     @PatchMapping("/users/{userId}/block")
     public ResponseEntity<AdminUserResponse> blockUser(
             @Parameter(description = "User ID to block", required = true)
+            @RequestHeader(USER_ID) @NotNull UUID id,
             @PathVariable("userId") @NotNull UUID userId
     ) {
+        if (id.equals(userId)) {
+            throw new AdminNoneBlockException();
+        }
         var response = userMapper.toAdminResponse(userService.updateUserBlocked(userId, true));
         refreshTokenService.revokeAllUserTokens(userId);
         return ResponseEntity.ok(response);
