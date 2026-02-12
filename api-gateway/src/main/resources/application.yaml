@@ -82,6 +82,15 @@ spring:
                       metadata:
                         required-role: ADMIN
 
+                    - id: solution-service-admin
+                      uri: http://solution-service:8084
+                      predicates:
+                        - Path=/api/v${app.version}/admin/solutions/**
+                      filters:
+                        - StripPrefix=2
+                      metadata:
+                        required-role: ADMIN
+
 
                     # === OAUTH2 FLOW ===
                     - id: oauth2-authorization
