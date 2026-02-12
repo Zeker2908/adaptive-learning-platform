@@ -59,7 +59,7 @@ public class SolutionAdminController {
     )
     public ResponseEntity<Page<UserProgressResponse>> getUserProgress(
             @Parameter(description = "Unique user identifier")
-            @PathVariable UUID userId,
+            @PathVariable("userId") UUID userId,
             @PageableDefault(size = 20) Pageable pageable
     ) {
         return ResponseEntity.ok(userProgressService.getUserProgress(userId, pageable)
@@ -89,7 +89,7 @@ public class SolutionAdminController {
     )
     public ResponseEntity<List<DailyActivity>> getUserActivity(
             @Parameter(description = "Unique user identifier")
-            @PathVariable UUID userId,
+            @PathVariable("userId") UUID userId,
             @Parameter(
                     description = "Number of recent days to aggregate (maximum 90)",
                     example = "14"

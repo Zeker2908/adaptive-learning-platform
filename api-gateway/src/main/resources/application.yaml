@@ -38,6 +38,15 @@ spring:
                       filters:
                         - StripPrefix=2
 
+                    - id: solution-service-admin
+                      uri: http://solution-service:8084
+                      predicates:
+                        - Path=/api/v${app.version}/admin/solutions/**
+                      filters:
+                        - StripPrefix=2
+                      metadata:
+                        required-role: ADMIN
+
                     # === TASK SERVICE ===
                     - id: task-service-admin
                       uri: http://task-service:8082
@@ -77,15 +86,6 @@ spring:
                       uri: http://authentication-service:8081
                       predicates:
                         - Path=/api/v${app.version}/admin/**
-                      filters:
-                        - StripPrefix=2
-                      metadata:
-                        required-role: ADMIN
-
-                    - id: solution-service-admin
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/api/v${app.version}/admin/solutions/**
                       filters:
                         - StripPrefix=2
                       metadata:
