@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.zeker.authentication.domain.dto.OAuth2UserInfo;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
+import ru.zeker.authentication.domain.dto.response.AdminUserResponse;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.model.entity.LocalAuth;
 import ru.zeker.authentication.domain.model.entity.OAuthAuth;
@@ -32,6 +33,12 @@ public interface UserMapper {
     @Mapping(target = "isOAuthUser", expression = "java(user.getOauthAuth() != null)")
     @Mapping(target = "isUserBlocked", expression = "java(user.getLocked())")
     UserResponse toResponse(User user);
+
+    @Mapping(target = "isLocalUser", expression = "java(user.getLocalAuth() != null)")
+    @Mapping(target = "isOAuthUser", expression = "java(user.getOauthAuth() != null)")
+    @Mapping(target = "isUserBlocked", expression = "java(user.getLocked())")
+    @Mapping(target = "isEnabled", expression = "java(user.isEnabled())")
+    AdminUserResponse toAdminResponse(User user);
 
     @AfterMapping
     default void setLocalAuth(@MappingTarget User user, RegisterRequest request,

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.zeker.authentication.domain.dto.response.AdminUserResponse;
 import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.RefreshTokenService;
@@ -66,11 +67,11 @@ public class AdminController {
             }
     )
     @GetMapping("/users")
-    public ResponseEntity<Page<UserResponse>> getAllUsers(
+    public ResponseEntity<Page<AdminUserResponse>> getAllUsers(
             @Parameter(description = "Pagination parameters: page (0-based), size, sort")
             @PageableDefault(size = 20) Pageable pageable) {
-        Page<UserResponse> users = userService.findAll(pageable)
-                .map(userMapper::toResponse);
+        var users = userService.findAll(pageable)
+                .map(userMapper::toAdminResponse);
         return ResponseEntity.ok(users);
     }
 
@@ -92,10 +93,10 @@ public class AdminController {
             }
     )
     @GetMapping("/users/{userId}")
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<AdminUserResponse> getUserById(
             @Parameter(description = "Unique user identifier (UUID)", required = true)
             @PathVariable("userId") @NotNull UUID userId) {
-        return ResponseEntity.ok(userMapper.toResponse(userService.findById(userId)));
+        return ResponseEntity.ok(userMapper.toAdminResponse(userService.findById(userId)));
     }
 
 
@@ -117,11 +118,11 @@ public class AdminController {
             }
     )
     @GetMapping("/users/email/{email}")
-    public ResponseEntity<UserResponse> getUserByEmail(
+    public ResponseEntity<AdminUserResponse> getUserByEmail(
             @Parameter(description = "User email address", required = true)
             @PathVariable("email") @NotBlank @Email String email) {
         var user = userService.findByEmail(email);
-        return ResponseEntity.ok(userMapper.toResponse(user));
+        return ResponseEntity.ok(userMapper.toAdminResponse(user));
     }
 
     /**
@@ -143,7 +144,7 @@ public class AdminController {
             }
     )
     @GetMapping("/users/search")
-    public ResponseEntity<List<UserResponse>> searchUsersByEmail(
+    public ResponseEntity<List<AdminUserResponse>> searchUsersByEmail(
             @Parameter(description = "Email prefix to search for", required = true, example = "john")
             @RequestParam("q") @NotBlank String prefix,
 
@@ -152,7 +153,7 @@ public class AdminController {
     ) {
         var users = userService.searchByEmailPrefix(prefix, limit)
                 .stream()
-                .map(userMapper::toResponse)
+                .map(userMapper::toAdminResponse)
                 .toList();
         return ResponseEntity.ok(users);
     }
@@ -173,10 +174,10 @@ public class AdminController {
             }
     )
     @PatchMapping("/users/{userId}/grant-admin")
-    public ResponseEntity<UserResponse> grantAdmin(
+    public ResponseEntity<AdminUserResponse> grantAdmin(
             @Parameter(description = "User ID to grant admin role", required = true)
             @PathVariable("userId") @NotNull UUID userId) {
-        return ResponseEntity.ok(userMapper.toResponse(userService.grantAdmin(userId)));
+        return ResponseEntity.ok(userMapper.toAdminResponse(userService.grantAdmin(userId)));
     }
 
     /**
@@ -189,19 +190,19 @@ public class AdminController {
             summary = "Block user",
             description = "Blocks the specified user and revokes all active refresh tokens",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "User blocked successfully"),
+                    @ApiResponse(responseCode = "200", description = "User blocked successfully"),
                     @ApiResponse(responseCode = "400", description = "Invalid user ID"),
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
     @PatchMapping("/users/{userId}/block")
-    public ResponseEntity<Void> blockUser(
+    public ResponseEntity<AdminUserResponse> blockUser(
             @Parameter(description = "User ID to block", required = true)
             @PathVariable("userId") @NotNull UUID userId
     ) {
-        userService.setUserBlocked(userId, true);
+        var response = userMapper.toAdminResponse(userService.updateUserBlocked(userId, true));
         refreshTokenService.revokeAllUserTokens(userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -214,18 +215,17 @@ public class AdminController {
             summary = "Unblock user",
             description = "Unblock the specified user and revokes all active refresh tokens",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "User unblock successfully"),
+                    @ApiResponse(responseCode = "200", description = "User unblock successfully"),
                     @ApiResponse(responseCode = "400", description = "Invalid user ID"),
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
     @PatchMapping("/users/{userId}/unblock")
-    public ResponseEntity<Void> unblockUser(
+    public ResponseEntity<AdminUserResponse> unblockUser(
             @Parameter(description = "User ID to unblock", required = true)
             @PathVariable("userId") @NotNull UUID userId
     ) {
-        userService.setUserBlocked(userId, false);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(userMapper.toAdminResponse(userService.updateUserBlocked(userId, false)));
     }
 
 }

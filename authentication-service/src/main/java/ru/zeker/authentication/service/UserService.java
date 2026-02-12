@@ -160,11 +160,12 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void setUserBlocked(UUID userId, boolean blocked) {
+    public User updateUserBlocked(UUID userId, boolean blocked) {
         var user = findById(userId);
         user.setLocked(blocked);
-        repository.save(user);
+        var udateUser = repository.save(user);
         log.info("User {} has been {}", userId, blocked ? "blocked" : "unblocked");
+        return udateUser;
     }
 
     public boolean existsByEmail(String email) {
