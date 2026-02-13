@@ -77,6 +77,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         if (jwtUtils.isTokenExpired(token)) {
+                            jwtUtils.invalidateToken(token);
                             throw new AuthException("The token has expired", ErrorCode.TOKEN_EXPIRED);
                         }
                         return jwtUtils.extractAllClaims(token);

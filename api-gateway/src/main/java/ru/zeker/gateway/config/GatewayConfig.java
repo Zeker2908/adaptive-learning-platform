@@ -25,11 +25,9 @@ public class GatewayConfig {
 
     @Bean
     public Cache<String, Claims> claimsCache(JwtProperties jwtProperties) {
-        var cacheTtlMs = Math.max(0, jwtProperties.getAccess().getExpiration() - TimeUnit.MINUTES.toMillis(1));
-
         return Caffeine.newBuilder()
                 .maximumSize(100_000)
-                .expireAfterWrite(cacheTtlMs, TimeUnit.MILLISECONDS)
+                .expireAfterWrite(jwtProperties.getAccess().getExpiration(), TimeUnit.MILLISECONDS)
                 .evictionListener((String key, Claims value, RemovalCause cause) ->
                         log.debug("The token has been evicted from the cache: {}, cause: {}", key, cause))
                 .removalListener((String key, Claims value, RemovalCause cause) ->
