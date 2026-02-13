@@ -112,6 +112,14 @@ public class SolutionService {
                 .toList();
     }
 
+    public long countUserSolutions(UUID userId) {
+        return repository.countByUserId(userId);
+    }
+
+    public long countUserSuccessfulSolutions(UUID userId) {
+        return repository.countByUserIdAndStatus(userId, SolutionStatus.SUCCESS);
+    }
+
     @SneakyThrows
     @Scheduled(fixedDelay = 30_000)
     @Transactional

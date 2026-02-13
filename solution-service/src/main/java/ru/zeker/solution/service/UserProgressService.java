@@ -3,6 +3,7 @@ package ru.zeker.solution.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +70,19 @@ public class UserProgressService {
         var newConfidence = calculateNewConfidence(oldConfidence, delta);
         progress.setConfidence(newConfidence);
         repository.save(progress);
+    }
+
+    public double getAverageConfidence(UUID userId) {
+        var progresses = repository.findByUserId(userId);
+
+        if (progresses.isEmpty()) {
+            return NumberUtils.DOUBLE_ZERO;
+        }
+
+        return progresses.stream()
+                .mapToDouble(UserProgress::getConfidence)
+                .average()
+                .orElse(NumberUtils.DOUBLE_ZERO);
     }
 
     private double calculateNewConfidence(double oldConfidence, double delta) {

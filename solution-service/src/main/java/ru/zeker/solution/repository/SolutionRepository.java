@@ -24,4 +24,8 @@ public interface SolutionRepository extends JpaRepository<Solution, UUID> {
             "GROUP BY DATE(s.createdAt) " +
             "ORDER BY DATE(s.createdAt)")
     List<Object[]> findActivityByDay(@Param("userId") UUID userId, @Param("since") LocalDateTime since);
+
+    long countByUserId(UUID userId);
+
+    long countByUserIdAndStatus(UUID userId, SolutionStatus status);
 }

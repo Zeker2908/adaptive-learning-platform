@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.common.dto.solution.response.DailyActivity;
+import ru.zeker.common.dto.solution.response.TaskStatisticsResponse;
 import ru.zeker.common.dto.solution.response.UserProgressResponse;
 import ru.zeker.solution.domain.mapper.UserProgressMapper;
 import ru.zeker.solution.service.SolutionService;
+import ru.zeker.solution.service.SolutionStatisticsFacade;
 import ru.zeker.solution.service.UserProgressService;
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class SolutionAdminController {
     private final SolutionService solutionService;
     private final UserProgressService userProgressService;
     private final UserProgressMapper userProgressMapper;
+    private final SolutionStatisticsFacade solutionStatisticsFacade;
 
     @GetMapping("/user/progress/{userId}")
     @Operation(
@@ -100,5 +103,16 @@ public class SolutionAdminController {
             long days
     ) {
         return ResponseEntity.ok(solutionService.getUserActivity(userId, days));
+    }
+
+    @GetMapping("/user/statistics/{userId}")
+    @Operation(
+            summary = "Get aggregated task statistics",
+            description = "Returns overall user statistics: total solutions, success rate, weakest topics, average confidence."
+    )
+    public ResponseEntity<TaskStatisticsResponse> getUserStatistics(
+            @PathVariable("userId") UUID userId
+    ) {
+        return ResponseEntity.ok(solutionStatisticsFacade.buildStatistics(userId));
     }
 }
