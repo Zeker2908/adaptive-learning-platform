@@ -28,9 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static ru.zeker.common.headers.AppHeaders.USER_ID;
-import static ru.zeker.common.headers.AppHeaders.USER_NAME;
-import static ru.zeker.common.headers.AppHeaders.USER_ROLE;
+import static ru.zeker.common.headers.AppHeaders.*;
 
 @Slf4j
 @Component
@@ -61,14 +59,16 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         var route = (Route) exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
         var required = Optional.ofNullable(route)
                 .map(Route::getMetadata)
-                .map(meta -> Boolean.parseBoolean(meta.getOrDefault(AUTH_REQUIRED_KEY, "true").toString()))
-                .orElse(true);
+                .map(meta -> meta.get(AUTH_REQUIRED_KEY))
+                .map(Object::toString)
+                .map(JwtValidationFilter::parseBooleanFalse)
+                .orElse(Boolean.TRUE);
         return Mono.just(required);
     }
 
     private Mono<Claims> extractClaims(ServerWebExchange exchange) {
         var authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isBlank(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
+        if (StringUtils.isBlank(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
             return Mono.error(new AuthException("Authorization header missing", HttpStatus.UNAUTHORIZED));
         }
 
@@ -153,5 +153,9 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     @Override
     public int getOrder() {
         return Ordered.HIGHEST_PRECEDENCE;
+    }
+
+    private static Boolean parseBooleanFalse(String str) {
+        return !StringUtils.equalsIgnoreCase("false", str);
     }
 }
