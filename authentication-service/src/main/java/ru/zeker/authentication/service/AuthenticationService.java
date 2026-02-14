@@ -216,7 +216,7 @@ public class AuthenticationService {
 
             // Combined token validation
             if (!jwtUtils.isValidVersion(claims, user.getVersion()) ||
-                    !jwtUtils.isValidUsername(token, user.getEmail())) {
+                    !jwtUtils.isValidUsername(claims, user.getEmail())) {
                 log.warn("Invalid token for password reset");
                 throw new InvalidTokenException("Invalid token for password reset", ErrorCode.INVALID_EMAIL_TOKEN);
             }

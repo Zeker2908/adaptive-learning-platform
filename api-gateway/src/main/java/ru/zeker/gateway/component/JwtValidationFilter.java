@@ -44,14 +44,12 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         return isAuthRequired(exchange)
-                .flatMap(required -> {
-                    if (!required) {
-                        return chain.filter(exchange);
-                    }
-                    return extractClaims(exchange)
-                            .flatMap(claims -> verifyRole(exchange, claims))
-                            .flatMap(claims -> chain.filter(withUserHeaders(exchange, claims)));
-                })
+                .flatMap(required -> required
+                        ? extractClaims(exchange)
+                        .flatMap(claims -> verifyRole(exchange, claims))
+                        .flatMap(claims -> chain.filter(withUserHeaders(exchange, claims)))
+                        : chain.filter(exchange)
+                )
                 .onErrorResume(AuthException.class, ex -> writeError(exchange, ex));
     }
 
@@ -77,7 +75,6 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
         return Mono.fromCallable(() -> {
                     try {
                         if (jwtUtils.isTokenExpired(token)) {
-                            jwtUtils.invalidateToken(token);
                             throw new AuthException("The token has expired", ErrorCode.TOKEN_EXPIRED);
                         }
                         return jwtUtils.extractAllClaims(token);
