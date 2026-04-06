@@ -23,6 +23,7 @@ import ru.zeker.common.exception.AuthException;
 import ru.zeker.common.exception.ErrorCode;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -114,13 +115,11 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private ServerWebExchange withUserHeaders(ServerWebExchange exchange, Claims claims) {
         var mutated = exchange.getRequest().mutate()
                 .header(USER_ID, jwtUtils.getUserId(claims))
-                .header(USER_NAME, jwtUtils.getUsername(claims))
                 .header(USER_ROLE, jwtUtils.getRole(claims))
                 .headers(headers -> headers.remove(HttpHeaders.AUTHORIZATION))
                 .build();
         return exchange.mutate().request(mutated).build();
     }
-
 
     private Mono<Void> writeError(ServerWebExchange exchange, AuthException ex) {
         var response = exchange.getResponse();
@@ -141,7 +140,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
                         response.bufferFactory(),
                         ResolvableType.forClassWithGenerics(Map.class, String.class, Object.class),
                         MediaType.APPLICATION_JSON,
-                        null
+                        Collections.emptyMap()
                 )
         );
     }
