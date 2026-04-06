@@ -54,7 +54,7 @@ public class TaskService {
 
         var spec = TaskSpecification.hasTitle(title)
                 .and(TaskSpecification.hasDifficulties(difficulties))
-                .and(TaskSpecification.hasAnyTags(tags));
+                .and(TaskSpecification.hasAllTags(tags));
 
         return repository.findAll(spec, pageable);
     }
