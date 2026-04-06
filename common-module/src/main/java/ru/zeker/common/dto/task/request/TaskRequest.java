@@ -26,6 +26,7 @@ public class TaskRequest {
     @Size(min = 8, max = 255, message = "The title length must be between 8 and 255 characters.")
     private String title;
 
+    @NotBlank(message = "The description cannot be empty")
     @Size(max = 1000, message = "The description length must be between 1000 characters.")
     private String description;
 
