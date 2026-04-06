@@ -27,14 +27,36 @@ public class TaskService {
     private final TagService tagService;
     private final TaskMapper taskMapper;
 
-    public Page<Task> getTasks(String title, List<Difficulty> difficulties, List<String> tags, int count) {
-        log.debug("Find task with parameters title={}, diffList={}, tags={}", title, difficulties, tags);
+    public Page<Task> getTasks(String title,
+                               List<Difficulty> difficulties,
+                               List<String> tags,
+                               int count) {
+
+        Pageable pageable = Pageable.ofSize(count);
+        return getTasksInternal(title, difficulties, tags, pageable);
+    }
+
+    public Page<Task> getTasksPaged(String title,
+                                    List<Difficulty> difficulties,
+                                    List<String> tags,
+                                    Pageable pageable) {
+
+        return getTasksInternal(title, difficulties, tags, pageable);
+    }
+
+    private Page<Task> getTasksInternal(String title,
+                                        List<Difficulty> difficulties,
+                                        List<String> tags,
+                                        Pageable pageable) {
+
+        log.debug("Find task with parameters title={}, diffList={}, tags={}, pageable={}",
+                title, difficulties, tags, pageable);
 
         var spec = TaskSpecification.hasTitle(title)
                 .and(TaskSpecification.hasDifficulties(difficulties))
                 .and(TaskSpecification.hasAnyTags(tags));
 
-        return repository.findAll(spec, Pageable.ofSize(count));
+        return repository.findAll(spec, pageable);
     }
 
     public Task getTask(UUID id) {

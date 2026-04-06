@@ -45,7 +45,7 @@ public class TaskController {
                     • difficulty — list of difficulties (EASY, MEDIUM, HARD)
                     • tags — list of tags (task must contain all specified tags)
                     • count — maximum number of tasks to return (default 20, maximum 100)
-
+                    
                     Filters work together.
                     If nothing is specified — returns all tasks (with count limit).
                     """
