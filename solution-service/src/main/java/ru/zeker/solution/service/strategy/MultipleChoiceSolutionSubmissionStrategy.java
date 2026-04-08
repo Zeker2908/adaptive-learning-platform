@@ -46,7 +46,7 @@ public class MultipleChoiceSolutionSubmissionStrategy implements SolutionSubmiss
                         answer.replaceAll("[\\[\\]\\s]", StringUtils.EMPTY)
                                 .split(",")
                 )
-                .filter(str -> !str.isEmpty())
+                .filter(StringUtils::isNotEmpty)
                 .filter(str -> str.matches("-?\\d+"))
                 .map(Integer::parseInt)
                 .collect(Collectors.toSet());

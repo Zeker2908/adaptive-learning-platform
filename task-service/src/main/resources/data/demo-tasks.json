@@ -659,5 +659,2249 @@
       ],
       "correctOptionIndex": 4
     }
+  },
+  {
+    "title": "Реверс строки",
+    "description": "Прочитайте строку и выведите её в обратном порядке.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "abc",
+          "output": "cba"
+        },
+        {
+          "input": "12345",
+          "output": "54321"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Максимум из двух чисел",
+    "description": "Даны два целых числа. Выведите большее из них.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "5 10",
+          "output": "10"
+        },
+        {
+          "input": "-1 -5",
+          "output": "-1"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Таблица умножения",
+    "description": "Дано число n. Выведите результат его умножения на числа от 1 до 10 через пробел.",
+    "tags": [
+      "Циклы",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2",
+          "output": "2 4 6 8 10 12 14 16 18 20"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Инкапсуляция?",
+    "description": "Выберите наиболее точное определение одного из столпов ООП.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое инкапсуляция?",
+      "options": [
+        {
+          "text": "Способность функции обрабатывать данные разных типов"
+        },
+        {
+          "text": "Сокрытие внутренней реализации объекта и ограничение прямого доступа к его данным"
+        },
+        {
+          "text": "Процесс создания подкласса на основе суперкласса"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Среднее арифметическое массива",
+    "description": "Дан массив n чисел. Выведите среднее арифметическое (целая часть).",
+    "tags": [
+      "Массивы",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n10 20 30",
+          "output": "20"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Поиск индекса элемента",
+    "description": "Дан массив и число x. Выведите индекс первого вхождения x или -1, если его нет.",
+    "tags": [
+      "Массивы",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4 5\n1 5 2 5",
+          "output": "1"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Проверка на простое число",
+    "description": "Определите, является ли число n простым. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "7",
+          "output": "Yes"
+        },
+        {
+          "input": "10",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Какие из перечисленных методов HTTP не изменяют состояние сервера?",
+    "description": "Выберите безопасные (safe) методы.",
+    "tags": [
+      "HTTP",
+      "Веб",
+      "API"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Какие методы являются 'safe'?",
+      "options": [
+        {
+          "text": "GET"
+        },
+        {
+          "text": "HEAD"
+        },
+        {
+          "text": "OPTIONS"
+        },
+        {
+          "text": "POST"
+        },
+        {
+          "text": "DELETE"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "title": "Возведение в степень",
+    "description": "Даны числа a и b. Вычислите a в степени b.",
+    "tags": [
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2 3",
+          "output": "8"
+        },
+        {
+          "input": "5 2",
+          "output": "25"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Слияние двух массивов",
+    "description": "Даны два отсортированных массива. Объедините их в один отсортированный массив.",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2\n1 3\n2\n2 4",
+          "output": "1 2 3 4"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Анаграммы",
+    "description": "Даны две строки. Проверьте, являются ли они анаграммами. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "listen silent",
+          "output": "Yes"
+        },
+        {
+          "input": "hello world",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сложность вставки в начало связного списка",
+    "description": "Укажите временную сложность вставки элемента в начало (head) LinkedList.",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Сложность вставки в начало LinkedList?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(n)"
+        },
+        {
+          "text": "O(log n)"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Сумма элементов матрицы",
+    "description": "Дана матрица n x m. Выведите сумму всех её элементов.",
+    "tags": [
+      "Массивы",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2 2\n1 2\n3 4",
+          "output": "10"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Удаление дубликатов из строки",
+    "description": "Удалите все повторяющиеся символы из строки, оставив только первое вхождение.",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "google",
+          "output": "gole"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Бинарное число в десятичное",
+    "description": "Дана строка, представляющая бинарное число. Переведите его в десятичную систему.",
+    "tags": [
+      "Математика",
+      "Строки"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "1010",
+          "output": "10"
+        },
+        {
+          "input": "111",
+          "output": "7"
+        }
+      ]
+    }
+  },
+  {
+    "title": "SQL: Оператор LIKE",
+    "description": "Какой запрос выберет всех пользователей, чьё имя начинается на 'A'?",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Запрос для поиска имен на 'A':",
+      "options": [
+        {
+          "text": "SELECT * FROM users WHERE name = 'A%'"
+        },
+        {
+          "text": "SELECT * FROM users WHERE name LIKE 'A%'"
+        },
+        {
+          "text": "SELECT * FROM users WHERE name LIKE '%A'"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Переворот массива",
+    "description": "Дан массив. Переверните его элементы на месте и выведите.",
+    "tags": [
+      "Массивы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 2 3",
+          "output": "3 2 1"
+        }
+      ]
+    }
+  },
+  {
+    "title": "НОД двух чисел",
+    "description": "Найдите наибольший общий делитель (НОД) двух чисел.",
+    "tags": [
+      "Математика",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "48 18",
+          "output": "6"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Проверка на сбалансированные скобки",
+    "description": "Дана строка из '(' и ')'. Проверьте, сбалансированы ли они. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Алгоритмы",
+      "Структуры данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "(())",
+          "output": "Yes"
+        },
+        {
+          "input": "(()",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что выведет `print(0.1 + 0.2 == 0.3)` в Python?",
+    "description": "Особенности работы с числами с плавающей точкой.",
+    "tags": [
+      "Python",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Результат 0.1 + 0.2 == 0.3?",
+      "options": [
+        {
+          "text": "True"
+        },
+        {
+          "text": "False"
+        },
+        {
+          "text": "Ошибка"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Вторая по величине цифра",
+    "description": "Дан массив различных целых чисел. Найдите второй по величине элемент.",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4\n10 5 8 12",
+          "output": "10"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Какие из этих СУБД являются реляционными?",
+    "description": "Выберите все реляционные базы данных.",
+    "tags": [
+      "Базы данных",
+      "SQL"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Реляционные СУБД:",
+      "options": [
+        {
+          "text": "PostgreSQL"
+        },
+        {
+          "text": "MongoDB"
+        },
+        {
+          "text": "MySQL"
+        },
+        {
+          "text": "Redis"
+        },
+        {
+          "text": "Oracle"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "title": "Замена пробелов",
+    "description": "Замените все пробелы в строке на символ '%20'.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "a b c",
+          "output": "a%20b%20c"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Поиск отсутствующего числа",
+    "description": "Дан массив, содержащий n-1 чисел из диапазона от 1 до n без повторений. Найдите недостающее число.",
+    "tags": [
+      "Математика",
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4\n1 2 4",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "HTTP статус 404",
+    "description": "Что означает код ответа 404?",
+    "tags": [
+      "HTTP",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Код 404 это:",
+      "options": [
+        {
+          "text": "Internal Server Error"
+        },
+        {
+          "text": "Unauthorized"
+        },
+        {
+          "text": "Not Found"
+        },
+        {
+          "text": "Forbidden"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Префиксная сумма",
+    "description": "Дан массив. Сформируйте массив, где i-й элемент равен сумме элементов исходного массива с 0 по i.",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 2 3",
+          "output": "1 3 6"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Свойства ACID",
+    "description": "Что означает буква 'A' в аббревиатуре ACID (базы данных)?",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Буква A в ACID:",
+      "options": [
+        {
+          "text": "Availability"
+        },
+        {
+          "text": "Atomicity"
+        },
+        {
+          "text": "Authority"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Умножение матриц",
+    "description": "Даны две матрицы 2x2. Выведите результат их произведения.",
+    "tags": [
+      "Математика",
+      "Массивы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "1 2\n3 4\n5 6\n7 8",
+          "output": "19 22\n43 50"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Глубина дерева",
+    "description": "Какая структура данных обычно используется для реализации обхода дерева в ширину (BFS)?",
+    "tags": [
+      "Структуры данных",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Структура для BFS:",
+      "options": [
+        {
+          "text": "Стек (Stack)"
+        },
+        {
+          "text": "Очередь (Queue)"
+        },
+        {
+          "text": "Словарь (Dictionary)"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Сумма кратных 3 и 5",
+    "description": "Найдите сумму всех натуральных чисел меньше n, кратных 3 или 5.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "10",
+          "output": "23"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое 'Deadlock'?",
+    "description": "Выберите описание ситуации взаимной блокировки в многопоточности.",
+    "tags": [
+      "Теория",
+      "Многопоточность"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Deadlock?",
+      "options": [
+        {
+          "text": "Когда процесс завершается слишком быстро"
+        },
+        {
+          "text": "Когда два или более процессов ожидают освобождения ресурсов, удерживаемых друг другом"
+        },
+        {
+          "text": "Когда память переполняется"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Удаление гласных из строки",
+    "description": "Удалите все гласные буквы (a, e, i, o, u) из строки.",
+    "tags": [
+      "Строки",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "Apple",
+          "output": "ppl"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Бинарный поиск (реализация)",
+    "description": "Дан отсортированный массив и число x. Выведите индекс x или -1.",
+    "tags": [
+      "Алгоритмы",
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "5 7\n1 3 5 7 9",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "JWT: Где хранить токен на клиенте?",
+    "description": "Выберите безопасные/стандартные варианты хранения токена в браузере.",
+    "tags": [
+      "Безопасность",
+      "JWT",
+      "Веб"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Где хранить JWT?",
+      "options": [
+        {
+          "text": "LocalStorage"
+        },
+        {
+          "text": "HttpOnly Cookie"
+        },
+        {
+          "text": "SessionStorage"
+        },
+        {
+          "text": "Внутри глобальной переменной JS (Memory)"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "title": "Высокосный год",
+    "description": "Проверьте, является ли год высокосным. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2024",
+          "output": "Yes"
+        },
+        {
+          "input": "1900",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Гистограмма",
+    "description": "Дан массив. Для каждого числа выведите строку из '*' соответствующей длины.",
+    "tags": [
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 3 2",
+          "output": "*\n***\n**"
+        }
+      ]
+    }
+  },
+  {
+    "title": "SQL: INNER JOIN",
+    "description": "Что делает INNER JOIN?",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Результат INNER JOIN:",
+      "options": [
+        {
+          "text": "Возвращает только те строки, для которых есть соответствие в обеих таблицах"
+        },
+        {
+          "text": "Возвращает все строки из левой таблицы"
+        },
+        {
+          "text": "Возвращает все строки из обеих таблиц"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Перевод в верхний регистр",
+    "description": "Переведите каждое слово в строке в верхний регистр.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "hello world",
+          "output": "HELLO WORLD"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Дерево: In-order traversal",
+    "description": "В каком порядке посещаются узлы в In-order обходе бинарного дерева поиска?",
+    "tags": [
+      "Алгоритмы",
+      "Структуры данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "In-order это:",
+      "options": [
+        {
+          "text": "Root, Left, Right"
+        },
+        {
+          "text": "Left, Root, Right"
+        },
+        {
+          "text": "Left, Right, Root"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Проверка подстроки",
+    "description": "Проверьте, содержится ли строка s2 в строке s1. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "banana nan",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Объединение множеств",
+    "description": "Даны два массива. Выведите все уникальные элементы, которые есть хотя бы в одном из них (в порядке возрастания).",
+    "tags": [
+      "Хэш-таблицы",
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 2 3\n3\n2 3 4",
+          "output": "1 2 3 4"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое 'Pure Function'?",
+    "description": "Выберите характеристики чистой функции.",
+    "tags": [
+      "Теория",
+      "Функциональное программирование"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Чистая функция:",
+      "options": [
+        {
+          "text": "Всегда возвращает один и тот же результат при одинаковых входных данных"
+        },
+        {
+          "text": "Не имеет побочных эффектов"
+        },
+        {
+          "text": "Изменяет глобальные переменные"
+        },
+        {
+          "text": "Зависит от текущего времени"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Максимальная разность",
+    "description": "Найдите максимальную разность между двумя элементами в массиве (больший минус меньший).",
+    "tags": [
+      "Массивы",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4\n1 5 3 10",
+          "output": "9"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сортировка по длине строк",
+    "description": "Дан список строк. Отсортируйте их по длине (по возрастанию).",
+    "tags": [
+      "Строки",
+      "Сортировка"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\napple to banana",
+          "output": "to apple banana"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое DNS?",
+    "description": "Выберите назначение системы DNS.",
+    "tags": [
+      "Сети",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Зачем нужен DNS?",
+      "options": [
+        {
+          "text": "Для защиты от вирусов"
+        },
+        {
+          "text": "Для преобразования доменных имен в IP-адреса"
+        },
+        {
+          "text": "Для ускорения интернета"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Шифр Цезаря (сдвиг 1)",
+    "description": "Сдвиньте каждую букву латинского алфавита в строке на 1 вперед (a->b, z->a).",
+    "tags": [
+      "Строки",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "abc",
+          "output": "bcd"
+        },
+        {
+          "input": "xyz",
+          "output": "yza"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Поиск пересечения двух массивов",
+    "description": "Выведите элементы, которые есть в обоих массивах.",
+    "tags": [
+      "Массивы",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 2 3\n2\n2 4",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Разница дат (в днях)",
+    "description": "Сколько дней между 1 января 2024 и 10 января 2024?",
+    "tags": [
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2024-01-01 2024-01-10",
+          "output": "9"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое CORS?",
+    "description": "Аббревиатура CORS в веб-разработке.",
+    "tags": [
+      "Веб",
+      "Безопасность"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "CORS это:",
+      "options": [
+        {
+          "text": "Cross-Origin Resource Sharing"
+        },
+        {
+          "text": "Client-Only Request Security"
+        },
+        {
+          "text": "Common Object Resource System"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Двоичное дерево поиска (BST)",
+    "description": "Какое свойство характерно для BST?",
+    "tags": [
+      "Структуры данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Свойство BST:",
+      "options": [
+        {
+          "text": "Все узлы имеют ровно два потомка"
+        },
+        {
+          "text": "Левый потомок меньше корня, правый — больше"
+        },
+        {
+          "text": "Корень всегда равен 0"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Сумма нечетных чисел в диапазоне",
+    "description": "Даны два числа a и b. Найдите сумму всех нечетных целых чисел от a до b включительно.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "1 5",
+          "output": "9"
+        },
+        {
+          "input": "4 8",
+          "output": "12"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Инверсия регистра",
+    "description": "Замените в строке все строчные буквы на заглавные, а заглавные — на строчные.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "PyThOn",
+          "output": "pYtHoN"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Проверка на степень двойки",
+    "description": "Определите, является ли число n степенью двойки. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Математика",
+      "Условия"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "16",
+          "output": "Yes"
+        },
+        {
+          "input": "18",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "SQL: Удаление данных",
+    "description": "Выберите правильный синтаксис для удаления всех пользователей с возрастом менее 18 лет.",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Как удалить записи?",
+      "options": [
+        {
+          "text": "REMOVE FROM users WHERE age < 18"
+        },
+        {
+          "text": "DELETE FROM users WHERE age < 18"
+        },
+        {
+          "text": "DROP users WHERE age < 18"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Поиск дубликата",
+    "description": "Дан массив, где ровно одно число повторяется дважды. Найдите это число.",
+    "tags": [
+      "Массивы",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "5\n1 3 4 2 2",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое полиморфизм?",
+    "description": "Выберите наиболее точное определение одного из принципов ООП.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Суть полиморфизма:",
+      "options": [
+        {
+          "text": "Возможность объектов разных типов иметь одинаковые интерфейсы (методы)"
+        },
+        {
+          "text": "Наследование свойств от родителя"
+        },
+        {
+          "text": "Скрытие данных внутри класса"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Разворот слов в предложении",
+    "description": "Дана строка. Измените порядок слов на обратный, сохранив пробелы.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "coding is fun",
+          "output": "fun is coding"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сложность добавления в HashMap",
+    "description": "Укажите среднюю временную сложность вставки элемента в HashMap.",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Средняя сложность вставки в HashMap?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(log n)"
+        },
+        {
+          "text": "O(n)"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Проверка на анаграмму числа",
+    "description": "Являются ли два числа анаграммами друг друга (состоят ли из одинаковых цифр)?",
+    "tags": [
+      "Математика",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "123 321",
+          "output": "Yes"
+        },
+        {
+          "input": "100 10",
+          "output": "No"
+        }
+      ]
+    }
+  },
+  {
+    "title": "HTTP статус 201",
+    "description": "Что означает код ответа 201?",
+    "tags": [
+      "HTTP",
+      "Веб"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Код 201 это:",
+      "options": [
+        {
+          "text": "OK"
+        },
+        {
+          "text": "Created"
+        },
+        {
+          "text": "Accepted"
+        },
+        {
+          "text": "No Content"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Длина последнего слова",
+    "description": "Дана строка с пробелами. Выведите длину последнего слова.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "Hello world",
+          "output": "5"
+        },
+        {
+          "input": "   python  ",
+          "output": "6"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Минимальное число монет",
+    "description": "Дана сумма S и номиналы 1, 5, 10. Какое минимальное количество монет нужно, чтобы собрать S?",
+    "tags": [
+      "Алгоритмы",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "28",
+          "output": "6"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое 'Middleware'?",
+    "description": "В контексте веб-серверов, что такое Middleware?",
+    "tags": [
+      "Веб",
+      "Архитектура"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Функция Middleware:",
+      "options": [
+        {
+          "text": "Слой кода между запросом клиента и финальным обработчиком"
+        },
+        {
+          "text": "Скрипт для отрисовки графики"
+        },
+        {
+          "text": "Протокол передачи файлов"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Пересечение множеств",
+    "description": "Выберите все типы JOIN в SQL, которые могут вернуть данные только из одной таблицы.",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Виды JOIN:",
+      "options": [
+        {
+          "text": "LEFT JOIN"
+        },
+        {
+          "text": "RIGHT JOIN"
+        },
+        {
+          "text": "INNER JOIN"
+        },
+        {
+          "text": "FULL OUTER JOIN"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        3
+      ]
+    }
+  },
+  {
+    "title": "Первый уникальный символ",
+    "description": "Выведите индекс первого символа в строке, который не повторяется. Если таких нет, -1.",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "leetcode",
+          "output": "0"
+        },
+        {
+          "input": "loveleetcode",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Наибольшее число из цифр",
+    "description": "Дано положительное число. Переставьте его цифры так, чтобы получилось максимально возможное число.",
+    "tags": [
+      "Математика",
+      "Сортировка"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "281",
+          "output": "821"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое 'Race Condition'?",
+    "description": "Выберите описание проблемы состояния гонки.",
+    "tags": [
+      "Теория",
+      "Многопоточность"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Race Condition — это:",
+      "options": [
+        {
+          "text": "Ситуация, когда результат программы зависит от порядка выполнения потоков"
+        },
+        {
+          "text": "Метод ускорения работы процессора"
+        },
+        {
+          "text": "Зацикливание программы"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Десятичное в бинарное",
+    "description": "Переведите целое число n в двоичную строку.",
+    "tags": [
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "10",
+          "output": "1010"
+        }
+      ]
+    }
+  },
+  {
+    "title": "JWT: Из чего состоит подпись?",
+    "description": "Какие части токена используются для создания подписи (signature)?",
+    "tags": [
+      "Безопасность",
+      "JWT"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Состав подписи JWT:",
+      "options": [
+        {
+          "text": "Encoded Header"
+        },
+        {
+          "text": "Encoded Payload"
+        },
+        {
+          "text": "Secret/Private Key"
+        },
+        {
+          "text": "Password пользователя"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "title": "Сортировка вставками",
+    "description": "Реализуйте алгоритм сортировки вставками для массива целых чисел.",
+    "tags": [
+      "Алгоритмы",
+      "Сортировка"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4\n4 3 2 1",
+          "output": "1 2 3 4"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Метод HTTP: OPTIONS",
+    "description": "Для чего обычно используется метод OPTIONS?",
+    "tags": [
+      "HTTP",
+      "API"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Назначение OPTIONS:",
+      "options": [
+        {
+          "text": "Для получения списка разрешенных методов на сервере"
+        },
+        {
+          "text": "Для удаления ресурса"
+        },
+        {
+          "text": "Для обновления части ресурса"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Поиск пика",
+    "description": "Элемент называется пиком, если он больше соседей. Найдите индекс любого пика в массиве.",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "4\n1 2 3 1",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое DRY?",
+    "description": "Выберите расшифровку принципа разработки программного обеспечения.",
+    "tags": [
+      "Архитектура",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Аббревиатура DRY:",
+      "options": [
+        {
+          "text": "Don't Repeat Yourself"
+        },
+        {
+          "text": "Do Repeat Yearly"
+        },
+        {
+          "text": "Data Remote Yield"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Проверка подмножества",
+    "description": "Проверьте, являются ли все элементы массива A элементами массива B. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Массивы",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "2\n1 2\n4\n1 2 3 4",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "HTTP статус 503",
+    "description": "Что означает код ответа 503 Service Unavailable?",
+    "tags": [
+      "HTTP",
+      "Веб"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Причина 503:",
+      "options": [
+        {
+          "text": "Ошибка в коде приложения"
+        },
+        {
+          "text": "Сервер временно не может обрабатывать запросы (перегрузка/обслуживание)"
+        },
+        {
+          "text": "Неверные данные в запросе"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Количество слов в строке",
+    "description": "Посчитайте количество слов, разделенных одним или несколькими пробелами.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "  Hello   world  ",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Принцип KISS",
+    "description": "Что означает принцип KISS в программировании?",
+    "tags": [
+      "Архитектура"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "KISS расшифровывается как:",
+      "options": [
+        {
+          "text": "Keep It Simple, Stupid"
+        },
+        {
+          "text": "Keep In Safe Storage"
+        },
+        {
+          "text": "Key Information Security System"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Генерация всех делителей",
+    "description": "Выведите все делители числа n в порядке возрастания.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "12",
+          "output": "1 2 3 4 6 12"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое SQL Injection?",
+    "description": "Выберите верное описание уязвимости.",
+    "tags": [
+      "Безопасность",
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Суть SQL Injection:",
+      "options": [
+        {
+          "text": "Внедрение вредоносного SQL-кода в запрос через входные данные"
+        },
+        {
+          "text": "Слишком частые запросы к базе"
+        },
+        {
+          "text": "Случайное удаление таблицы"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Сумма по диагонали",
+    "description": "Дана квадратная матрица n x n. Выведите сумму элементов главной диагонали.",
+    "tags": [
+      "Массивы",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n1 2 3\n4 5 6\n7 8 9",
+          "output": "15"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Типы данных в SQL",
+    "description": "Какой тип данных лучше всего подходит для хранения текста неопределенной длины (например, статьи)?",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Тип данных для длинного текста:",
+      "options": [
+        {
+          "text": "INTEGER"
+        },
+        {
+          "text": "BOOLEAN"
+        },
+        {
+          "text": "TEXT / CLOB"
+        },
+        {
+          "text": "CHAR(10)"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Рекурсия: Сумма чисел",
+    "description": "Напишите рекурсивную функцию для вычисления суммы чисел от 1 до n.",
+    "tags": [
+      "Рекурсия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "5",
+          "output": "15"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Singleton?",
+    "description": "Выберите описание паттерна проектирования Одиночка.",
+    "tags": [
+      "Архитектура",
+      "OOP"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Особенность Singleton:",
+      "options": [
+        {
+          "text": "Позволяет создавать неограниченное число объектов"
+        },
+        {
+          "text": "Гарантирует, что у класса есть только один экземпляр"
+        },
+        {
+          "text": "Автоматически удаляет неиспользуемые объекты"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Количество вхождений символа",
+    "description": "Дана строка и символ. Посчитайте, сколько раз символ встречается в строке.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "hello l",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сортировка пузырьком: количество обменов",
+    "description": "Сколько обменов совершит алгоритм сортировки пузырьком для массива [3, 2, 1]?",
+    "tags": [
+      "Алгоритмы",
+      "Сортировка"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3\n3 2 1",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Протокол UDP",
+    "description": "В чем основное отличие UDP от TCP?",
+    "tags": [
+      "Сети"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Свойство UDP:",
+      "options": [
+        {
+          "text": "Гарантирует доставку пакетов"
+        },
+        {
+          "text": "Устанавливает соединение перед передачей"
+        },
+        {
+          "text": "Передает данные без гарантии доставки и контроля порядка (быстрее)"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Удаление лишних пробелов",
+    "description": "Замените несколько идущих подряд пробелов на один.",
+    "tags": [
+      "Строки",
+      "Регулярные выражения"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "a    b  c",
+          "output": "a b c"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Индекс в БД?",
+    "description": "Для чего используются индексы в базах данных?",
+    "tags": [
+      "Базы данных",
+      "SQL"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Назначение индекса:",
+      "options": [
+        {
+          "text": "Для экономии места на диске"
+        },
+        {
+          "text": "Для ускорения поиска данных"
+        },
+        {
+          "text": "Для шифрования данных"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Фибоначчи через рекурсию (эффективность)",
+    "description": "Какова временная сложность наивной рекурсивной реализации чисел Фибоначчи?",
+    "tags": [
+      "О-нотация",
+      "Рекурсия"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Сложность наивного Фибоначчи?",
+      "options": [
+        {
+          "text": "O(n)"
+        },
+        {
+          "text": "O(n²)"
+        },
+        {
+          "text": "O(2^n)"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Циклический сдвиг массива",
+    "description": "Сдвиньте массив вправо на k позиций.",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3 1\n1 2 3",
+          "output": "3 1 2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Типы связей в БД",
+    "description": "Какая связь используется, если один автор может написать много книг, а одна книга написана одним автором?",
+    "tags": [
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Тип связи:",
+      "options": [
+        {
+          "text": "One-to-One"
+        },
+        {
+          "text": "One-to-Many"
+        },
+        {
+          "text": "Many-to-Many"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Замена символов в строке",
+    "description": "Замените все вхождения символа 'a' на 'b'.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "banana",
+          "output": "bbnbnb"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Свойства транзакций: Изоляция",
+    "description": "Что гарантирует свойство Isolation в ACID?",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Суть Isolation:",
+      "options": [
+        {
+          "text": "Данные сохраняются при сбое питания"
+        },
+        {
+          "text": "Параллельные транзакции не влияют на результат друг друга"
+        },
+        {
+          "text": "Транзакция выполняется полностью или никак"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Сумма квадратов",
+    "description": "Дано число n. Выведите сумму квадратов всех чисел от 1 до n.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "3",
+          "output": "14"
+        }
+      ]
+    }
+  },
+  {
+    "title": "HTTP статус 301",
+    "description": "Что означает код ответа 301 Moved Permanently?",
+    "tags": [
+      "HTTP",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Код 301 это:",
+      "options": [
+        {
+          "text": "Ошибка сервера"
+        },
+        {
+          "text": "Постоянное перенаправление (редирект)"
+        },
+        {
+          "text": "Успешная авторизация"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Средний элемент (Медиана)",
+    "description": "Дан отсортированный массив. Выведите его медиану. Если элементов четное количество, выведите меньший из двух центральных.",
+    "tags": [
+      "Массивы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "5\n1 2 3 4 5",
+          "output": "3"
+        },
+        {
+          "input": "4\n10 20 30 40",
+          "output": "20"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сложность поиска в бинарном дереве поиска",
+    "description": "Укажите временную сложность поиска в сбалансированном BST.",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Сложность поиска в BST?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(log n)"
+        },
+        {
+          "text": "O(n)"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Поиск длинного слова",
+    "description": "Выведите самое длинное слово в предложении.",
+    "tags": [
+      "Строки",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "I love programming",
+          "output": "programming"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое 'State' в React/Frontend?",
+    "description": "Краткое определение состояния компонента.",
+    "tags": [
+      "Веб",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое State?",
+      "options": [
+        {
+          "text": "Внешние данные, передаваемые компоненту"
+        },
+        {
+          "text": "Внутренние данные компонента, которые могут меняться со временем"
+        },
+        {
+          "text": "Стиль оформления страницы"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Проверка на число Армстронга",
+    "description": "Число Армстронга — это число, сумма цифр которого, возведенных в степень количества цифр, равна самому числу. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "templateCode": null,
+      "testCases": [
+        {
+          "input": "153",
+          "output": "Yes"
+        },
+        {
+          "input": "123",
+          "output": "No"
+        }
+      ]
+    }
   }
 ]
