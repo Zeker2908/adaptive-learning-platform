@@ -18,7 +18,7 @@ import static ru.zeker.solution.domain.constant.Confidences.MAX_CONFIDENCE;
 @RequiredArgsConstructor
 public class RecommendationService {
 
-    private static final int CANDIDATE_TASKS_LIMIT = 5;
+    private static final int CANDIDATE_TASKS_LIMIT = 30;
     private static final int WEAK_TOPICS_LIMIT = 3;
 
     private final UserProgressService userProgressService;
