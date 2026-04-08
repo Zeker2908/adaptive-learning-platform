@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.zeker.common.dto.task.Difficulty;
 import ru.zeker.common.dto.task.request.TaskRequest;
@@ -33,28 +34,33 @@ public class TaskService {
                                int count) {
 
         Pageable pageable = Pageable.ofSize(count);
-        return getTasksInternal(title, difficulties, tags, pageable);
+        return getTasksInternal(title, difficulties, tags, pageable, false);
     }
 
     public Page<Task> getTasksPaged(String title,
                                     List<Difficulty> difficulties,
                                     List<String> tags,
                                     Pageable pageable) {
-
-        return getTasksInternal(title, difficulties, tags, pageable);
+        return getTasksInternal(title, difficulties, tags, pageable, true);
     }
 
     private Page<Task> getTasksInternal(String title,
                                         List<Difficulty> difficulties,
                                         List<String> tags,
-                                        Pageable pageable) {
+                                        Pageable pageable,
+                                        boolean matchAllTags) {
 
-        log.debug("Find task with parameters title={}, diffList={}, tags={}, pageable={}",
-                title, difficulties, tags, pageable);
+        log.debug("Find task with parameters title={}, diffList={}, tags={}, pageable={}, matchAll={}",
+                title, difficulties, tags, pageable, matchAllTags);
+
+        // Выбираем нужную спецификацию в зависимости от флага
+        Specification<Task> tagSpec = matchAllTags
+                ? TaskSpecification.hasAllTags(tags)
+                : TaskSpecification.hasAnyTags(tags);
 
         var spec = TaskSpecification.hasTitle(title)
                 .and(TaskSpecification.hasDifficulties(difficulties))
-                .and(TaskSpecification.hasAllTags(tags));
+                .and(tagSpec);
 
         return repository.findAll(spec, pageable);
     }
@@ -64,6 +70,7 @@ public class TaskService {
         return repository.findById(id)
                 .orElseThrow(TaskNotFoundException::new);
     }
+
 
     public List<Task> getRandomTasks(int count) {
         log.debug("Find random {} tasks", count);

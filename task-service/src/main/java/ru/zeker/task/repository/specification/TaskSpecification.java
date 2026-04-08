@@ -47,4 +47,15 @@ public class TaskSpecification {
         };
     }
 
+    public static Specification<Task> hasAnyTags(List<String> tagNames) {
+        return (root, query, builder) -> {
+            if (Objects.isNull(tagNames) || tagNames.isEmpty()) {
+                return builder.conjunction();
+            }
+            query.distinct(true);
+            var join = root.join("tags");
+            return join.get("name").in(tagNames);
+        };
+    }
+
 }
