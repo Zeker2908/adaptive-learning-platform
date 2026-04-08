@@ -1,6 +1,7 @@
 package ru.zeker.solution.service.strategy;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.zeker.common.dto.solution.SolutionStatus;
 import ru.zeker.common.dto.solution.request.SolutionRequest;
@@ -41,10 +42,15 @@ public class MultipleChoiceSolutionSubmissionStrategy implements SolutionSubmiss
     }
 
     private boolean isCorrectAnswer(String answer, MultipleChoiceTaskContent taskContent) {
-        return taskContent.getCorrectOptionIndices().equals(Arrays.stream(answer.trim().split("\\s+"))
+        var parsedAnswer = Arrays.stream(
+                        answer.replaceAll("[\\[\\]\\s]", StringUtils.EMPTY)
+                                .split(",")
+                )
                 .filter(str -> !str.isEmpty())
                 .filter(str -> str.matches("-?\\d+"))
                 .map(Integer::parseInt)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet());
+
+        return taskContent.getCorrectOptionIndices().equals(parsedAnswer);
     }
 }
