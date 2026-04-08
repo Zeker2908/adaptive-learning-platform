@@ -27,11 +27,11 @@ public class RecommendationService {
     public List<TaskResponse> getRecommendedTasks(UUID userId, int limit) {
         var weakTopics = userProgressService.getWeakestTopics(userId, WEAK_TOPICS_LIMIT);
 
-        List<TaskResponse> candidateTasks = weakTopics.isEmpty()
-                ? taskClient.getRandomTasks(CANDIDATE_TASKS_LIMIT)
-                : taskClient.getTasksByTags(weakTopics, CANDIDATE_TASKS_LIMIT);
+        if (weakTopics.isEmpty()) {
+            return taskClient.getRandomTasks(CANDIDATE_TASKS_LIMIT);
+        }
 
-        return candidateTasks.stream()
+        return taskClient.getTasksByTags(weakTopics, CANDIDATE_TASKS_LIMIT).stream()
                 .sorted(comparatorByAdaptivePriority(userProgressService.getUserConfidenceMap(userId)))
                 .limit(limit)
                 .toList();
