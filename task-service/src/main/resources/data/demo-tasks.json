@@ -2903,5 +2903,2258 @@
         }
       ]
     }
+  },
+  {
+    "title": "Сравнение длин строк",
+    "description": "Даны две строки. Выведите ту, которая длиннее. Если длины равны, выведите первую.",
+    "tags": [
+      "Строки",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "apple banana",
+          "output": "banana"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Зарплата и налог",
+    "description": "Дана зарплата. Если она больше 50000, налог 13%, иначе 0%. Выведите чистую зарплату.",
+    "tags": [
+      "Математика",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "60000",
+          "output": "52200"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Тип треугольника",
+    "description": "Даны три стороны треугольника. Выведите 'равносторонний', 'равнобедренный' или 'разносторонний'.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5 5 5",
+          "output": "равносторонний"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Время года по месяцу",
+    "description": "Дан номер месяца (1-12). Выведите 'зима', 'весна', 'лето' или 'осень'.",
+    "tags": [
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5",
+          "output": "весна"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Положительное, отрицательное или ноль",
+    "description": "Дано число. Выведите 'positive', 'negative' или 'zero'.",
+    "tags": [
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "-5",
+          "output": "negative"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Кратность трем",
+    "description": "Проверьте, кратно ли число 3. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "9",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Максимум из трех",
+    "description": "Даны три числа. Выведите наибольшее.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "10 5 8",
+          "output": "10"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Валидация возраста",
+    "description": "Дан возраст. Если он в диапазоне 0-120 (включительно), выведите 'valid', иначе 'invalid'.",
+    "tags": [
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "25",
+          "output": "valid"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Пароль совпадает?",
+    "description": "Даны две строки. Проверьте, совпадают ли они. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Строки",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "secret secret",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Калькулятор (базовый)",
+    "description": "Дано два числа и символ операции (+, -, *, /). Выведите результат. Гарантируется, что деление корректно.",
+    "tags": [
+      "Условия",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "10 5 +",
+          "output": "15"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Числа от 1 до N",
+    "description": "Дано число n. Выведите все числа от 1 до n через пробел.",
+    "tags": [
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5",
+          "output": "1 2 3 4 5"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Обратный отсчет",
+    "description": "Дано число n. Выведите все числа от n до 1 через пробел.",
+    "tags": [
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5",
+          "output": "5 4 3 2 1"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сумма чисел от 1 до N",
+    "description": "Дано число n. Выведите сумму всех целых чисел от 1 до n.",
+    "tags": [
+      "Циклы",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5",
+          "output": "15"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Только четные до N",
+    "description": "Дано число n. Выведите все четные числа от 2 до n через пробел.",
+    "tags": [
+      "Циклы",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "10",
+          "output": "2 4 6 8 10"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Поиск делителей",
+    "description": "Дано число n. Выведите все его делители через пробел.",
+    "tags": [
+      "Циклы",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "12",
+          "output": "1 2 3 4 6 12"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Факториал (цикл)",
+    "description": "Вычислите факториал числа n (n!) с использованием цикла.",
+    "tags": [
+      "Циклы",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5",
+          "output": "120"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Степени двойки",
+    "description": "Дано число n. Выведите все степени двойки от 2^0 до 2^n включительно.",
+    "tags": [
+      "Циклы",
+      "Математика"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "4",
+          "output": "1 2 4 8 16"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сумма цифр числа (строка)",
+    "description": "Дано число n. Преобразуйте его в строку и посчитайте сумму его цифр.",
+    "tags": [
+      "Строки",
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "123",
+          "output": "6"
+        }
+      ]
+    }
+  },
+  {
+    "title": "НОК двух чисел",
+    "description": "Найдите наименьшее общее кратное (НОК) двух чисел.",
+    "tags": [
+      "Математика",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "12 15",
+          "output": "60"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Числа Армстронга",
+    "description": "Дано число. Проверьте, является ли оно числом Армстронга (сумма его цифр, возведенных в степень, равную количеству цифр, равна самому числу).",
+    "tags": [
+      "Математика",
+      "Циклы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "153",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сумма массива",
+    "description": "Дан массив целых чисел. Выведите их сумму.",
+    "tags": [
+      "Массивы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "3\n10 20 30",
+          "output": "60"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Среднее массива (float)",
+    "description": "Дан массив чисел. Выведите среднее арифметическое (с двумя знаками после запятой).",
+    "tags": [
+      "Массивы",
+      "Математика"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "3\n10 15 20",
+          "output": "15.00"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Максимум массива",
+    "description": "Дан массив. Найдите наибольший элемент.",
+    "tags": [
+      "Массивы",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5\n3 1 4 1 5",
+          "output": "5"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Все элементы на месте?",
+    "description": "Дан массив и число x. Выведите 'Yes', если все элементы массива равны x, иначе 'No'.",
+    "tags": [
+      "Массивы",
+      "Циклы",
+      "Условия"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "3 10\n10 10 10",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Количество вхождений",
+    "description": "Дан массив и число x. Посчитайте, сколько раз x встречается в массиве.",
+    "tags": [
+      "Массивы",
+      "Циклы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "4 2\n1 2 3 2",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Удаление нуля из массива",
+    "description": "Дан массив. Создайте новый массив, удалив все нулевые элементы.",
+    "tags": [
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5\n1 0 2 0 3",
+          "output": "1 2 3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сортировка по возрастанию",
+    "description": "Отсортируйте массив целых чисел.",
+    "tags": [
+      "Массивы",
+      "Сортировка"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5\n3 1 4 1 5",
+          "output": "1 1 3 4 5"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Уникальные элементы массива",
+    "description": "Дан массив. Выведите только уникальные элементы (без дубликатов) в том же порядке.",
+    "tags": [
+      "Массивы",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5\n1 2 2 3 1",
+          "output": "1 2 3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Поиск пар с заданной суммой",
+    "description": "Дан массив и число S. Найдите количество пар элементов, сумма которых равна S.",
+    "tags": [
+      "Массивы",
+      "Хэш-таблицы",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "4 5\n1 2 3 4",
+          "output": "2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Пересечение двух отсортированных",
+    "description": "Даны два отсортированных массива. Объедините их в один массив, содержащий только общие элементы (без дубликатов).",
+    "tags": [
+      "Массивы",
+      "Алгоритмы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "2 3\n1 3\n2 3 4",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Длина слова (база)",
+    "description": "Дано слово. Выведите его длину.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "hello",
+          "output": "5"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Реверс строки (база)",
+    "description": "Дана строка. Переверните ее.",
+    "tags": [
+      "Строки"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "apple",
+          "output": "elppa"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Палиндром?",
+    "description": "Дана строка. Проверьте, является ли она палиндромом. Выведите 'Yes' или 'No'.",
+    "tags": [
+      "Строки",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "radar",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Замена гласных",
+    "description": "Замените все гласные (a, e, i, o, u) в строке на символ '*'.",
+    "tags": [
+      "Строки",
+      "Условия"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "apple",
+          "output": "*ppl*"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Количество слов в строке",
+    "description": "Дана строка. Посчитайте количество слов в ней (слова разделены пробелами).",
+    "tags": [
+      "Строки",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "Hello world from coding",
+          "output": "4"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Анаграммы?",
+    "description": "Даны две строки. Проверьте, являются ли они анаграммами (содержат одинаковый набор символов).",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "listen silent",
+          "output": "Yes"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Самое длинное слово",
+    "description": "Дана строка текста. Найдите самое длинное слово в ней.",
+    "tags": [
+      "Строки",
+      "Циклы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "Programming is a very interesting hobby",
+          "output": "Programming"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Первый уникальный символ (база)",
+    "description": "Дана строка. Найдите первый уникальный (не повторяющийся) символ и выведите его.",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "aabbccde",
+          "output": "d"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Удаление дубликатов (строка)",
+    "description": "Дана строка. Удалите из нее все повторяющиеся символы.",
+    "tags": [
+      "Строки",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "aabbccdde",
+          "output": "abcde"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Разделение и объединение",
+    "description": "Дана строка, в которой слова разделены запятыми. Разделите ее на массив слов, а затем объедините слова обратно в строку через пробел.",
+    "tags": [
+      "Строки",
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "apple,banana,cherry",
+          "output": "apple banana cherry"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Стек?",
+    "description": "Выберите наиболее точное определение стека как структуры данных.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Стек?",
+      "options": [
+        {
+          "text": "FIFO (First In, First Out)"
+        },
+        {
+          "text": "LIFO (Last In, First Out)"
+        },
+        {
+          "text": "Структура для хранения пар ключ-значение"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Реализация Стека на Массиве",
+    "description": "Даны операции: push, pop. Выполните их над стеком, используя массив.",
+    "tags": [
+      "Структуры данных",
+      "Массивы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "push 10\npush 20\npop\npop",
+          "output": "20 10"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Очередь?",
+    "description": "Выберите наиболее точное определение очереди как структуры данных.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Очередь?",
+      "options": [
+        {
+          "text": "FIFO (First In, First Out)"
+        },
+        {
+          "text": "LIFO (Last In, First Out)"
+        },
+        {
+          "text": "Структура для быстрого поиска"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Реализация Очереди на Связном Списке",
+    "description": "Реализуйте очередь с помощью связного списка. Даны операции: enqueue, dequeue.",
+    "tags": [
+      "Структуры данных"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "enqueue 10\nenqueue 20\ndequeue\ndequeue",
+          "output": "10 20"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Сложность поиска в Связном Списке",
+    "description": "Укажите временную сложность поиска элемента в односвязном списке размера n.",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Какова сложность поиска в Связном Списке?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(log n)"
+        },
+        {
+          "text": "O(n)"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Сложность вставки в ArrayList (Java)",
+    "description": "Какова сложность вставки элемента в середину ArrayList в Java?",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Какова сложность вставки в ArrayList?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(n)"
+        },
+        {
+          "text": "O(log n)"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Что такое Хэш-таблица?",
+    "description": "Выберите описание хэш-таблицы.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Хэш-таблица?",
+      "options": [
+        {
+          "text": "Структура для хранения пар ключ-значение"
+        },
+        {
+          "text": "LIFO структура"
+        },
+        {
+          "text": "Связный список"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Разрешение коллизий",
+    "description": "Выберите способы разрешения коллизий в хэш-таблицах.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Способы разрешения коллизий:",
+      "options": [
+        {
+          "text": "Связывание (Chaining)"
+        },
+        {
+          "text": "Линейное зондирование (Linear Probing)"
+        },
+        {
+          "text": "Слияние (Merging)"
+        },
+        {
+          "text": "Сортировка (Sorting)"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Сложность поиска в HashMap (Average Case)",
+    "description": "Какова временная сложность поиска элемента по ключу в идеальной хэш-таблице в среднем случае?",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Какова сложность поиска в HashMap?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(log n)"
+        },
+        {
+          "text": "O(n)"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Уникальные элементы с помощью HashSet",
+    "description": "Используя HashSet, выведите количество уникальных элементов в массиве.",
+    "tags": [
+      "Структуры данных",
+      "Массивы",
+      "Хэш-таблицы"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "5\n1 2 2 3 1",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Бинарное Дерево Поиска?",
+    "description": "Выберите описание Бинарного Дерева Поиска.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Бинарное Дерево Поиска?",
+      "options": [
+        {
+          "text": "Любое бинарное дерево"
+        },
+        {
+          "text": "Бинарное дерево, где левый потомок < родителя, а правый > родителя"
+        },
+        {
+          "text": "Бинарное дерево, где все потомки равны"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Сложность поиска в сбалансированном BST",
+    "description": "Какова временная сложность поиска элемента в сбалансированном бинарном дереве поиска размера n?",
+    "tags": [
+      "Структуры данных",
+      "О-нотация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Какова сложность поиска в сбалансированном BST?",
+      "options": [
+        {
+          "text": "O(1)"
+        },
+        {
+          "text": "O(log n)"
+        },
+        {
+          "text": "O(n)"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Какое свойство у TreeSet?",
+    "description": "Выберите свойство, отличающее TreeSet в Java от HashSet.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что отличает TreeSet?",
+      "options": [
+        {
+          "text": "TreeSet хранит дубликаты"
+        },
+        {
+          "text": "TreeSet гарантирует порядок элементов"
+        },
+        {
+          "text": "HashSet гарантирует порядок элементов"
+        },
+        {
+          "text": "TreeSet работает быстрее, чем HashSet"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Глубина Дерева (Реализация)",
+    "description": "Реализуйте функцию для вычисления максимальной глубины бинарного дерева.",
+    "tags": [
+      "Структуры данных",
+      "Алгоритмы",
+      "Рекурсия"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "Tree: [3, 9, 20, null, null, 15, 7]",
+          "output": "3"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Обход Дерева в Ширину (BFS)",
+    "description": "Реализуйте BFS (Level Order Traversal) для бинарного дерева.",
+    "tags": [
+      "Структуры данных",
+      "Алгоритмы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "Tree: [3, 9, 20, null, null, 15, 7]",
+          "output": "[[3], [9, 20], [15, 7]]"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Граф?",
+    "description": "Выберите наиболее точное определение графа как структуры данных.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Граф?",
+      "options": [
+        {
+          "text": "Набор пар ключ-значение"
+        },
+        {
+          "text": "Набор вершин и ребер, соединяющих их"
+        },
+        {
+          "text": "Иерархическая структура данных"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Представление Графа: Список Смежности",
+    "description": "Выберите способы представления графа в коде.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Способы представления графа:",
+      "options": [
+        {
+          "text": "Матрица Смежности (Adjacency Matrix)"
+        },
+        {
+          "text": "Список Смежности (Adjacency List)"
+        },
+        {
+          "text": "Матрица Значений"
+        },
+        {
+          "text": "Дерево"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Кратчайший путь в невзвешенном графе",
+    "description": "Какой алгоритм используется для поиска кратчайшего пути между двумя вершинами в невзвешенном графе?",
+    "tags": [
+      "Структуры данных",
+      "Алгоритмы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Алгоритм для кратчайшего пути:",
+      "options": [
+        {
+          "text": "Поиск в ширину (BFS)"
+        },
+        {
+          "text": "Поиск в глубину (DFS)"
+        },
+        {
+          "text": "Алгоритм Дейкстры"
+        },
+        {
+          "text": "Алгоритм Флойда-Уоршелла"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Реализация DFS в Графе",
+    "description": "Реализуйте поиск в глубину (DFS) в графе.",
+    "tags": [
+      "Структуры данных",
+      "Алгоритмы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "CODING",
+      "testCases": [
+        {
+          "input": "Graph: 0-[1, 2], 1-[0, 2], 2-[0, 1]. Start: 0",
+          "output": "0 1 2"
+        }
+      ]
+    }
+  },
+  {
+    "title": "Что такое Связный Список?",
+    "description": "Выберите наиболее точное определение связного списка.",
+    "tags": [
+      "Структуры данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Связный Список?",
+      "options": [
+        {
+          "text": "Массив, к которому можно обращаться по индексам"
+        },
+        {
+          "text": "Структура данных, где каждый элемент содержит значение и ссылку на следующий элемент"
+        },
+        {
+          "text": "FIFO структура"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Что такое ООП?",
+    "description": "Выберите наиболее точное описание объектно-ориентированного программирования.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое ООП?",
+      "options": [
+        {
+          "text": "Парадигма программирования, основанная на функциях"
+        },
+        {
+          "text": "Парадигма программирования, использующая объекты для моделирования данных и поведения"
+        },
+        {
+          "text": "Язык программирования"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Принципы ООП (MULTIPLE)",
+    "description": "Выберите все основные принципы ООП.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Основные принципы ООП:",
+      "options": [
+        {
+          "text": "Наследование"
+        },
+        {
+          "text": "Полиморфизм"
+        },
+        {
+          "text": "Инкапсуляция"
+        },
+        {
+          "text": "Абстракция"
+        },
+        {
+          "text": "Рекурсия"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "title": "Инкапсуляция (SINGLE)",
+    "description": "Выберите наиболее точное описание инкапсуляции.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Инкапсуляция?",
+      "options": [
+        {
+          "text": "Скрытие внутренней реализации объекта"
+        },
+        {
+          "text": "Процесс создания подкласса"
+        },
+        {
+          "text": "Использование полиморфизма"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Наследование (SINGLE)",
+    "description": "Выберите наиболее точное описание наследования.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Наследование?",
+      "options": [
+        {
+          "text": "Способность объекта принимать множество форм"
+        },
+        {
+          "text": "Создание нового класса на основе существующего с наследованием его свойств и методов"
+        },
+        {
+          "text": "Скрытие данных"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Полиморфизм (SINGLE)",
+    "description": "Выберите наиболее точное описание полиморфизма.",
+    "tags": [
+      "OOP",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Полиморфизм?",
+      "options": [
+        {
+          "text": "Способность функции обрабатывать данные разных типов"
+        },
+        {
+          "text": "Наследование свойств"
+        },
+        {
+          "text": "Создание подкласса"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Компиляция против Интерпретации",
+    "description": "Выберите наиболее точное различие между компиляцией и интерпретацией.",
+    "tags": [
+      "Теория",
+      "Компиляторы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Различие между компиляцией и интерпретацией:",
+      "options": [
+        {
+          "text": "Компиляция переводит весь код целиком до выполнения, а интерпретация выполняет код построчно"
+        },
+        {
+          "text": "Компиляция работает только с С++, интерпретация — с Python"
+        },
+        {
+          "text": "Это синонимы"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Язык программирования с сильной типизацией",
+    "description": "Выберите язык программирования с сильной статической типизацией.",
+    "tags": [
+      "Теория",
+      "Типизация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Язык с сильной статической типизацией:",
+      "options": [
+        {
+          "text": "Java"
+        },
+        {
+          "text": "JavaScript"
+        },
+        {
+          "text": "Python"
+        },
+        {
+          "text": "PHP"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Что выведет Python: type([1, 2, 3])",
+    "description": "Выберите тип данных Python, который выведет данный код.",
+    "tags": [
+      "Python",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что выведет type([1, 2, 3])?",
+      "options": [
+        {
+          "text": "<class 'list'>"
+        },
+        {
+          "text": "<class 'tuple'>"
+        },
+        {
+          "text": "<class 'set'>"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Ссылки в Java",
+    "description": "Выберите верное утверждение о ссылках в Java.",
+    "tags": [
+      "Java",
+      "Ссылки",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Утверждение о ссылках в Java:",
+      "options": [
+        {
+          "text": "Java использует указатели"
+        },
+        {
+          "text": "Все объекты в Java передаются по значению"
+        },
+        {
+          "text": "Примитивные типы передаются по значению, а объекты — по ссылке"
+        }
+      ],
+      "correctOptionIndex": 2
+    }
+  },
+  {
+    "title": "Что такое SQL?",
+    "description": "Выберите наиболее точное определение SQL.",
+    "tags": [
+      "SQL",
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое SQL?",
+      "options": [
+        {
+          "text": "Язык программирования"
+        },
+        {
+          "text": "Язык структурированных запросов для работы с реляционными базами данных"
+        },
+        {
+          "text": "Операционная система"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Типы Баз Данных (MULTIPLE)",
+    "description": "Выберите основные типы баз данных.",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Типы баз данных:",
+      "options": [
+        {
+          "text": "Реляционные"
+        },
+        {
+          "text": "NoSQL (документные, графовые и др.)"
+        },
+        {
+          "text": "Операционные"
+        },
+        {
+          "text": "Сетевые"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Первичный ключ в SQL",
+    "description": "Что такое первичный ключ (Primary Key)?",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое первичный ключ?",
+      "options": [
+        {
+          "text": "Уникальный идентификатор записи в таблице"
+        },
+        {
+          "text": "Ключ от квартиры"
+        },
+        {
+          "text": "Внешний ключ"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Внешний ключ в SQL",
+    "description": "Что такое внешний ключ (Foreign Key)?",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое внешний ключ?",
+      "options": [
+        {
+          "text": "Ключ от другой таблицы, связывающий две таблицы"
+        },
+        {
+          "text": "Уникальный идентификатор"
+        },
+        {
+          "text": "Замок"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Нормализация",
+    "description": "Что такое нормализация баз данных?",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое нормализация?",
+      "options": [
+        {
+          "text": "Процесс уменьшения дублирования данных в таблицах"
+        },
+        {
+          "text": "Настройка производительности"
+        },
+        {
+          "text": "Сортировка"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "SQL: INNER JOIN (база)",
+    "description": "Выберите верное описание INNER JOIN.",
+    "tags": [
+      "SQL",
+      "Базы данных"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что делает INNER JOIN?",
+      "options": [
+        {
+          "text": "Возвращает записи, которые имеют совпадения в обеих таблицах"
+        },
+        {
+          "text": "Возвращает все записи из левой таблицы"
+        },
+        {
+          "text": "Возвращает все записи из правой таблицы"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "NoSQL: Пример (база)",
+    "description": "Выберите пример NoSQL базы данных.",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Пример NoSQL:",
+      "options": [
+        {
+          "text": "MongoDB"
+        },
+        {
+          "text": "MySQL"
+        },
+        {
+          "text": "PostgreSQL"
+        },
+        {
+          "text": "Oracle"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Что такое ACID?",
+    "description": "Что такое ACID в контексте баз данных?",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое ACID?",
+      "options": [
+        {
+          "text": "Набор свойств, гарантирующих надежность транзакций"
+        },
+        {
+          "text": "Тип NoSQL базы данных"
+        },
+        {
+          "text": "Язык запросов"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "ACID: Буква A (Atomicity)",
+    "description": "Что означает Атомарность в ACID?",
+    "tags": [
+      "Базы данных",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Атомарность?",
+      "options": [
+        {
+          "text": "Транзакция выполняется полностью или не выполняется вовсе"
+        },
+        {
+          "text": "Транзакции не должны влиять друг на друга"
+        },
+        {
+          "text": "Гарантирует согласованность данных"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "SOLID Принципы (SINGLE)",
+    "description": "Принцип SOLID гласит: Классы должны быть открыты для расширения, но закрыты для модификации.",
+    "tags": [
+      "SOLID",
+      "Архитектура"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Какой это принцип SOLID?",
+      "options": [
+        {
+          "text": "Single Responsibility Principle"
+        },
+        {
+          "text": "Open/Closed Principle"
+        },
+        {
+          "text": "Liskov Substitution Principle"
+        },
+        {
+          "text": "Interface Segregation Principle"
+        },
+        {
+          "text": "Dependency Inversion Principle"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "REST API (SINGLE)",
+    "description": "Что означает REST?",
+    "tags": [
+      "Веб",
+      "API",
+      "Архитектура"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что означает REST?",
+      "options": [
+        {
+          "text": "Representational State Transfer"
+        },
+        {
+          "text": "Remote Execution of Stateful Tasks"
+        },
+        {
+          "text": "Reliable Event Streaming Technology"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Статус HTTP 200",
+    "description": "Что означает статус ответа HTTP 200?",
+    "tags": [
+      "HTTP",
+      "Сети",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Статус 200 это:",
+      "options": [
+        {
+          "text": "OK"
+        },
+        {
+          "text": "Not Found"
+        },
+        {
+          "text": "Created"
+        },
+        {
+          "text": "Forbidden"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "HTTP Статус 404 (база)",
+    "description": "Выберите верное описание статуса 404.",
+    "tags": [
+      "HTTP",
+      "Сети",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Статус 404 это:",
+      "options": [
+        {
+          "text": "Forbidden"
+        },
+        {
+          "text": "Not Found"
+        },
+        {
+          "text": "OK"
+        },
+        {
+          "text": "Internal Server Error"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "HTTP Статус 500 (база)",
+    "description": "Что означает статус ответа HTTP 500?",
+    "tags": [
+      "HTTP",
+      "Сети",
+      "Веб"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Статус 500 это:",
+      "options": [
+        {
+          "text": "Internal Server Error"
+        },
+        {
+          "text": "Bad Request"
+        },
+        {
+          "text": "Created"
+        },
+        {
+          "text": "Unauthorized"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Различие между HTTP и HTTPS",
+    "description": "Что обеспечивает HTTPS?",
+    "tags": [
+      "HTTP",
+      "Сети",
+      "Безопасность"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Различие HTTPS от HTTP:",
+      "options": [
+        {
+          "text": "HTTPS быстрее"
+        },
+        {
+          "text": "HTTPS шифрует передаваемые данные"
+        },
+        {
+          "text": "HTTPS работает по другому протоколу"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Идемпотентные HTTP методы (база)",
+    "description": "Выберите все идемпотентные HTTP-методы.",
+    "tags": [
+      "HTTP",
+      "API"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Идемпотентные методы:",
+      "options": [
+        {
+          "text": "GET"
+        },
+        {
+          "text": "POST"
+        },
+        {
+          "text": "PUT"
+        },
+        {
+          "text": "DELETE"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "title": "Что такое TCP?",
+    "description": "Выберите описание протокола TCP.",
+    "tags": [
+      "Сети",
+      "Протоколы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое TCP?",
+      "options": [
+        {
+          "text": "Протокол для передачи данных, гарантирующий доставку"
+        },
+        {
+          "text": "Протокол для передачи данных, не гарантирующий доставку"
+        },
+        {
+          "text": "Язык запросов"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Что такое UDP?",
+    "description": "Выберите описание протокола UDP.",
+    "tags": [
+      "Сети",
+      "Протоколы"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое UDP?",
+      "options": [
+        {
+          "text": "Протокол, гарантирующий доставку"
+        },
+        {
+          "text": "Протокол, не гарантирующий доставку"
+        },
+        {
+          "text": "Язык структурированных запросов"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Модель OSI (MULTI)",
+    "description": "Выберите уровни модели OSI.",
+    "tags": [
+      "Сети",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Уровни модели OSI:",
+      "options": [
+        {
+          "text": "Прикладной"
+        },
+        {
+          "text": "Транспортный"
+        },
+        {
+          "text": "Сетевой"
+        },
+        {
+          "text": "Канальный"
+        },
+        {
+          "text": "Физический"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "title": "Назначение DNS",
+    "description": "Что такое DNS?",
+    "tags": [
+      "Сети",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Назначение DNS:",
+      "options": [
+        {
+          "text": "Протокол для передачи почты"
+        },
+        {
+          "text": "Служба для преобразования доменных имен в IP-адреса"
+        },
+        {
+          "text": "Язык программирования"
+        }
+      ],
+      "correctOptionIndex": 1
+    }
+  },
+  {
+    "title": "Микросервисы против Монолита (MULTI)",
+    "description": "Выберите преимущества микросервисной архитектуры.",
+    "tags": [
+      "Архитектура",
+      "Микросервисы"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Преимущества микросервисов:",
+      "options": [
+        {
+          "text": "Разработка на разных языках"
+        },
+        {
+          "text": "Легкость масштабирования"
+        },
+        {
+          "text": "Быстрое развертывание"
+        },
+        {
+          "text": "Меньшая сложность системы"
+        },
+        {
+          "text": "Единая база данных"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "title": "Что такое MVC?",
+    "description": "Выберите описание паттерна MVC.",
+    "tags": [
+      "Шаблоны проектирования",
+      "Архитектура"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое MVC?",
+      "options": [
+        {
+          "text": "Model-View-Controller"
+        },
+        {
+          "text": "Remote Execution of Stateful Tasks"
+        },
+        {
+          "text": "LIFO структура"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Свойства Docker",
+    "description": "Что такое Docker?",
+    "tags": [
+      "Инструменты",
+      "Контейнеризация"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Docker это:",
+      "options": [
+        {
+          "text": "Платформа для контейнеризации приложений"
+        },
+        {
+          "text": "Язык программирования"
+        },
+        {
+          "text": "База данных"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Шаблон Singleton (база)",
+    "description": "Что гарантирует шаблон проектирования Singleton?",
+    "tags": [
+      "Шаблоны проектирования",
+      "ООП"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что делает Singleton?",
+      "options": [
+        {
+          "text": "Гарантирует существование только одного экземпляра класса"
+        },
+        {
+          "text": "Гарантирует быстрое выполнение"
+        },
+        {
+          "text": "Помогает создавать множество объектов"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Очереди сообщений (MULTI)",
+    "description": "Выберите примеры очередей сообщений.",
+    "tags": [
+      "Архитектура",
+      "Теория"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Примеры очередей сообщений:",
+      "options": [
+        {
+          "text": "RabbitMQ"
+        },
+        {
+          "text": "Kafka"
+        },
+        {
+          "text": "MySQL"
+        },
+        {
+          "text": "Docker"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Назначение Git (база)",
+    "description": "Что такое Git?",
+    "tags": [
+      "Инструменты",
+      "Теория"
+    ],
+    "difficulty": "EASY",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Git?",
+      "options": [
+        {
+          "text": "Система контроля версий"
+        },
+        {
+          "text": "Язык программирования"
+        },
+        {
+          "text": "База данных"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Свойства Git",
+    "description": "Выберите верные утверждения о Git.",
+    "tags": [
+      "Инструменты",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "MULTIPLE_CHOICE",
+      "question": "Утверждения о Git:",
+      "options": [
+        {
+          "text": "Git — распределенная система контроля версий"
+        },
+        {
+          "text": "Git хранит историю изменений"
+        },
+        {
+          "text": "Git работает только в браузере"
+        },
+        {
+          "text": "Git требует постоянного подключения к интернету"
+        }
+      ],
+      "correctOptionIndices": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "title": "Паттерн Factory Method (база)",
+    "description": "Что такое Factory Method?",
+    "tags": [
+      "Шаблоны проектирования",
+      "ООП"
+    ],
+    "difficulty": "HARD",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Фабричный метод?",
+      "options": [
+        {
+          "text": "Паттерн для создания объектов"
+        },
+        {
+          "text": "Паттерн для удаления объектов"
+        },
+        {
+          "text": "Язык запросов"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "CI/CD (SINGLE)",
+    "description": "Что означает CI/CD?",
+    "tags": [
+      "Инструменты",
+      "Архитектура",
+      "Теория"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что означает CI/CD?",
+      "options": [
+        {
+          "text": "Continuous Integration / Continuous Deployment"
+        },
+        {
+          "text": "Continuous Integration / Continuous Development"
+        },
+        {
+          "text": "Continuous Improvement / Continuous Deployment"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
+  },
+  {
+    "title": "Назначение Kubernetes (база)",
+    "description": "Что делает Kubernetes?",
+    "tags": [
+      "Инструменты",
+      "Оркестрация"
+    ],
+    "difficulty": "MEDIUM",
+    "content": {
+      "type": "SINGLE_CHOICE",
+      "question": "Что такое Kubernetes?",
+      "options": [
+        {
+          "text": "Оркестрация контейнеров"
+        },
+        {
+          "text": "База данных"
+        },
+        {
+          "text": "Язык программирования"
+        }
+      ],
+      "correctOptionIndex": 0
+    }
   }
 ]
