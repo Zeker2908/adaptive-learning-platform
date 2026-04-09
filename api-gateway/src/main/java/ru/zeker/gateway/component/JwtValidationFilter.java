@@ -115,6 +115,7 @@ public class JwtValidationFilter implements GlobalFilter, Ordered {
     private ServerWebExchange withUserHeaders(ServerWebExchange exchange, Claims claims) {
         var mutated = exchange.getRequest().mutate()
                 .header(USER_ID, jwtUtils.getUserId(claims))
+                .header(USER_NAME, jwtUtils.getUsername(claims))
                 .header(USER_ROLE, jwtUtils.getRole(claims))
                 .headers(headers -> headers.remove(HttpHeaders.AUTHORIZATION))
                 .build();
