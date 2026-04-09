@@ -10,15 +10,17 @@ spring:
       server:
         webflux:
           globalcors:
+            add-to-simple-url-handler-mapping: true
             cors-configurations:
               '[/**]':
-                allowed-origin-patterns: "http://localhost:*"
+                allowed-origin-patterns:
+                  - "https://haslgraim.ru"
+                  - "https://api.haslgraim.ru"
+                  - "http://localhost:*"
                 allowed-methods: "*"
                 allowed-headers: "*"
                 exposed-headers:
                   - Authorization
-                  - User-Name
-                  - User-Role
                   - Set-Cookie
                 allow-credentials: true
                 max-age: 3600
