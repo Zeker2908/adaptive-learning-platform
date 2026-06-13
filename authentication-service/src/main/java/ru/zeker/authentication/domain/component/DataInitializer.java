@@ -3,10 +3,12 @@ package ru.zeker.authentication.domain.component;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import ru.zeker.authentication.config.DemoLoginProperties;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.PasswordHistoryService;
@@ -27,20 +29,19 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordHistoryService passwordHistoryService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final DemoLoginProperties demoLoginProperties;
 
     @Value("${app.admin.username}")
     private String adminName;
 
-    /**
-     * Initializes an administrator in the system.
-     * If an administrator with the given email address does not exist, it creates an administrator with a generated password.
-     * Logs information about the created administrator.
-     *
-     * @param args command line arguments
-     */
     @Override
     @Transactional
     public void run(String... args) {
+        initAdmin();
+        initDemoUser();
+    }
+
+    private void initAdmin() {
         if (!userService.existsByEmail(adminName)) {
             final var password = generateRandomPassword();
             log.info("Creating an administrator with email: {}", adminName);
@@ -59,11 +60,42 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    /**
-     * Generates a random password from {@value #CHARACTERS} with a length of {@value #STRING_LENGTH}.
-     *
-     * @return the generated password
-     */
+    private void initDemoUser() {
+        if (!demoLoginProperties.isEnabled() || StringUtils.isBlank(demoLoginProperties.getEmail())) {
+            return;
+        }
+
+        var email = demoLoginProperties.getEmail().toLowerCase();
+
+        if (userService.existsByEmail(email)) {
+            var user = userService.findByEmail(email);
+            var localAuth = user.getLocalAuth();
+            if (localAuth != null && Boolean.FALSE.equals(localAuth.getEnabled())) {
+                localAuth.setEnabled(true);
+                userService.update(user);
+                log.info("Demo user {} activated for QR login", email);
+            } else {
+                log.info("Demo user {} already exists", email);
+            }
+            return;
+        }
+
+        final var password = generateRandomPassword();
+        log.info("Creating demo user with email: {}", email);
+        var request = RegisterRequest.builder()
+                .email(email)
+                .password(password)
+                .firstName("Demo")
+                .lastName("User")
+                .build();
+        var demoUser = userMapper.toEntity(request, passwordEncoder);
+        demoUser.getLocalAuth().setEnabled(true);
+        userService.create(demoUser);
+        passwordHistoryService.create(demoUser, password);
+        log.info("Demo user created for QR login");
+        log.info(ANSI_GREEN + "Demo user password (login form): {}" + ANSI_RESET, password);
+    }
+
     private String generateRandomPassword() {
         var random = new SecureRandom();
         return random.ints(STRING_LENGTH, 0, CHARACTERS.length())
