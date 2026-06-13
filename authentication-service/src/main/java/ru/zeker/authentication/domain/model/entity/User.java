@@ -20,7 +20,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users", indexes = {
+@Table(name = "users", schema = "authentication_service", indexes = {
     @Index(columnList = "email", unique = true)
 })
 public class User extends BaseEntity implements UserDetails {

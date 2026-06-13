@@ -4,7 +4,7 @@ spring:
   application:
     name: task-service
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/learning
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/learning?currentSchema=task_service
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:admin}
     password: ${POSTGRES_PASSWORD:admin}
@@ -13,12 +13,17 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        default_schema: task_service
         format_sql: true
     database: postgresql
     show-sql: true
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: task_service
+    liquibase-schema: public
+    database-change-log-table: task_service_databasechangelog
+    database-change-log-lock-table: task_service_databasechangeloglock
 
 logging:
   level:

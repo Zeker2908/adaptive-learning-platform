@@ -32,7 +32,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tasks")
+@Table(name = "tasks", schema = "task_service")
 public class Task extends BaseEntity {
     @Column(nullable = false)
     private String title;
@@ -47,6 +47,7 @@ public class Task extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "task_tags",
+            schema = "task_service",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )

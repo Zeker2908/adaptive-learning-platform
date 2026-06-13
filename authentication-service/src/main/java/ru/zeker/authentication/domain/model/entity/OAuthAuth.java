@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(
+@Table(schema = "authentication_service",
         uniqueConstraints = @UniqueConstraint(columnNames = {"provider", "oAuthId"}),
         indexes = @Index(columnList = "provider, oAuthId")
 )

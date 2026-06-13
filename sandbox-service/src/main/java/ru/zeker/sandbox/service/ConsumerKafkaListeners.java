@@ -42,7 +42,7 @@ public class ConsumerKafkaListeners {
                     .solutionId(record.value().getSolutionId())
                     .status(SolutionStatus.SUCCESS)
                     .build();
-            kafkaProducer.sendEmailEvent(solutionExecResult);
+            kafkaProducer.sendEvent(solutionExecResult);
             log.info("Message processing completed");
         } catch (RetryableException | FeignException.ServiceUnavailable e) {
             log.error("Judge0 service is temporarily unavailable: {}", e.getMessage(), e);
@@ -51,7 +51,7 @@ public class ConsumerKafkaListeners {
                     .status(SolutionStatus.SERVICE_UNAVAILABLE)
                     .descriptionError("Execution service is temporarily unavailable")
                     .build();
-            kafkaProducer.sendEmailEvent(solutionExecResult);
+            kafkaProducer.sendEvent(solutionExecResult);
         } catch (CodeExecutionException e) {
             log.warn("Code execution failed: {}", e.getMessage());
             var solutionExecResult = SolutionExecResult.builder()
@@ -59,7 +59,7 @@ public class ConsumerKafkaListeners {
                     .status(SolutionStatus.FAILED)
                     .descriptionError(e.getMessage())
                     .build();
-            kafkaProducer.sendEmailEvent(solutionExecResult);
+            kafkaProducer.sendEvent(solutionExecResult);
         } catch (Exception e) {
             log.error("Error while request to judge0 {}", e.getMessage(), e);
             var solutionExecResult = SolutionExecResult.builder()
@@ -67,7 +67,7 @@ public class ConsumerKafkaListeners {
                     .status(SolutionStatus.FAILED)
                     .descriptionError(e.getMessage())
                     .build();
-            kafkaProducer.sendEmailEvent(solutionExecResult);
+            kafkaProducer.sendEvent(solutionExecResult);
         }
     }
 

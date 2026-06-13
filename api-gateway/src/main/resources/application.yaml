@@ -26,153 +26,153 @@ spring:
                 max-age: 3600
           routes:
             # === SOLUTION SERVICE ===
-                    - id: solution-service
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/api/v${app.version}/solutions/**
-                      filters:
-                        - StripPrefix=2
+            - id: solution-service
+              uri: http://solution-service:8084
+              predicates:
+                - Path=/api/v${app.version}/solutions/**
+              filters:
+                - StripPrefix=2
 
-                    - id: solution-service
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/api/v${app.version}/recommendations/**
-                      filters:
-                        - StripPrefix=2
+            - id: solution-service
+              uri: http://solution-service:8084
+              predicates:
+                - Path=/api/v${app.version}/recommendations/**
+              filters:
+                - StripPrefix=2
 
-                    - id: solution-service-admin
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/api/v${app.version}/admin/solutions/**
-                      filters:
-                        - StripPrefix=2
-                      metadata:
-                        required-role: ADMIN
+            - id: solution-service-admin
+              uri: http://solution-service:8084
+              predicates:
+                - Path=/api/v${app.version}/admin/solutions/**
+              filters:
+                - StripPrefix=2
+              metadata:
+                required-role: ADMIN
 
-                    # === TASK SERVICE ===
-                    - id: task-service-admin
-                      uri: http://task-service:8082
-                      predicates:
-                        - Path=/api/v${app.version}/admin/tasks/**
-                      filters:
-                        - StripPrefix=2
-                      metadata:
-                        required-role: ADMIN
+            # === TASK SERVICE ===
+            - id: task-service-admin
+              uri: http://task-service:8082
+              predicates:
+                - Path=/api/v${app.version}/admin/tasks/**
+              filters:
+                - StripPrefix=2
+              metadata:
+                required-role: ADMIN
 
-                    - id: task-service
-                      uri: http://task-service:8082
-                      predicates:
-                        - Path=/api/v${app.version}/tasks/**
-                      filters:
-                        - StripPrefix=2
+            - id: task-service
+              uri: http://task-service:8082
+              predicates:
+                - Path=/api/v${app.version}/tasks/**
+              filters:
+                - StripPrefix=2
 
-                    # === AUTH SERVICE ===
-                    - id: authentication-service-auth
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/api/v${app.version}/auth/**
-                      filters:
-                        - StripPrefix=2
-                      metadata:
-                        auth-required: false
+            # === AUTH SERVICE ===
+            - id: authentication-service-auth
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/api/v${app.version}/auth/**
+              filters:
+                - StripPrefix=2
+              metadata:
+                auth-required: false
 
-                    - id: authentication-service-users
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/api/v${app.version}/users/**
-                      filters:
-                        - StripPrefix=2
+            - id: authentication-service-users
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/api/v${app.version}/users/**
+              filters:
+                - StripPrefix=2
 
-                    # === ADMIN ===
-                    - id: authentication-service-admin
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/api/v${app.version}/admin/**
-                      filters:
-                        - StripPrefix=2
-                      metadata:
-                        required-role: ADMIN
+            # === ADMIN ===
+            - id: authentication-service-admin
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/api/v${app.version}/admin/**
+              filters:
+                - StripPrefix=2
+              metadata:
+                required-role: ADMIN
 
 
-                    # === OAUTH2 FLOW ===
-                    - id: oauth2-authorization
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/oauth2/authorization/**
-                      filters:
-                        - RewritePath=/oauth2/authorization/(?<seg>.*), /oauth2/authorization/${seg}
-                      metadata:
-                        auth-required: false
+            # === OAUTH2 FLOW ===
+            - id: oauth2-authorization
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/oauth2/authorization/**
+              filters:
+                - RewritePath=/oauth2/authorization/(?<seg>.*), /oauth2/authorization/${seg}
+              metadata:
+                auth-required: false
 
-                    - id: oauth2-callback
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/login/oauth2/code/**
-                      filters:
-                        - RewritePath=/login/oauth2/code/(?<seg>.*), /login/oauth2/code/${seg}
-                      metadata:
-                        auth-required: false
+            - id: oauth2-callback
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/login/oauth2/code/**
+              filters:
+                - RewritePath=/login/oauth2/code/(?<seg>.*), /login/oauth2/code/${seg}
+              metadata:
+                auth-required: false
 
-                    # === Swagger passthrough ===
-                    - id: authentication-service-docs
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/authentication-service/v3/api-docs/**
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            # === Swagger passthrough ===
+            - id: authentication-service-docs
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/authentication-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
-                    - id: solution-service-docs
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/solution-service/v3/api-docs/**
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            - id: solution-service-docs
+              uri: http://solution-service:8084
+              predicates:
+                - Path=/solution-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
-                    - id: task-service-docs
-                      uri: http://task-service:8082
-                      predicates:
-                        - Path=/task-service/v3/api-docs/**
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            - id: task-service-docs
+              uri: http://task-service:8082
+              predicates:
+                - Path=/task-service/v3/api-docs/**
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
-                    - id: authentication-service-docs-swagger
-                      uri: http://authentication-service:8081
-                      predicates:
-                        - Path=/authentication-service/swagger-ui.html
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            - id: authentication-service-docs-swagger
+              uri: http://authentication-service:8081
+              predicates:
+                - Path=/authentication-service/swagger-ui.html
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
-                    - id: task-service-docs-swagger
-                      uri: http://task-service:8082
-                      predicates:
-                        - Path=/task-service/swagger-ui.html
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            - id: task-service-docs-swagger
+              uri: http://task-service:8082
+              predicates:
+                - Path=/task-service/swagger-ui.html
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
-                    - id: solution-service-docs-swagger
-                      uri: http://solution-service:8084
-                      predicates:
-                        - Path=/solution-service/swagger-ui.html
-                      filters:
-                        - StripPrefix=1
-                      metadata:
-                        auth-required: false
-                      order: -1
+            - id: solution-service-docs-swagger
+              uri: http://solution-service:8084
+              predicates:
+                - Path=/solution-service/swagger-ui.html
+              filters:
+                - StripPrefix=1
+              metadata:
+                auth-required: false
+              order: -1
 
 server:
   port: 8080

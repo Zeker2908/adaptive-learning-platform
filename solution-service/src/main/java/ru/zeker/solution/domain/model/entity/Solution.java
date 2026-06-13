@@ -29,7 +29,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "solutions", indexes = {
+@Table(name = "solutions",
+        schema = "solution_service",
+        indexes = {
         @Index(columnList = "userId")
 })
 public class Solution extends BaseEntity {

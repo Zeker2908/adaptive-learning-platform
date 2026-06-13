@@ -31,7 +31,7 @@ spring:
       port: ${REDIS_PORT:6379}
       database: 0
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/learning
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/learning?currentSchema=authentication_service
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:admin}
     password: ${POSTGRES_PASSWORD:admin}
@@ -40,12 +40,17 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
+        default_schema: authentication_service
         format_sql: true
     database: postgresql
     show-sql: true
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: authentication_service
+    liquibase-schema: public
+    database-change-log-table: authentication_service_databasechangelog
+    database-change-log-lock-table: authentication_service_databasechangeloglock
 logging:
   level:
     root: INFO

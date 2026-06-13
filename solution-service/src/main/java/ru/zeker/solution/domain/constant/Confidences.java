@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import ru.zeker.common.dto.task.Difficulty;
 
 @UtilityClass
-public class Confidences {
+public final class Confidences {
 
     public static final double DEFAULT_CONFIDENCE = 0.5;
     public static final double MAX_CONFIDENCE = 1.0;

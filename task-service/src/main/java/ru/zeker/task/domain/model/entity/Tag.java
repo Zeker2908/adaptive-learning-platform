@@ -25,7 +25,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tags", indexes = {
+@Table(name = "tags", schema = "task_service", indexes = {
         @Index(columnList = "name", unique = true)
 })
 public class Tag extends BaseEntity {

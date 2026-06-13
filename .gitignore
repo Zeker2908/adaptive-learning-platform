@@ -36,3 +36,4 @@ build/
 
 ### Amplicode ###
 amplicode.xml
+/.env

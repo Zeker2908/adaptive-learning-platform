@@ -15,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(indexes = @Index(name = "idx_password_history_user", columnList = "user_id"))
+@Table(schema = "authentication_service", indexes = @Index(name = "idx_password_history_user", columnList = "user_id"))
 public class PasswordHistory extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,0 +1,73 @@
+services:
+  # === API Gateway ===
+  api-gateway:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/api-gateway:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Auth Service ===
+  authentication-service:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/authentication-service:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === SMTP Service ===
+  smtp-service:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/smtp-service:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Task Service ===
+  task-service:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/task-service:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Solution Service ===
+  solution-service:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/solution-service:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Sandbox Service ===
+  sandbox-service:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/sandbox-service:${TAG:-latest}
+    build: null
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Frontend ===
+  frontend:
+    image: ghcr.io/${GHCR_OWNER:-zeker2908}/frontend:${TAG:-latest}
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # === Infrastructure ===
+  postgres:
+    restart: unless-stopped
+
+  redis:
+    restart: unless-stopped
+
+  zookeeper:
+    restart: unless-stopped
+
+  kafka:
+    restart: unless-stopped
+
+  judge0:
+    restart: unless-stopped

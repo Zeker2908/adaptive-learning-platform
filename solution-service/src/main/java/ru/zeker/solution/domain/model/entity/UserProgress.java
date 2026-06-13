@@ -27,7 +27,9 @@ import static ru.zeker.solution.domain.constant.Confidences.MIN_CONFIDENCE_STR;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_progress", uniqueConstraints = {
+@Table(name = "user_progress",
+        schema = "solution_service",
+        uniqueConstraints = {
         @UniqueConstraint(columnNames = {"userId", "topic"})
 },
         indexes = {

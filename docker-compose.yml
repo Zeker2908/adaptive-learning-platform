@@ -12,12 +12,13 @@ services:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: learning
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./init-judge0-db.sql:/docker-entrypoint-initdb.d/init-judge0-db.sql
+      - ./init-schemas.sql:/docker-entrypoint-initdb.d/01-init-schemas.sql
+      - ./init-judge0-db.sql:/docker-entrypoint-initdb.d/02-init-judge0-db.sql
     networks:
       - internal
 
@@ -143,8 +144,8 @@ services:
       PRIVATE_KEY: file:///app/keys/private.pem
       PUBLIC_KEY: file:///app/keys/public.pem
       POSTGRES_HOST: postgres:5432
-      POSTGRES_USERNAME: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       KAFKA_HOST: kafka:9092
@@ -205,8 +206,8 @@ services:
     restart: always
     environment:
       POSTGRES_HOST: postgres:5432
-      POSTGRES_USERNAME: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       - postgres
     networks:
@@ -223,8 +224,8 @@ services:
     restart: always
     environment:
       POSTGRES_HOST: postgres:5432
-      POSTGRES_USERNAME: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       KAFKA_HOST: kafka:9092
     depends_on:
       kafka:
