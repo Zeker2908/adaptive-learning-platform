@@ -37,3 +37,4 @@ build/
 ### Amplicode ###
 amplicode.xml
 /.env
+/deploy/nginx/adaptiver.ru.conf

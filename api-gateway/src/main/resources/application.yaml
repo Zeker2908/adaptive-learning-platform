@@ -14,9 +14,8 @@ spring:
             cors-configurations:
               '[/**]':
                 allowed-origin-patterns:
-                  - "https://haslgraim.ru"
-                  - "https://api.haslgraim.ru"
-                  - "https://www.haslgraim.ru"
+                  - "https://adaptiver.ru"
+                  - "https://www.adaptiver.ru"
                   - "http://localhost:*"
                 allowed-methods: "*"
                 allowed-headers: "*"
