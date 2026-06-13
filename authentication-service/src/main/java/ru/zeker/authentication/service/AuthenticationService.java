@@ -4,10 +4,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.zeker.authentication.config.DemoLoginProperties;
 import ru.zeker.authentication.domain.dto.Tokens;
 import ru.zeker.authentication.domain.dto.request.ConfirmationEmailRequest;
 import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
@@ -48,6 +50,7 @@ public class AuthenticationService {
     private final KafkaProducer kafkaProducer;
     private final PasswordHistoryService passwordHistoryService;
     private final VerificationCooldownService verificationCooldownService;
+    private final DemoLoginProperties demoLoginProperties;
 
     /**
      * Register a new user and send email verification message
@@ -101,6 +104,41 @@ public class AuthenticationService {
         var refreshToken = refreshTokenService.createRefreshToken(user);
 
         log.info("User successfully logged in: {}", email);
+
+        return Tokens.builder()
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    /**
+     * Authenticates demo user using static token from QR link.
+     */
+    public Tokens loginWithDemoToken(String loginToken) {
+        if (!demoLoginProperties.isEnabled()
+                || StringUtils.isBlank(demoLoginProperties.getEmail())
+                || StringUtils.isBlank(demoLoginProperties.getToken())) {
+            throw new InvalidTokenException("Demo login is disabled");
+        }
+
+        if (!demoLoginProperties.getToken().equals(StringUtils.trim(loginToken))) {
+            throw new InvalidTokenException("Demo login token is invalid");
+        }
+
+        var email = demoLoginProperties.getEmail().toLowerCase();
+        log.info("Demo login for user: {}", email);
+
+        var user = userService.findByEmail(email);
+
+        if (!user.isAccountNonLocked()) {
+            throw new InvalidTokenException("Demo account is blocked", ErrorCode.ACCOUNT_BLOCKED);
+        }
+        if (!user.isEnabled()) {
+            throw new InvalidTokenException("Demo account is disabled", ErrorCode.ACCOUNT_DISABLED);
+        }
+
+        var jwtToken = jwtService.generateAccessToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(user);
 
         return Tokens.builder()
                 .token(jwtToken)

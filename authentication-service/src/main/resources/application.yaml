@@ -81,6 +81,10 @@ app:
     secure: ${COOKIE_SECURE:true}
   admin:
     username: ${ADMIN_EMAIL:admin@admin.com}
+  demo-login:
+    enabled: ${DEMO_LOGIN_ENABLED:false}
+    email: ${DEMO_LOGIN_EMAIL:}
+    token: ${DEMO_LOGIN_TOKEN:}
   security:
     password-history:
       max-count: 5

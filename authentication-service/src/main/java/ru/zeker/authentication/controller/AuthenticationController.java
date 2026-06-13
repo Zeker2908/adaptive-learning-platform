@@ -25,14 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.authentication.domain.dto.request.ConfirmationEmailRequest;
 import ru.zeker.authentication.domain.dto.request.ForgotPasswordRequest;
 import ru.zeker.authentication.domain.dto.request.LoginRequest;
+import ru.zeker.authentication.domain.dto.request.LoginTokenRequest;
 import ru.zeker.authentication.domain.dto.request.RegisterRequest;
 import ru.zeker.authentication.domain.dto.request.ResendVerificationRequest;
 import ru.zeker.authentication.domain.dto.request.ResetPasswordRequest;
 import ru.zeker.authentication.domain.dto.response.AuthenticationResponse;
 import ru.zeker.authentication.exception.TokenExpiredException;
 import ru.zeker.authentication.service.AuthenticationService;
-import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.CookieService;
+import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.common.config.JwtProperties;
 
 import java.time.Duration;
@@ -91,6 +92,25 @@ public class AuthenticationController {
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
         var tokens = authenticationService.login(request);
+        var cookie = cookieService.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
+    }
+
+    /**
+     * Authenticates demo user using token from QR link.
+     */
+    @Operation(summary = "Demo login by token", description = "Exchanges demo login token for session")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Authentication successful",
+                    content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired token")
+    })
+    @PostMapping("/login-token")
+    public ResponseEntity<AuthenticationResponse> loginWithToken(
+            @RequestBody @Valid LoginTokenRequest request,
+            HttpServletResponse response) {
+        var tokens = authenticationService.loginWithDemoToken(request.getToken());
         var cookie = cookieService.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));

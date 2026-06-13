@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.zeker.authentication.domain.component.OAuth2SuccessHandler;
+import ru.zeker.authentication.config.DemoLoginProperties;
 import ru.zeker.common.config.JwtProperties;
 
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
 @Import(AuthenticationBeansConfig.class)
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties({JwtProperties.class, DemoLoginProperties.class})
 public class SecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final AuthenticationProvider authenticationProvider;
