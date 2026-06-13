@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import ru.zeker.authentication.exception.OAuth2ProviderException;
 import ru.zeker.authentication.service.JwtService;
 import ru.zeker.authentication.service.OAuth2Service;
-import ru.zeker.authentication.util.CookieUtils;
+import ru.zeker.authentication.util.CookieService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -28,6 +28,7 @@ import java.util.Objects;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final OAuth2Service oAuth2Service;
+    private final CookieService cookieService;
 
     @Value("${jwt.refresh.expiration}")
     private long durationDays;
@@ -71,7 +72,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             var accessToken = jwtService.generateAccessToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
 
-            var refreshCookie = CookieUtils.createTokenCookie(refreshToken, Duration.ofMillis(durationDays));
+            var refreshCookie = cookieService.createTokenCookie(refreshToken, Duration.ofMillis(durationDays));
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
             String frontendCallbackUrl = frontendUrl + "/oauth/callback?token=" + accessToken;

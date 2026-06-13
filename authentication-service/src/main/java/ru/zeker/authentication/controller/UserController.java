@@ -32,7 +32,7 @@ import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.UserService;
-import ru.zeker.authentication.util.CookieUtils;
+import ru.zeker.authentication.util.CookieService;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -53,6 +53,7 @@ import static ru.zeker.common.headers.AppHeaders.USER_ID;
         private final UserService userService;
         private final UserMapper userMapper;
         private final RefreshTokenService refreshTokenService;
+        private final CookieService cookieService;
 
         /**
          * Retrieves information about the current authenticated user.
@@ -182,7 +183,7 @@ import static ru.zeker.common.headers.AppHeaders.USER_ID;
             userService.changePassword(userId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
             refreshTokenService.revokeAllUserTokens(refreshToken);
             response.addHeader(HttpHeaders.SET_COOKIE,
-                    CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO).toString());
+                    cookieService.createTokenCookie(StringUtils.EMPTY, Duration.ZERO).toString());
             return ResponseEntity.noContent().build();
         }
 

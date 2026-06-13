@@ -75,6 +75,10 @@ app:
   frontend-url: ${FRONT_URL}
   domain: http://localhost:8080
   version: 1
+  cookie:
+    domain: ${COOKIE_DOMAIN:}
+    same-site: ${COOKIE_SAME_SITE:Lax}
+    secure: ${COOKIE_SECURE:true}
   admin:
     username: ${ADMIN_EMAIL:admin@admin.com}
   security:

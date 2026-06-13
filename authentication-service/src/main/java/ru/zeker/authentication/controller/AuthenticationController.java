@@ -32,7 +32,7 @@ import ru.zeker.authentication.domain.dto.response.AuthenticationResponse;
 import ru.zeker.authentication.exception.TokenExpiredException;
 import ru.zeker.authentication.service.AuthenticationService;
 import ru.zeker.authentication.service.RefreshTokenService;
-import ru.zeker.authentication.util.CookieUtils;
+import ru.zeker.authentication.util.CookieService;
 import ru.zeker.common.config.JwtProperties;
 
 import java.time.Duration;
@@ -51,6 +51,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
     private final JwtProperties jwtProperties;
+    private final CookieService cookieService;
 
     /**
      * Registers a new user and sends a confirmation email.
@@ -90,7 +91,7 @@ public class AuthenticationController {
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
         var tokens = authenticationService.login(request);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
+        var cookie = cookieService.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -113,7 +114,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> confirmEmail(@RequestBody @Valid ConfirmationEmailRequest request,
                                                                HttpServletResponse response) {
         var tokens = authenticationService.confirmEmail(request);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
+        var cookie = cookieService.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -192,7 +193,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         var tokens = authenticationService.refreshToken(refreshToken);
-        var cookie = CookieUtils.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
+        var cookie = cookieService.createTokenCookie(tokens.getRefreshToken(), Duration.ofMillis(jwtProperties.getRefresh().getExpiration()));
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthenticationResponse(tokens.getToken()));
     }
@@ -215,7 +216,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeRefreshToken(refreshToken);
-        var cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
+        var cookie = cookieService.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }
@@ -238,7 +239,7 @@ public class AuthenticationController {
             @CookieValue(name = "refresh_token") @NotBlank String refreshToken,
             HttpServletResponse response) {
         refreshTokenService.revokeAllUserTokens(refreshToken);
-        var cookie = CookieUtils.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
+        var cookie = cookieService.createTokenCookie(StringUtils.EMPTY, Duration.ZERO);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.noContent().build();
     }
