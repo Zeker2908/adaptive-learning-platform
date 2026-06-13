@@ -77,7 +77,7 @@ app:
   version: 1
   cookie:
     domain: ${COOKIE_DOMAIN:}
-    same-site: ${COOKIE_SAME_SITE:Lax}
+    same-site: ${COOKIE_SAME_SITE:None}
     secure: ${COOKIE_SECURE:true}
   admin:
     username: ${ADMIN_EMAIL:admin@admin.com}
