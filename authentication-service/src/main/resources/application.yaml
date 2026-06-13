@@ -83,8 +83,8 @@ app:
     username: ${ADMIN_EMAIL:admin@admin.com}
   demo-login:
     enabled: ${DEMO_LOGIN_ENABLED:false}
-    email: ${DEMO_LOGIN_EMAIL:}
-    token: ${DEMO_LOGIN_TOKEN:}
+    email: ${DEMO_LOGIN_EMAIL:test@test.com}
+    token: ${DEMO_LOGIN_TOKEN:demo-qr-2026-secret}
   security:
     password-history:
       max-count: 5
