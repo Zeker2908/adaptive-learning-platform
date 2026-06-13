@@ -32,7 +32,7 @@ import ru.zeker.authentication.domain.dto.response.AuthenticationResponse;
 import ru.zeker.authentication.exception.TokenExpiredException;
 import ru.zeker.authentication.service.AuthenticationService;
 import ru.zeker.authentication.service.RefreshTokenService;
-import ru.zeker.authentication.util.CookieService;
+import ru.zeker.authentication.service.CookieService;
 import ru.zeker.common.config.JwtProperties;
 
 import java.time.Duration;

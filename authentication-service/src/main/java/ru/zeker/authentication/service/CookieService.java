@@ -1,4 +1,4 @@
-package ru.zeker.authentication.util;
+package ru.zeker.authentication.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ public class CookieService {
     @Value("${app.cookie.domain:}")
     private String domain;
 
-    @Value("${app.cookie.same-site:Lax}")
+    @Value("${app.cookie.same-site:None}")
     private String sameSite;
 
     @Value("${app.cookie.secure:true}")

@@ -32,7 +32,7 @@ import ru.zeker.authentication.domain.dto.response.UserResponse;
 import ru.zeker.authentication.domain.mapper.UserMapper;
 import ru.zeker.authentication.service.RefreshTokenService;
 import ru.zeker.authentication.service.UserService;
-import ru.zeker.authentication.util.CookieService;
+import ru.zeker.authentication.service.CookieService;
 
 import java.time.Duration;
 import java.util.UUID;

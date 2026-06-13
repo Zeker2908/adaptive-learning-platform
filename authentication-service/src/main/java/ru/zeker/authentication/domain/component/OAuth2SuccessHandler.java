@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import ru.zeker.authentication.exception.OAuth2ProviderException;
 import ru.zeker.authentication.service.JwtService;
 import ru.zeker.authentication.service.OAuth2Service;
-import ru.zeker.authentication.util.CookieService;
+import ru.zeker.authentication.service.CookieService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
