@@ -16,6 +16,7 @@ spring:
                 allowed-origin-patterns:
                   - "https://haslgraim.ru"
                   - "https://api.haslgraim.ru"
+                  - "https://www.haslgraim.ru"
                   - "http://localhost:*"
                 allowed-methods: "*"
                 allowed-headers: "*"
