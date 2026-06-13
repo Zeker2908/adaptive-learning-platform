@@ -90,7 +90,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DATABASE_URL=postgresql://admin:admin@postgres:5432/judge0
+      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@postgres:5432/judge0
       - REDIS_URL=redis://redis:6379/10
       - REDIS_HOST=redis
       - REDIS_PORT=6379
