@@ -36,7 +36,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Value("${app.company-name:Adaptive learning platform}")
+    @Value("${app.company-name:AdaptCode}")
     private String companyName;
 
     public void sendEmail(EmailContext emailContext) {

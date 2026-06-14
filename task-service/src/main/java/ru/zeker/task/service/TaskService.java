@@ -3,6 +3,7 @@ package ru.zeker.task.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -95,8 +96,9 @@ public class TaskService {
                 .orElseThrow(TaskNotFoundException::new);
 
         task.setTitle(request.getTitle());
-        task.setDescription(request.getDescription());
+        task.setDescription(request.getDescription() != null ? request.getDescription() : StringUtils.EMPTY);
         task.setDifficulty(request.getDifficulty());
+        task.setContent(request.getContent());
 
         var tagEntities = tagService.findOrCreateTags(request.getTags());
         task.setTags(tagEntities);
